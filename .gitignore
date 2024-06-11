@@ -1,0 +1,12 @@
+# IDEs
+.vscode
+
+# dependencies
+/node_modules
+
+# testing
+/coverage
+
+# TypeScript
+/dist
+!src/**
