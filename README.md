@@ -1,60 +1,1242 @@
-# JSON Parser
+# Online Clothing Store API
 
-This repository contains an implementation of a custom JSON parser in TypeScript. The project demonstrates how to parse JSON strings using regular expressions and build a corresponding JavaScript object.
+## Content
+- [Description](#description)
+- [Technical Requirements](#technical-requirements)
+- [Base URL](#base-url) 
+- [API Endpoints](#api-endpoints)
+  - [Authentication](#authentication)
+  - [Users](#users)
+  - [Products](#products)
+  - [Carts](#carts)
+  - [Orders](#orders)
+- [Running the Project](#running-the-project)
 
-## Getting Started
+## Description
+The Online Clothing Store API allows customers to search for specific clothing items in their size, add items to their carts, and place orders. The API supports user authentication to provide a personalized shopping experience.
 
-### Prerequisites
+## Technical Requirements
+- **Node.js**
+- **Express.js** - For building the RESTful API.
+- **TypeScript** - For type safety and improved developer experience.
+- **PostgreSQL** - Relational database to store product, user, and order information.
+- **bcrypt** - For hashing user passwords.
+- **JWT** - For handling user authentication.
+- **Jest** - For unit and integration testing.
 
-- Node.js
-- npm (Node Package Manager)
+## Base URL
 
-### Installing
+`http://localhost:3000`
 
-1. Clone the repository
-2. Navigate to the project directory
-3. Install dependencies
+## API Endpoints
 
-```sh
-npm install
-```
+### Authentication
 
-### Building the Project
+<details>
+  <summary><strong>Get Current User</strong> &nbsp; &nbsp; &nbsp;<code>/api/v1/account</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center"></summary>
+  
+- **Description**: This endpoint retrieves the details of the currently logged-in user.
+- **Endpoint**: `/api/v1/account`
+- **Method**: `GET`
+- **Response**:
+  - `200 OK` with currently logged user's details
+  - `401 Unauthorized` on invalid credentials
+    
+- **Example Request**:
 
-```sh
-npm run build
-```
+  ```sh
+  curl '{base_url}/api/v1/account' \
+  -H 'Authorization: Bearer {token}'
+  ```
+- **Example Response**:
 
-### Running the Project
+  ```json
+  {
+    "id": "1",
+    "email": "user@example.com",
+    "first_name": "Jon",
+    "last_name": "Snow",
+    "role": "user"  /Possible values: "admin", "user"
+  }
+  ```
+</details>  
+<details>
+   <summary><strong>User Registration</strong> &nbsp; &nbsp; &nbsp;<code>/api/v1/register</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center"></summary>  
+  
+- **Description**: This endpoint registers a new user with the provided details. The role is automatically assigned as `user` and cannot be specified during registration.
+- **Endpoint**: `/api/v1/register`
+- **Method**: `POST`
+- **Request Body**:
+  ```json
+   {
+     "email": "string",
+     "password": "string",
+     "first_name": "string",
+     "last_name": "string"
+   }
+  ```
+- **Response**:
+  - `201 Created` on successful registration with user details (role will be assigned as `user`)
+  - `400 Bad Request` on invalid input or if the user already exists
+- **Example Request**:
 
-```sh
-npm start
-```
+  ```sh
+  curl -X POST '{base_url}/api/v1/register' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "email": "user@example.com",
+    "password": "password123",
+    "first_name": "Jon",
+    "last_name": "Snow"
+  }'
+  ```
+- **Example Response**:
 
-### Running the Tests
+  ```json
+  {
+    "id": "1",
+    "email": "user@example.com",
+    "first_name": "Jon",
+    "last_name": "Snow",
+    "role": "user"  // Automatically assigned role for new users
+  }
+  ```
+</details>
 
-```sh
-npm test
-```
+<details>
+   <summary><strong>User Login</strong> &nbsp; &nbsp; &nbsp;<code>/api/v1/login</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center"></summary>  
+  
+- **Description**: This endpoint authenticates a user and returns a JWT token if the credentials are valid. The token can be used to access protected routes and resources.
+- **Endpoint**: `/api/v1/login`
+- **Method**: `POST`
+- **Request Body**:
+  ```json
+   {
+     "email": "string",
+     "password": "string"
+   }
+  ```
+- **Response**:
+  - `200 OK` with JWT token
+  - `401 Unauthorized` on invalid credentials
+- **Example Request**:
 
-## Features
+  ```sh
+  curl -X POST '{base_url}/api/v1/login' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "email": "user@example.com",
+    "password": "password123"
+  }'
+  ```
+- **Example Response**:
 
-- Parses JSON strings into JavaScript objects.
-- Supports nested objects and arrays.
-- Handles boolean values, null, and numbers (including negative and floating-point numbers).
-- Processes Unicode escape sequences.
-- Allows custom transformations using a reviver function.
+  ```json
+  {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  }
+  ```
+</details>
 
-## Reflection
+<details>
+<summary><strong>User Logout</strong> &nbsp; &nbsp; &nbsp;<code>/api/v1/logout</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/DELETE-E4003A" align="center"></summary>
 
-Implementing the `myJSONParse` function was a challenging yet rewarding experience. One of the primary challenges was handling various JSON features such as nested structures, different data types, and escape sequences using regular expressions. To address these challenges, I incrementally built and tested the function, ensuring that each component (tokenization and parsing) worked correctly before moving on to the next.
+- **Description**: This endpoint logs out the user by invalidating their JWT token. After successful logout, the token should no longer be accepted for authenticated requests.
+- **Endpoint**: `/api/v1/logout`
+- **Method**: `DELETE`
+- **Request Headers**:
+  - `Authorization` (string, required) - The JWT token to be invalidated.
+- **Response**:
+  - `200 OK` with an empty response indicating successful logout
+  - `401 Unauthorized` if the token is invalid or missing
+  
+- **Example Request**:
 
-Extending the function to support a custom reviver function and handling Unicode escapes added complexity but also made the parser more versatile and closer in functionality to the native `JSON.parse`. This project has deepened my understanding of both regular expressions and the intricacies of JSON parsing.
+  ```sh
+  curl -X DELETE '{base_url}/api/v1/logout' \
+  -H 'Authorization: Bearer {token}'
+  ```
+- **Example Response**:
+  
+  ```json
+  {}
+  ```
+</details>
+  
+### Users
 
-## Authors
+<details>
+<summary><strong>Get All Users (Admin Only)</strong>&nbsp; &nbsp; &nbsp;<code>/api/v1/admin/users</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center"></summary>
 
-- Marlena Dulęba
+- **Description**: This endpoint retrieves a list of all users in the system. It is restricted to administrators or users with specific permissions. Access to this endpoint should be granted only to those with administrative privileges.
+- **Endpoint**: `/api/v1/admin/users`
+- **Method**: `GET`
+- **Request Headers**:
+  - `Authorization` (string, required) - The JWT token for authorization. Only users with admin roles or specific permissions should be able to access this endpoint.
+- **Response**:
+  - `200 OK` with a list of users
+  - `401 Unauthorized` if the token is missing or invalid
+  - `403 Forbidden` if the authenticated user does not have the necessary permissions to access the user list
+  
+- **Example Request**:
 
-## License
+  ```sh
+  curl '{base_url}/api/v1/admin/users' \
+  -H 'Authorization: Bearer {admin_token}'
+  ```
+- **Example Response**:
 
-- This project is licensed under the ISC License.
+  ```json
+  [
+    {
+      "id": "1",
+      "email": "user@example.com",
+      "first_name": "Jon",
+      "last_name": "Snow",
+      "role": "user"  
+    },
+    {
+      "id": "2",
+      "email": "user2@example.com",
+      "first_name": "Arya",
+      "last_name": "Stark",
+      "role": "admin"  
+    }
+  ]
+  ```
+</details>
+
+<details>
+<summary><strong>Get User by ID (Admin Only)</strong>&nbsp; &nbsp; &nbsp;<code>/api/v1/admin/users/{id}</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center"></summary>
+
+- **Description**: Retrieves detailed information about a specific user based on the user ID. This endpoint is accessible only to administrators. Administrators can view details of any user.
+- **Endpoint**: `/api/v1/admin/users/{id}`
+- **Method**: `GET`
+- **Path Parameters**:
+  - `id` (string, required) - The ID of the user whose details are being retrieved
+- **Request Headers**:
+  - `Authorization` (string, required) - The JWT token for authorization. Only administrators with a valid token should be able to access this endpoint.
+- **Response**:
+  - `200 OK` with user details including role
+  - `404 Not Found` if the user does not exist
+  - `403 Forbidden` if the user does not have admin privileges
+
+- **Example Request**:
+
+  ```sh
+  curl '{base_url}/api/v1/admin/users/{id}' \
+  -H 'Authorization: Bearer {admin_token}'
+  ```
+
+- **Example Response**:
+
+  ```json
+  {
+    "id": "1",
+    "email": "user@example.com",
+    "first_name": "Jon",
+    "last_name": "Snow",
+    "role": "user"
+  }
+  ```
+</details> 
+
+<details>
+<summary><strong>Create User (Admin Only)</strong>&nbsp; &nbsp; &nbsp;<code>/api/v1/admin/users</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center"></summary>
+
+- **Description**: This endpoint is used by administrators to create a new user in the system. The request must include the role of the new user, which is assigned by the administrator. This ensures that the user is assigned appropriate permissions from the moment of creation. Access to this endpoint is restricted to administrators.
+- **Endpoint**: `/api/v1/admin/users`
+- **Method**: `POST`
+- **Request Body**:
+  ```json
+  {
+    "first_name": "string",
+    "last_name": "string",
+    "email": "string",
+    "password": "string",
+    "role": "string" // Possible values: "user", "admin"
+  }
+  ```
+- **Request Headers**:
+  - `Authorization` (string, required) - The JWT token for authorization. Only users with admin roles or specific permissions should be able to access this endpoint.
+- **Response**:
+  - `201 Created` with details of the newly created user, including assigned role
+  - `400 Bad Request` if the request body is invalid or missing required fields
+  - `422 Unprocessable Entity` if the email is already in use or other validation errors
+  - `403 Forbidden` if the authenticated user does not have the necessary permissions to create a new user
+  
+- **Example Request**:
+
+  ```sh
+  curl -X POST '{base_url}/api/v1/admin/users' \
+  -H 'Authorization: Bearer {admin_token}' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "first_name": "Jon",
+    "last_name": "Snow",
+    "email": "user@example.com",
+    "password": "password123",
+    "role": "user"
+  }'
+  ```
+- **Example Response**:
+
+  ```json
+  {
+    "id": "1",
+    "email": "user@example.com",
+    "first_name": "Jon",
+    "last_name": "Snow",
+    "role": "user"
+  }
+  ```
+</details>
+
+<details>
+<summary><strong>Update User by ID (Admin Only)</strong>&nbsp; &nbsp; &nbsp;<code>/api/v1/admin/users/{id}</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/PUT-FF8C00" align="center"></summary>
+
+- **Description**: Updates the details of a specific user based on their ID. This endpoint is accessible only to administrators. Administrators can update user details, including roles.
+- **Endpoint**: `/api/v1/admin/users/{id}`
+- **Method**: `PUT`
+- **Path Parameters**:
+  - `id` (string, required) - The ID of the user whose details are being updated
+- **Request Headers**:
+  - `Authorization` (string, required) - The JWT token for authorization. Only administrators with a valid token should be able to access this endpoint.
+- **Request Body**:
+  ```json
+  {
+    "first_name": "string",
+    "last_name": "string",
+    "email": "string",
+    "password": "string",   
+    "role": "string"       
+  }
+  ```
+- **Response**:
+  - `200 OK` with updated user details
+  - `400 Bad Request` on validation error
+  - `404 Not Found` if the user does not exist
+  - `403 Forbidden` if the user does not have admin privileges
+
+- **Example Request**:
+
+  ```sh
+  curl -X PUT '{base_url}/api/v1/admin/users/{id}' \
+  -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer {admin_token}' \
+  -d '{
+    "first_name": "John",
+    "last_name": "Doe",
+    "email": "new-user@example.com",
+    "password": "new-password123",
+    "role": "admin" 
+  }'
+  ```
+
+- **Example Response**:
+
+  ```json
+  {
+    "id": "1",
+    "email": "new-user@example.com",
+    "first_name": "John",
+    "last_name": "Doe",
+    "role": "admin"  
+  }
+  ```
+</details> 
+
+<details>
+<summary><strong>Delete User by ID (Admin Only)</strong>&nbsp; &nbsp; &nbsp;<code>/api/v1/admin/users/{id}</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/DELETE-E4003A" align="center"></summary>
+
+- **Description**: This endpoint allows administrators to delete a specific user from the system based on the user ID. Access to this endpoint is restricted to administrators.
+- **Endpoint**: `/api/v1/admin/users/{id}`
+- **Method**: `DELETE`
+- **Path Parameters**:
+  - `id` (string, required) - The ID of the user to be deleted
+- **Request Headers**:
+  - `Authorization` (string, required) - The JWT token for authorization. Only users with admin roles or specific permissions should be able to access this endpoint.
+- **Response**:
+  - `200 OK` on successful deletion
+  - `404 Not Found` if the user does not exist
+  - `403 Forbidden` if the authenticated user does not have permission to delete the user
+
+- **Example Request**:
+
+  ```sh
+  curl -X DELETE '{base_url}/api/v1/admin/users/{id}' \
+  -H 'Authorization: Bearer {admin_token}'
+  ```
+- **Example Response**:
+
+  ```json
+  {}
+  ```
+</details>
+
+### Products
+
+<details>
+<summary><strong>Get All Products</strong>&nbsp; &nbsp; &nbsp;<code>/api/v1/products</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center"></summary>
+
+- **Description**: Retrieves a list of all products available in the system, with the option to filter by brand, category, and size. The response includes details such as ID, name, description, price, brand, category, and size. This endpoint is publicly accessible and does not require authentication or authorization.
+- **Endpoint**: `/api/v1/products`
+- **Method**: `GET`
+- **Query Parameters**:
+  - `brand` (string, optional) - Filter products by brand.
+  - `category` (string, optional) - Filter products by category.
+  - `size` (string, optional) - Filter products by size.
+- **Response**:
+  - `200 OK` with a list of products matching the specified filters. Each product includes details such as ID, name, description, price, brand, category, and size.
+
+- **Example Request**:
+
+  ```sh
+  curl '{base_url}/api/v1/products?brand=BrandA&category=CategoryX&size=M'
+  ```
+
+- **Example Response**:
+
+  ```json
+  [
+    {
+      "id": "1",
+      "name": "Product 1",
+      "description": "Description of product 1",
+      "price": 100.00,
+      "brand": "Brand A",
+      "category": "Category X",
+      "size": "M"
+    },
+    {
+      "id": "2",
+      "name": "Product 2",
+      "description": "Description of product 2",
+      "price": 150.00,
+      "brand": "Brand A",
+      "category": "Category X",
+      "size": "L"
+    }
+  ]
+  ```
+
+</details>
+
+<details>
+<summary><strong>Get Product by ID</strong>&nbsp; &nbsp; &nbsp;<code>/api/v1/products/{id}</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center"></summary>
+
+- **Description**: Retrieves detailed information about a specific product based on its ID. This endpoint provides all available details about the product, including its name, description, price, brand, and category. This endpoint is accessible to all users, regardless of their role or authorization status.
+- **Endpoint**: `/api/v1/products/{id}`
+- **Method**: `GET`
+- **Path Parameters**:
+  - `id` (string, required) - The ID of the product to retrieve
+- **Response**:
+  - `200 OK` with product details
+  - `404 Not Found` if the product does not exist
+
+- **Example Request**:
+
+  ```sh
+  curl '{base_url}/api/v1/products/{id}'
+  ```
+
+- **Example Response**:
+
+  ```json
+  {
+    "id": "1",
+    "name": "Product 1",
+    "description": "Description of product 1",
+    "price": 100.00,
+    "brand": "Brand A",
+    "category": "Category X",
+    "size": "M"
+  }
+  ``` 
+</details>
+
+<details>
+<summary><strong>Search Products</strong>&nbsp; &nbsp; &nbsp;<code>/api/v1/products/search</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center"></summary>
+
+- **Description**: Searches for products based on a query string that can match either the product name or description. This endpoint provides a way to find products that contain the specified search term in their name or description. It is publicly accessible and does not require authentication or authorization.
+- **Endpoint**: `/api/v1/products/search`
+- **Method**: `GET`
+- **Query Parameters**:
+  - `query` (string, required) - The search term used to find products by name or description. The search is case-insensitive and will return products where the term appears in either the name or description.
+  - `brand` (string, optional) - Filter results by brand.
+  - `category` (string, optional) - Filter results by category.
+  - `size` (string, optional) - Filter results by size.
+- **Response**:
+  - `200 OK` with a list of products matching the search criteria. Each product includes details such as ID, name, description, price, brand, category, and size.
+
+- **Example Request**:
+
+  ```sh
+  curl '{base_url}/api/v1/products/search?query=shirt&brand=BrandA&category=CategoryX'
+  ```
+
+- **Example Response**:
+
+  ```json
+  [
+    {
+      "id": "1",
+      "name": "Cool Shirt",
+      "description": "A cool shirt with a stylish design.",
+      "price": 29.99,
+      "brand": "Brand A",
+      "category": "Category X",
+      "size": "M"
+    },
+    {
+      "id": "2",
+      "name": "Stylish Shirt",
+      "description": "A stylish shirt that is perfect for any occasion.",
+      "price": 35.00,
+      "brand": "Brand A",
+      "category": "Category X",
+      "size": "L"
+    }
+  ]
+  ```
+
+</details>
+
+<details>
+<summary><strong>Create Product (Admin Only)</strong>&nbsp; &nbsp; &nbsp;<code>/api/v1/admin/products</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center"></summary>
+
+- **Description**: This endpoint allows administrators to create a new product in the system. The request must include all necessary details about the product, including its name, description, price, brand, and category. Access to this endpoint is restricted to users with administrative roles.
+- **Endpoint**: `/api/v1/admin/products`
+- **Method**: `POST`
+- **Request Body**:
+  ```json
+  {
+    "name": "string",
+    "description": "string",
+    "price": "number",
+    "brand": "string",
+    "category": "string",
+    "size": "M"
+  }
+  ```
+- **Request Headers**:
+  - `Authorization` (string, required) - The JWT token for authorization. Only users with administrative roles or specific permissions should be able to access this endpoint.
+
+- **Response**:
+  - `201 Created` with details of the newly created product, including `id`, `name`, `description`, `price`, `brand`, and `category`
+  - `400 Bad Request` if the request body is invalid or missing required fields
+  - `403 Forbidden` if the authenticated user does not have the necessary permissions to create a new product
+
+- **Example Request**:
+
+  ```sh
+  curl -X POST '{base_url}/api/v1/admin/products' \
+  -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer {admin_token}' \
+  -d '{
+    "name": "Product 3",
+    "description": "Description of product 3",
+    "price": 200.00,
+    "brand": "Brand C",
+    "category": "Category Z",
+    "size": "M"
+  }'
+  ```
+- **Example Response**:
+
+  ```json
+  {
+    "id": "3",
+    "name": "Product 3",
+    "description": "Description of product 3",
+    "price": 200.00,
+    "brand": "Brand C",
+    "category": "Category Z",
+    "size": "M"
+  }
+  ```
+</details>
+
+<details>
+<summary><strong>Update Product by ID (Admin Only)</strong >&nbsp; &nbsp; &nbsp;<code>/api/v1/admin/products/{id}</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/PUT-FF8C00" align="center"></summary>
+
+- **Description**: This endpoint allows administrators to update the details of a specific product based on its ID. The request must include the updated product information. 
+- **Endpoint**: `/api/v1/admin/products/{id}`
+- **Method**: `PUT`
+- **Path Parameters**:
+  - `id` (string, required) - The ID of the product to update
+- **Request Headers**:
+  - `Authorization` (string, required) - The JWT token for authorization. Only users with admin roles or specific permissions should be able to access this endpoint.
+- **Request Body**:
+  ```json
+  {
+    "name": "string",
+    "description": "string",
+    "price": "number",
+    "brand": "string",   
+    "category": "string",
+    "size": "M"
+  }
+  ```
+- **Response**:
+  - `200 OK` with updated product details
+  - `400 Bad Request` on validation error
+  - `404 Not Found` if the product doesn't exist
+  - `403 Forbidden` if the authenticated user does not have the necessary permissions to update the product
+
+- **Example Request**:
+
+  ```sh
+  curl -X PUT '{base_url}/api/v1/admin/products/{id}' \
+  -H 'Authorization: Bearer {admin_token}' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "name": "Updated Product",
+    "description": "Updated description",
+    "price": 250.00,
+    "brand": "New Brand",
+    "category": "New Category",
+    "size": "M"
+  }'
+  ```
+
+- **Example Response**:
+
+  ```json
+  {
+    "id": "1",
+    "name": "Updated Product",
+    "description": "Updated description",
+    "price": 250.00,
+    "brand": "New Brand",
+    "category": "New Category",
+    "size": "L"
+  }
+  ```
+</details>
+
+<details>
+<summary><strong>Delete Product by ID (Admin Only)</strong>&nbsp; &nbsp; &nbsp;<code>/api/v1/admin/products/{id}</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/DELETE-E4003A" align="center"></summary>
+
+- **Description**: This endpoint allows administrators to delete a specific product based on its ID. Only users with admin roles or specific permissions should be able to access this endpoint to ensure that only authorized personnel can remove products from the system.
+- **Endpoint**: `/api/v1/admin/products/{id}`
+- **Method**: `DELETE`
+- **Path Parameters**:
+  - `id` (string, required) - The ID of the product to delete
+- **Request Headers**:
+  - `Authorization` (string, required) - The JWT token for authorization. Only users with admin roles or specific permissions should be able to access this endpoint.
+- **Response**:
+  - `200 OK` if the product is successfully deleted
+  - `404 Not Found` if the product does not exist
+  - `403 Forbidden` if the authenticated user does not have the necessary permissions to delete the product
+
+- **Example Request**:
+
+  ```sh
+  curl -X DELETE '{base_url}/api/v1/admin/products/{id}' \
+  -H 'Authorization: Bearer {admin_token}'
+  ```
+
+- **Example Response**:
+
+  ```json
+  {}
+  ```
+
+</details>
+
+### Carts
+
+<details>
+<summary><strong>Get Current User's Cart</strong>&nbsp; &nbsp; &nbsp;<code>/api/v1/account/carts</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center"></summary>
+
+- **Description**: Retrieves the shopping cart of the currently logged-in user. This endpoint is accessible only to authenticated users. The request requires a valid JWT token to ensure that the user has access to their own cart.
+- **Endpoint**: `/api/v1/account/carts`
+- **Method**: `GET`
+- **Request Headers**:
+  - `Authorization` (string, required) - The JWT token for authorization. This token ensures that only the authenticated user can access their own cart.
+- **Response**:
+  - `200 OK` with cart details
+  - `401 Unauthorized` if the token is missing or invalid
+  - `404 Not Found` if the carts for the current user does not exist
+
+- **Example Request**:
+
+  ```sh
+  curl '{base_url}/api/v1/account/carts' \
+  -H 'Authorization: Bearer {token}'
+  ```
+
+- **Example Response**:
+
+  ```json
+  {
+    "id": "1",
+    "user_id": "1",
+    "items": [
+      {
+        "product_id": "1",
+        "quantity": 2
+      }
+    ]
+  }
+  ```
+
+</details>
+<details>
+<summary><strong>Add Item to Cart</strong>&nbsp; &nbsp; &nbsp;<code>/api/v1/account/carts</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center"></summary>
+
+- **Description**: Adds an item to the shopping cart of the currently logged-in user. This endpoint is accessible only to authenticated users. The request requires a valid JWT token to ensure that the user can modify their own cart.
+- **Endpoint**: `/api/v1/account/carts`
+- **Method**: `POST`
+- **Request Headers**:
+  - `Authorization` (string, required) - The JWT token for authorization. This token ensures that only the authenticated user can modify their own cart.
+  - `Content-Type` (string, required) - Should be `application/json`.
+- **Request Body**:
+  ```json
+  {
+    "product_id": "string",   // The ID of the product to be added to the cart
+    "quantity": "integer"     // The quantity of the product to be added
+  }
+  ```
+- **Response**:
+  - `200 OK` with updated cart details
+  - `400 Bad Request` on validation error (e.g., invalid product ID, quantity not a positive integer)
+  - `401 Unauthorized` if the token is missing or invalid
+  - `404 Not Found` if the specified product does not exist
+
+- **Example Request**:
+
+  ```sh
+  curl -X POST '{base_url}/api/v1/account/carts' \
+  -H 'Authorization: Bearer {token}' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "product_id": "1",
+    "quantity": 2
+  }'
+  ```
+
+- **Example Response**:
+
+  ```json
+  {
+    "id": "1",
+    "user_id": "1",
+    "items": [
+      {
+        "product_id": "1",
+        "quantity": 2,
+        "price": 50.00,
+        "subtotal": 100.00
+      }
+    ],
+    "total": 100.00,
+    "created_at": "2024-07-16T10:00:00Z",
+    "updated_at": "2024-07-16T10:10:00Z"
+  }
+  ```
+</details> 
+
+
+<details>
+<summary><strong>Update Cart</strong>&nbsp; &nbsp; &nbsp;<code>/api/v1/account/cart</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/PUT-FF8C00" align="center"></summary>
+
+- **Description**: Updates the shopping cart of the currently logged-in user. This endpoint allows for updating the quantity of items in the cart, and removing items by setting their quantity to 0. This endpoint is accessible only to authenticated users. The request requires a valid JWT token to ensure that the user can modify their own cart.
+- **Endpoint**: `/api/v1/account/cart`
+- **Method**: `PUT`
+- **Request Headers**:
+  - `Authorization` (string, required) - The JWT token for authorization. This token ensures that only the authenticated user can modify their own cart.
+  - `Content-Type` (string, required) - Should be `application/json`.
+- **Request Body**:
+  ```json
+  {
+    "items": [
+      {
+        "product_id": "string",   // The ID of the product in the cart
+        "quantity": "number"     // The updated quantity of the product. Use 0 to remove the product.
+      }
+    ]
+  }
+  ```
+- **Response**:
+  - `200 OK` with updated cart details
+  - `400 Bad Request` on validation error (e.g., invalid product ID, quantity not a positive integer)
+  - `401 Unauthorized` if the token is missing or invalid
+  - `403 Forbidden` if the user tries to update a cart that does not belong to them
+  - `404 Not Found` if the cart or product does not exist
+
+- **Example Request**:
+
+  ```sh
+  curl -X PUT '{base_url}/api/v1/account/cart' \
+  -H 'Authorization: Bearer {token}' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "items": [
+      {
+        "product_id": "1",
+        "quantity": 3
+      },
+      {
+        "product_id": "2",
+        "quantity": 0
+      }
+    ]
+  }'
+  ```
+
+- **Example Response**:
+
+  ```json
+  {
+    "id": "1",
+    "user_id": "1",
+    "items": [
+      {
+        "product_id": "1",
+        "quantity": 3,
+        "price": 100.00,
+        "subtotal": 300.00
+      }
+    ],
+    "total": 300.00,
+    "created_at": "2024-07-16T10:00:00Z",
+    "updated_at": "2024-07-16T10:20:00Z"
+  }
+  ```
+
+</details>
+  
+<details>
+<summary><strong>Clear Cart</strong>&nbsp; &nbsp; &nbsp;<code>/api/v1/account/carts</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/DELETE-E4003A" align="center"></summary>
+
+- **Description**: Clears all items from the shopping cart of the currently logged-in user. This endpoint is accessible only to authenticated users. The request requires a valid JWT token to ensure that the user can modify their own cart.
+- **Endpoint**: `/api/v1/account/carts`
+- **Method**: `DELETE`
+- **Request Headers**:
+  - `Authorization` (string, required) - The JWT token for authorization. This token ensures that only the authenticated user can clear their own carts.
+- **Response**:
+  - `200 OK` with the empty cart details
+  - `404 Not Found` if the cart does not exist
+  - `401 Unauthorized` if the token is missing or invalid
+
+- **Example Request**:
+
+  ```sh
+  curl -X DELETE '{base_url}/api/v1/account/carts' \
+  -H 'Authorization: Bearer {token}'
+  ```
+
+- **Example Response**:
+
+  ```json
+  {
+    "id": "1",
+    "user_id": "1",
+    "items": [],
+    "total": 0.00,
+    "created_at": "2024-07-16T10:00:00Z",
+    "updated_at": "2024-07-16T10:10:00Z"
+  }
+  ``` 
+</details>
+
+### Orders
+
+<details>
+<summary><strong>Get All Orders (Admin Only)</strong>&nbsp; &nbsp; &nbsp;<code>/api/v1/admin/orders</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center"></summary>
+
+- **Endpoint**: `/api/v1/admin/orders`
+- **Method**: `GET`
+- **Description**: Retrieves a list of all orders in the system. This endpoint is restricted to administrators only to ensure that order data is protected and only accessible by authorized personnel.
+- **Request Headers**:
+  - `Authorization` (string, required) - The JWT token for authorization. Only users with admin roles or specific permissions should be able to access this endpoint.
+- **Response**:
+  - `200 OK` with a list of orders
+  - `401 Unauthorized` if the user is not authorized or the token is missing/invalid
+  - `403 Forbidden` if the authenticated user does not have the necessary admin role or permissions
+  
+- **Example Request**:
+
+  ```sh
+  curl '{base_url}/api/v1/admin/orders' \
+  -H 'Authorization: Bearer {token}'
+  ```
+
+- **Example Response**:
+
+  ```json
+  [
+    {
+      "id": "1",
+      "user_id": "1",
+      "items": [
+        {
+          "product_id": "1",
+          "quantity": 2,
+          "price": 100.00,
+          "subtotal": 200.00
+        }
+      ],
+      "total": 200.00,
+      "created_at": "2024-07-16T10:00:00Z",
+      "updated_at": "2024-07-16T10:00:00Z"
+    },
+    {
+      "id": "2",
+      "user_id": "2",
+      "items": [
+        {
+          "product_id": "2",
+          "quantity": 1,
+          "price": 150.00,
+          "subtotal": 150.00
+        }
+      ],
+      "total": 150.00,
+      "created_at": "2024-07-16T11:00:00Z",
+      "updated_at": "2024-07-16T11:10:00Z"
+    }
+  ]
+  ```
+</details> 
+
+<details>
+<summary><strong>Get Order by ID (Admin Only</strong>&nbsp; &nbsp; &nbsp;<code>/api/v1/admin/orders/{id}</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center"></summary>
+
+- **Endpoint**: `/api/v1/admin/orders/{id}`
+- **Method**: `GET`
+- **Path Parameters**:
+  - `id` (string, required) - the id of the order
+- **Response**:
+  - `200 OK` with order details
+  - `404 Not Found` if the order doesn't exist
+  
+- **Example Request**:
+
+  ```sh
+  curl '{base_url}/api/v1/admin/orders/{id}' \
+  -H 'Authorization: Bearer {token}'
+  ```
+- **Example Response**:
+
+  ```json
+  {
+    "id": "1",
+    "user_id": "1",
+    "items": [
+      {
+        "product_id": "1",
+        "quantity": 2,
+        "price": 100.00,
+        "subtotal": 200.00
+      }
+    ],
+    "total": 200.00,
+    "created_at": "2024-07-16T10:00:00Z",
+    "updated_at": "2024-07-16T10:00:00Z"
+  }
+  ```
+</details>
+
+<details>
+<summary><strong>Get Current User's Orders</strong>&nbsp; &nbsp; &nbsp;<code>/api/v1/account/orders</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center"></summary>
+
+- **Description**: Retrieves all orders placed by the currently logged-in user. This endpoint is accessible only to authenticated users. The request requires a valid JWT token to ensure that the user can access their own orders.
+- **Endpoint**: `/api/v1/account/orders`
+- **Method**: `GET`
+- **Request Headers**:
+  - `Authorization` (string, required) - The JWT token for authorization. This token ensures that only the authenticated user can access their own orders.
+- **Response**:
+  - `200 OK` with a list of the user's orders
+  - `401 Unauthorized` if the token is missing or invalid
+
+- **Example Request**:
+
+  ```sh
+  curl '{base_url}/api/v1/account/orders' \
+  -H 'Authorization: Bearer {token}'
+  ```
+
+- **Example Response**:
+
+  ```json
+  [
+    {
+      "id": "1",
+      "user_id": "1",
+      "items": [
+        {
+          "product_id": "1",
+          "quantity": 2,
+          "price": 100.00,
+          "subtotal": 200.00
+        }
+      ],
+      "total": 200.00,
+      "created_at": "2024-07-16T10:00:00Z",
+      "updated_at": "2024-07-16T10:10:00Z"
+    },
+    {
+      "id": "2",
+      "user_id": "1",
+      "items": [
+        {
+          "product_id": "2",
+          "quantity": 1,
+          "price": 50.00,
+          "subtotal": 50.00
+        }
+      ],
+      "total": 50.00,
+      "created_at": "2024-07-17T11:00:00Z",
+      "updated_at": "2024-07-17T11:10:00Z"
+    }
+  ]
+  ```
+</details>
+
+<details>
+<summary><strong>Get Current User's Order by ID</strong>&nbsp; &nbsp; &nbsp;<code>/api/v1/account/orders/{id}</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center"></summary>
+
+- **Description**: Retrieves details of a specific order placed by the currently logged-in user. This endpoint is accessible only to authenticated users. The request requires a valid JWT token to ensure that the user can access their own order details.
+- **Endpoint**: `/api/v1/account/orders/{id}`
+- **Method**: `GET`
+- **Path Parameters**:
+  - `id` (string, required) - The ID of the order to be retrieved.
+- **Request Headers**:
+  - `Authorization` (string, required) - The JWT token for authorization. This token ensures that only the authenticated user can access their own order details.
+- **Response**:
+  - `200 OK` with details of the specified order
+  - `401 Unauthorized` if the token is missing or invalid
+  - `403 Forbidden` if the user tries to access an order that does not belong to them
+  - `404 Not Found` if the order does not exist
+
+- **Example Request**:
+
+  ```sh
+  curl '{base_url}/api/v1/account/orders/{id}' \
+  -H 'Authorization: Bearer {token}'
+  ```
+
+- **Example Response**:
+
+  ```json
+  {
+    "id": "1",
+    "user_id": "1",
+    "items": [
+      {
+        "product_id": "1",
+        "quantity": 2,
+        "price": 100.00,
+        "subtotal": 200.00
+      }
+    ],
+    "total": 200.00,
+    "created_at": "2024-07-16T10:00:00Z",
+    "updated_at": "2024-07-16T10:10:00Z"
+  }
+  ```
+</details>
+
+<details>
+<summary><strong>Create Order</strong>&nbsp; &nbsp; &nbsp;<code>/api/v1/account/orders</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center"></summary>
+
+- **Description**: Creates a new order based on the shopping cart of the currently logged-in user. This endpoint is accessible only to authenticated users. The request requires a valid JWT token to ensure that the user can create an order from their own cart.
+- **Endpoint**: `/api/v1/account/orders`
+- **Method**: `POST`
+- **Request Headers**:
+  - `Authorization` (string, required) - The JWT token for authorization. This token ensures that only the authenticated user can create an order from their own cart.
+  - `Content-Type` (string, required) - Should be `application/json`.
+- **Response**:
+  - `201 Created` with order details
+  - `400 Bad Request` on validation error (e.g., invalid cart contents)
+  - `401 Unauthorized` if the token is missing or invalid
+  - `404 Not Found` if the cart is empty or doesn't exist
+
+- **Example Request**:
+
+  ```sh
+  curl -X POST '{base_url}/api/v1/account/orders' \
+  -H 'Authorization: Bearer {token}' \
+  -H 'Content-Type: application/json'
+  ```
+
+- **Example Response**:
+
+  ```json
+  {
+    "id": "1",
+    "user_id": "1",
+    "items": [
+      {
+        "product_id": "1",
+        "quantity": 2,
+        "price": 100.00,
+        "subtotal": 200.00
+      }
+    ],
+    "total": 200.00,
+    "created_at": "2024-07-16T10:00:00Z",
+    "updated_at": "2024-07-16T10:00:00Z"
+  }
+  ```
+</details>
+
+<details>
+<summary><strong>Update Order</strong>&nbsp; &nbsp; &nbsp;<code>/api/v1/account/orders/{id}</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/PUT-FF8C00" align="center"></summary>
+
+- **Description**: Updates an existing order for the currently logged-in user, including the ability to remove a product from the order by setting its quantity to 0. This endpoint is accessible only to authenticated users. The request requires a valid JWT token to ensure that the user can update their own orders.
+- **Endpoint**: `/api/v1/account/orders/{id}`
+- **Method**: `PUT`
+- **Path Parameters**:
+  - `id` (string, required) - The ID of the order to be updated.
+- **Request Headers**:
+  - `Authorization` (string, required) - The JWT token for authorization. This token ensures that only the authenticated user can update their own order.
+  - `Content-Type` (string, required) - Should be `application/json`.
+- **Request Body**:
+  ```json
+  {
+    "items": [
+      {
+        "product_id": "string",   // The ID of the product in the order
+        "quantity": "number"     // The updated quantity of the product. Use 0 to remove the product.
+      }
+    ]
+  }
+  ```
+- **Response**:
+  - `200 OK` with updated order details
+  - `400 Bad Request` on validation error (e.g., invalid product ID, quantity not a positive integer)
+  - `401 Unauthorized` if the token is missing or invalid
+  - `403 Forbidden` if the user tries to update an order that does not belong to them
+  - `404 Not Found` if the order does not exist
+
+- **Example Request**:
+
+  ```sh
+  curl -X PUT '{base_url}/api/v1/account/orders/{id}' \
+  -H 'Authorization: Bearer {token}' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "items": [
+      {
+        "product_id": "1",
+        "quantity": 3
+      },
+      {
+        "product_id": "2",
+        "quantity": 0
+      }
+    ]
+  }'
+  ```
+
+- **Example Response**:
+
+  ```json
+  {
+    "id": "1",
+    "user_id": "1",
+    "items": [
+      {
+        "product_id": "1",
+        "quantity": 3,
+        "price": 100.00,
+        "subtotal": 300.00
+      }
+    ],
+    "total": 300.00,
+    "created_at": "2024-07-16T10:00:00Z",
+    "updated_at": "2024-07-16T10:20:00Z"
+  }
+  ```
+</details>
+
+<details>
+<summary><strong>Delete Order by ID (Admin Only)</strong>&nbsp; &nbsp; &nbsp;<code>/api/v1/admin/orders/{id}</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/DELETE-E4003A" align="center"></summary>
+
+- **Description**: Deletes an existing order by its ID. This endpoint is accessible only to authenticated users with admin privileges. The request requires a valid JWT token to ensure that the user has the necessary permissions to delete orders.
+- **Endpoint**: `/api/v1/admin/orders/{id}`
+- **Method**: `DELETE`
+- **Path Parameters**:
+  - `id` (string, required) - The ID of the order to be deleted.
+- **Request Headers**:
+  - `Authorization` (string, required) - The JWT token for authorization. This token ensures that only an authenticated admin can delete orders.
+  - `Content-Type` (string, required) - Should be `application/json`.
+- **Response**:
+  - `200 OK` on successful deletion of the order
+  - `400 Bad Request` if the order ID is invalid
+  - `401 Unauthorized` if the token is missing or invalid
+  - `403 Forbidden` if the user does not have admin privileges
+  - `404 Not Found` if the order does not exist
+
+- **Example Request**:
+
+  ```sh
+  curl -X DELETE '{base_url}/api/v1/admin/orders/{id}' \
+  -H 'Authorization: Bearer {token}' \
+  -H 'Content-Type: application/json'
+  ```
+
+- **Example Response**:
+
+  ```json
+  {
+    "message": "Order with ID {id} has been successfully deleted."
+  }
+  ```
+</details>
+
+## Running the Project
+
+To run the Online Clothing Store API using Docker, follow these steps:
+
+1. **Clone the Repository**
+    ```sh
+    git clone https://github.com/your-repo/online-clothing-store-api.git
+    cd online-clothing-store-api
+    ```
+
+2. **Build the Docker Image**
+    Build the Docker image for the project using:
+    ```sh
+    docker build -t online-clothing-store-api .
+    ```
+
+3. **Create and Start Containers**
+    Use Docker Compose to create and start the containers. Make sure you have a `docker-compose.yml` file configured. Then, run:
+    ```sh
+    docker-compose up
+    ```
+
+4. **Set Up Environment Variables**
+    Ensure your `.env` file is configured correctly. Docker Compose can use this file if it's specified in the `docker-compose.yml` configuration. A sample `.env` 
+    file might look like this:
+    ```env
+    DATABASE_URL=postgres://username:password@db:5432/yourdatabase
+    JWT_SECRET=your_jwt_secret
+    ```
+
+5. **Run Migrations**
+    If your project uses database migrations, apply them using a migration service inside the Docker container. For example, you might run:
+    ```sh
+    docker-compose exec web npx sequelize-cli db:migrate
+    ```
+    Replace `web` with the appropriate service name from your `docker-compose.yml`.
+
+6. **Access the API**
+    Once the containers are up and running, you should be able to access the API at `http://localhost:3000`.
+
+7. **Testing**
+    To run tests, you can use:
+    ```sh
+    docker-compose exec web npm test
+    ```
+    Replace `web` with the appropriate service name from your `docker-compose.yml`.
+
+---
+
+
