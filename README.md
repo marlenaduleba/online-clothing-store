@@ -15,17 +15,25 @@
 ## Description
 The Online Clothing Store API allows customers to search for specific clothing items in their size, add items to their carts, and place orders. The API supports user authentication to provide a personalized shopping experience.
 
+
 ## Technical Requirements
-- **Node.js**
-- **Express.js** - For building the RESTful API.
-- **TypeScript** - For type safety and improved developer experience.
-- **PostgreSQL** - Relational database to store product, user, and order information.
-- **bcrypt** - For hashing user passwords.
-- **JWT** - For handling user authentication.
-- **Jest** - For unit and integration testing.
 
-## Base URL
+<img src="https://github.com/user-attachments/assets/9b53ecc0-c37a-433a-b146-66fe7340d7b2" alt="Node.js" height="24" align="center"/>&nbsp; **Node.js** - For running the server-side application.  
 
+<img src="https://github.com/user-attachments/assets/cf65b516-de39-4cf8-bdef-ff09b2f187b5" alt="Express.js" height="24" align="center"/>&nbsp; **Express.js** - For building the RESTful API.
+
+<img src="https://github.com/user-attachments/assets/94839a39-279d-43c1-89d7-7f460ed78e56" alt="TypeScript" height="24" align="center"/>&nbsp; **TypeScript** - For type safety and improved developer experience.
+
+<img src="https://github.com/user-attachments/assets/edd03751-3aee-4d2c-befd-bddbd4d10a8b" alt="PostgreSQL" height="24" align="center"/>&nbsp; **PostgreSQL** - Relational database to store product, user, and order information.
+
+<img src="https://github.com/user-attachments/assets/30e8c509-da90-44c4-9b85-c6e515fe4e30" alt="bcrypt" height="24" align="center"/>&nbsp; **bcrypt** - For hashing user passwords.
+
+<img src="https://github.com/user-attachments/assets/cc786919-f195-44c2-9c97-6df104017ab9" alt="JWT" height="24" align="center"/>&nbsp; **JWT** - For handling user authentication.  
+ 
+<img src="https://github.com/user-attachments/assets/428687f9-ebcc-4507-9990-3f55f8ef0dbb" alt="Jest" height="24" align="center"/>&nbsp; **Jest** - For unit and integration testing.
+
+
+## Base URL 
 `http://localhost:3000`
 
 ## API Endpoints
@@ -33,7 +41,7 @@ The Online Clothing Store API allows customers to search for specific clothing i
 ### Authentication
 
 <details>
-  <summary><strong>Get Current User</strong> &nbsp; &nbsp; &nbsp;<code>/api/v1/account</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center"></summary>
+  <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/account</code>&nbsp;&nbsp;<strong>- Get Current User</strong></summary>
   
 - **Description**: This endpoint retrieves the details of the currently logged-in user.
 - **Endpoint**: `/api/v1/account`
@@ -61,7 +69,7 @@ The Online Clothing Store API allows customers to search for specific clothing i
   ```
 </details>  
 <details>
-   <summary><strong>User Registration</strong> &nbsp; &nbsp; &nbsp;<code>/api/v1/register</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center"></summary>  
+   <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center">&nbsp;&nbsp;<code>/api/v1/register</code>&nbsp;&nbsp;<strong>- User Registration</strong></summary>  
   
 - **Description**: This endpoint registers a new user with the provided details. The role is automatically assigned as `user` and cannot be specified during registration.
 - **Endpoint**: `/api/v1/register`
@@ -104,7 +112,7 @@ The Online Clothing Store API allows customers to search for specific clothing i
 </details>
 
 <details>
-   <summary><strong>User Login</strong> &nbsp; &nbsp; &nbsp;<code>/api/v1/login</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center"></summary>  
+   <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center">&nbsp;&nbsp;<code>/api/v1/login</code>&nbsp;&nbsp;<strong>- User Login</strong></summary>  
   
 - **Description**: This endpoint authenticates a user and returns a JWT token if the credentials are valid. The token can be used to access protected routes and resources.
 - **Endpoint**: `/api/v1/login`
@@ -139,7 +147,7 @@ The Online Clothing Store API allows customers to search for specific clothing i
 </details>
 
 <details>
-<summary><strong>User Logout</strong> &nbsp; &nbsp; &nbsp;<code>/api/v1/logout</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/DELETE-E4003A" align="center"></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/DEL-E4003A" align="center">&nbsp; &nbsp; <code>/api/v1/logout</code>&nbsp;&nbsp;<strong>- User Logout</strong></summary>
 
 - **Description**: This endpoint logs out the user by invalidating their JWT token. After successful logout, the token should no longer be accepted for authenticated requests.
 - **Endpoint**: `/api/v1/logout`
@@ -166,7 +174,7 @@ The Online Clothing Store API allows customers to search for specific clothing i
 ### Users
 
 <details>
-<summary><strong>Get All Users (Admin Only)</strong>&nbsp; &nbsp; &nbsp;<code>/api/v1/admin/users</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center"></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/admin/users</code>&nbsp;&nbsp;<strong>- Get All Users (Admin Only)</strong></summary>
 
 - **Description**: This endpoint retrieves a list of all users in the system. It is restricted to administrators or users with specific permissions. Access to this endpoint should be granted only to those with administrative privileges.
 - **Endpoint**: `/api/v1/admin/users`
@@ -207,7 +215,7 @@ The Online Clothing Store API allows customers to search for specific clothing i
 </details>
 
 <details>
-<summary><strong>Get User by ID (Admin Only)</strong>&nbsp; &nbsp; &nbsp;<code>/api/v1/admin/users/{id}</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center"></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/admin/users/{id}</code>&nbsp;&nbsp;<strong>- Get User by ID (Admin Only)</strong></summary>
 
 - **Description**: Retrieves detailed information about a specific user based on the user ID. This endpoint is accessible only to administrators. Administrators can view details of any user.
 - **Endpoint**: `/api/v1/admin/users/{id}`
@@ -242,7 +250,7 @@ The Online Clothing Store API allows customers to search for specific clothing i
 </details> 
 
 <details>
-<summary><strong>Create User (Admin Only)</strong>&nbsp; &nbsp; &nbsp;<code>/api/v1/admin/users</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center"></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center">&nbsp;&nbsp;<code>/api/v1/admin/users</code>&nbsp;&nbsp;<strong>- Create User (Admin Only)</strong></summary>
 
 - **Description**: This endpoint is used by administrators to create a new user in the system. The request must include the role of the new user, which is assigned by the administrator. This ensures that the user is assigned appropriate permissions from the moment of creation. Access to this endpoint is restricted to administrators.
 - **Endpoint**: `/api/v1/admin/users`
@@ -293,7 +301,7 @@ The Online Clothing Store API allows customers to search for specific clothing i
 </details>
 
 <details>
-<summary><strong>Update User by ID (Admin Only)</strong>&nbsp; &nbsp; &nbsp;<code>/api/v1/admin/users/{id}</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/PUT-FF8C00" align="center"></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/PUT-FF8C00" align="center">&nbsp; &nbsp; <code>/api/v1/admin/users/{id}</code>&nbsp;&nbsp;<strong>- Update User by ID (Admin Only)</strong></summary>
 
 - **Description**: Updates the details of a specific user based on their ID. This endpoint is accessible only to administrators. Administrators can update user details, including roles.
 - **Endpoint**: `/api/v1/admin/users/{id}`
@@ -347,7 +355,7 @@ The Online Clothing Store API allows customers to search for specific clothing i
 </details> 
 
 <details>
-<summary><strong>Delete User by ID (Admin Only)</strong>&nbsp; &nbsp; &nbsp;<code>/api/v1/admin/users/{id}</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/DELETE-E4003A" align="center"></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/DEL-E4003A" align="center">&nbsp; &nbsp; <code>/api/v1/admin/users/{id}</code>&nbsp;&nbsp;<strong>- Delete User by ID (Admin Only)</strong></summary>
 
 - **Description**: This endpoint allows administrators to delete a specific user from the system based on the user ID. Access to this endpoint is restricted to administrators.
 - **Endpoint**: `/api/v1/admin/users/{id}`
@@ -377,7 +385,7 @@ The Online Clothing Store API allows customers to search for specific clothing i
 ### Products
 
 <details>
-<summary><strong>Get All Products</strong>&nbsp; &nbsp; &nbsp;<code>/api/v1/products</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center"></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/products</code>&nbsp;&nbsp;<strong>- Get All Products</strong></summary>
 
 - **Description**: Retrieves a list of all products available in the system, with the option to filter by brand, category, and size. The response includes details such as ID, name, description, price, brand, category, and size. This endpoint is publicly accessible and does not require authentication or authorization.
 - **Endpoint**: `/api/v1/products`
@@ -423,7 +431,7 @@ The Online Clothing Store API allows customers to search for specific clothing i
 </details>
 
 <details>
-<summary><strong>Get Product by ID</strong>&nbsp; &nbsp; &nbsp;<code>/api/v1/products/{id}</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center"></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/products/{id}</code>&nbsp;&nbsp;<strong>- Get Product by ID</strong></summary>
 
 - **Description**: Retrieves detailed information about a specific product based on its ID. This endpoint provides all available details about the product, including its name, description, price, brand, and category. This endpoint is accessible to all users, regardless of their role or authorization status.
 - **Endpoint**: `/api/v1/products/{id}`
@@ -456,7 +464,7 @@ The Online Clothing Store API allows customers to search for specific clothing i
 </details>
 
 <details>
-<summary><strong>Search Products</strong>&nbsp; &nbsp; &nbsp;<code>/api/v1/products/search</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center"></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/products/search</code>&nbsp;&nbsp;<strong>- Search Products</strong></summary>
 
 - **Description**: Searches for products based on a query string that can match either the product name or description. This endpoint provides a way to find products that contain the specified search term in their name or description. It is publicly accessible and does not require authentication or authorization.
 - **Endpoint**: `/api/v1/products/search`
@@ -503,7 +511,7 @@ The Online Clothing Store API allows customers to search for specific clothing i
 </details>
 
 <details>
-<summary><strong>Create Product (Admin Only)</strong>&nbsp; &nbsp; &nbsp;<code>/api/v1/admin/products</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center"></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center">&nbsp;&nbsp;<code>/api/v1/admin/products</code>&nbsp;&nbsp;<strong>- Create Product (Admin Only)</strong></summary>
 
 - **Description**: This endpoint allows administrators to create a new product in the system. The request must include all necessary details about the product, including its name, description, price, brand, and category. Access to this endpoint is restricted to users with administrative roles.
 - **Endpoint**: `/api/v1/admin/products`
@@ -558,7 +566,7 @@ The Online Clothing Store API allows customers to search for specific clothing i
 </details>
 
 <details>
-<summary><strong>Update Product by ID (Admin Only)</strong >&nbsp; &nbsp; &nbsp;<code>/api/v1/admin/products/{id}</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/PUT-FF8C00" align="center"></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/PUT-FF8C00" align="center">&nbsp; &nbsp; <code>/api/v1/admin/products/{id}</code>&nbsp;&nbsp;<strong>- Update Product by ID (Admin Only)</strong></summary>
 
 - **Description**: This endpoint allows administrators to update the details of a specific product based on its ID. The request must include the updated product information. 
 - **Endpoint**: `/api/v1/admin/products/{id}`
@@ -616,7 +624,7 @@ The Online Clothing Store API allows customers to search for specific clothing i
 </details>
 
 <details>
-<summary><strong>Delete Product by ID (Admin Only)</strong>&nbsp; &nbsp; &nbsp;<code>/api/v1/admin/products/{id}</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/DELETE-E4003A" align="center"></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/DEL-E4003A" align="center">&nbsp; &nbsp; <code>/api/v1/admin/products/{id}</code>&nbsp;&nbsp;<strong>- Delete Product by ID (Admin Only)</strong></summary>
 
 - **Description**: This endpoint allows administrators to delete a specific product based on its ID. Only users with admin roles or specific permissions should be able to access this endpoint to ensure that only authorized personnel can remove products from the system.
 - **Endpoint**: `/api/v1/admin/products/{id}`
@@ -648,7 +656,7 @@ The Online Clothing Store API allows customers to search for specific clothing i
 ### Carts
 
 <details>
-<summary><strong>Get Current User's Cart</strong>&nbsp; &nbsp; &nbsp;<code>/api/v1/account/carts</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center"></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/account/carts</code>&nbsp;&nbsp;<strong>- Get Current User's Cart</strong></summary>
 
 - **Description**: Retrieves the shopping cart of the currently logged-in user. This endpoint is accessible only to authenticated users. The request requires a valid JWT token to ensure that the user has access to their own cart.
 - **Endpoint**: `/api/v1/account/carts`
@@ -684,7 +692,7 @@ The Online Clothing Store API allows customers to search for specific clothing i
 
 </details>
 <details>
-<summary><strong>Add Item to Cart</strong>&nbsp; &nbsp; &nbsp;<code>/api/v1/account/carts</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center"></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center">&nbsp;&nbsp;<code>/api/v1/account/carts</code>&nbsp;&nbsp;<strong>- Add Item to Cart</strong></summary>
 
 - **Description**: Adds an item to the shopping cart of the currently logged-in user. This endpoint is accessible only to authenticated users. The request requires a valid JWT token to ensure that the user can modify their own cart.
 - **Endpoint**: `/api/v1/account/carts`
@@ -740,7 +748,7 @@ The Online Clothing Store API allows customers to search for specific clothing i
 
 
 <details>
-<summary><strong>Update Cart</strong>&nbsp; &nbsp; &nbsp;<code>/api/v1/account/cart</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/PUT-FF8C00" align="center"></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/PUT-FF8C00" align="center">&nbsp; &nbsp; <code>/api/v1/account/cart</code>&nbsp;&nbsp;<strong>- Update Cart</strong></summary>
 
 - **Description**: Updates the shopping cart of the currently logged-in user. This endpoint allows for updating the quantity of items in the cart, and removing items by setting their quantity to 0. This endpoint is accessible only to authenticated users. The request requires a valid JWT token to ensure that the user can modify their own cart.
 - **Endpoint**: `/api/v1/account/cart`
@@ -809,7 +817,7 @@ The Online Clothing Store API allows customers to search for specific clothing i
 </details>
   
 <details>
-<summary><strong>Clear Cart</strong>&nbsp; &nbsp; &nbsp;<code>/api/v1/account/carts</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/DELETE-E4003A" align="center"></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/DEL-E4003A" align="center">&nbsp; &nbsp; <code>/api/v1/account/carts</code>&nbsp;&nbsp;<strong>- Clear Cart</strong></summary>
 
 - **Description**: Clears all items from the shopping cart of the currently logged-in user. This endpoint is accessible only to authenticated users. The request requires a valid JWT token to ensure that the user can modify their own cart.
 - **Endpoint**: `/api/v1/account/carts`
@@ -845,11 +853,11 @@ The Online Clothing Store API allows customers to search for specific clothing i
 ### Orders
 
 <details>
-<summary><strong>Get All Orders (Admin Only)</strong>&nbsp; &nbsp; &nbsp;<code>/api/v1/admin/orders</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center"></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/admin/orders</code>&nbsp;&nbsp;<strong>- Get All Orders (Admin Only)</strong></summary>
 
-- **Endpoint**: `/api/v1/admin/orders`
-- **Method**: `GET`
 - **Description**: Retrieves a list of all orders in the system. This endpoint is restricted to administrators only to ensure that order data is protected and only accessible by authorized personnel.
+- **Endpoint**: `/api/v1/admin/orders`
+- **Method**: `GET`  
 - **Request Headers**:
   - `Authorization` (string, required) - The JWT token for authorization. Only users with admin roles or specific permissions should be able to access this endpoint.
 - **Response**:
@@ -861,7 +869,7 @@ The Online Clothing Store API allows customers to search for specific clothing i
 
   ```sh
   curl '{base_url}/api/v1/admin/orders' \
-  -H 'Authorization: Bearer {token}'
+  -H 'Authorization: Bearer {admin_token}'
   ```
 
 - **Example Response**:
@@ -903,22 +911,28 @@ The Online Clothing Store API allows customers to search for specific clothing i
 </details> 
 
 <details>
-<summary><strong>Get Order by ID (Admin Only</strong>&nbsp; &nbsp; &nbsp;<code>/api/v1/admin/orders/{id}</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center"></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/admin/orders/{id}</code>&nbsp;&nbsp;<strong>- Get Order by ID (Admin Only)</strong></summary>
 
+- **Description**: Retrieves the details of a specific order by its ID. This endpoint is accessible only to authenticated users with administrative privileges. It provides detailed information about the order, including items, quantities, and pricing. This endpoint helps administrators to view individual orders for management or support purposes.
 - **Endpoint**: `/api/v1/admin/orders/{id}`
 - **Method**: `GET`
 - **Path Parameters**:
-  - `id` (string, required) - the id of the order
+  - `id` (string, required) - The ID of the order to retrieve.
+- **Request Headers**:
+  - `Authorization` (string, required) - The JWT token for authorization. This token ensures that only authenticated administrators can access this endpoint.
 - **Response**:
-  - `200 OK` with order details
-  - `404 Not Found` if the order doesn't exist
-  
+  - `200 OK` with order details. This includes the order's ID, user ID, items (with product ID, quantity, price, and subtotal), total amount, and timestamps for creation and last update.
+  - `404 Not Found` if the specified order does not exist in the database.
+  - `401 Unauthorized` if the request lacks valid authorization credentials.
+  - `403 Forbidden` if the user is not authorized to access this endpoint (e.g., not an admin).
+
 - **Example Request**:
 
   ```sh
-  curl '{base_url}/api/v1/admin/orders/{id}' \
-  -H 'Authorization: Bearer {token}'
+  curl -X GET '{base_url}/api/v1/admin/orders/{id}' \
+  -H 'Authorization: Bearer {admin_token}'
   ```
+
 - **Example Response**:
 
   ```json
@@ -938,10 +952,11 @@ The Online Clothing Store API allows customers to search for specific clothing i
     "updated_at": "2024-07-16T10:00:00Z"
   }
   ```
+
 </details>
 
 <details>
-<summary><strong>Get Current User's Orders</strong>&nbsp; &nbsp; &nbsp;<code>/api/v1/account/orders</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center"></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/account/orders</code>&nbsp;&nbsp;<strong>- Get Current User's Orders</strong></summary>
 
 - **Description**: Retrieves all orders placed by the currently logged-in user. This endpoint is accessible only to authenticated users. The request requires a valid JWT token to ensure that the user can access their own orders.
 - **Endpoint**: `/api/v1/account/orders`
@@ -998,7 +1013,7 @@ The Online Clothing Store API allows customers to search for specific clothing i
 </details>
 
 <details>
-<summary><strong>Get Current User's Order by ID</strong>&nbsp; &nbsp; &nbsp;<code>/api/v1/account/orders/{id}</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center"></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/account/orders/{id}</code>&nbsp;&nbsp;<strong>- Get Current User's Order by ID</strong></summary>
 
 - **Description**: Retrieves details of a specific order placed by the currently logged-in user. This endpoint is accessible only to authenticated users. The request requires a valid JWT token to ensure that the user can access their own order details.
 - **Endpoint**: `/api/v1/account/orders/{id}`
@@ -1042,7 +1057,7 @@ The Online Clothing Store API allows customers to search for specific clothing i
 </details>
 
 <details>
-<summary><strong>Create Order</strong>&nbsp; &nbsp; &nbsp;<code>/api/v1/account/orders</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center"></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center">&nbsp;&nbsp;<code>/api/v1/account/orders</code>&nbsp;&nbsp;<strong>- Create Order</strong></summary>
 
 - **Description**: Creates a new order based on the shopping cart of the currently logged-in user. This endpoint is accessible only to authenticated users. The request requires a valid JWT token to ensure that the user can create an order from their own cart.
 - **Endpoint**: `/api/v1/account/orders`
@@ -1086,7 +1101,7 @@ The Online Clothing Store API allows customers to search for specific clothing i
 </details>
 
 <details>
-<summary><strong>Update Order</strong>&nbsp; &nbsp; &nbsp;<code>/api/v1/account/orders/{id}</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/PUT-FF8C00" align="center"></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/PUT-FF8C00" align="center">&nbsp; &nbsp; <code>/api/v1/account/orders/{id}</code>&nbsp;&nbsp;<strong>- Update Order</strong></summary>
 
 - **Description**: Updates an existing order for the currently logged-in user, including the ability to remove a product from the order by setting its quantity to 0. This endpoint is accessible only to authenticated users. The request requires a valid JWT token to ensure that the user can update their own orders.
 - **Endpoint**: `/api/v1/account/orders/{id}`
@@ -1156,7 +1171,7 @@ The Online Clothing Store API allows customers to search for specific clothing i
 </details>
 
 <details>
-<summary><strong>Delete Order by ID (Admin Only)</strong>&nbsp; &nbsp; &nbsp;<code>/api/v1/admin/orders/{id}</code>&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/DELETE-E4003A" align="center"></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/DEL-E4003A" align="center">&nbsp; &nbsp; <code>/api/v1/admin/orders/{id}</code>&nbsp;&nbsp;<strong>- Delete Order by ID (Admin Only)</strong></summary>
 
 - **Description**: Deletes an existing order by its ID. This endpoint is accessible only to authenticated users with admin privileges. The request requires a valid JWT token to ensure that the user has the necessary permissions to delete orders.
 - **Endpoint**: `/api/v1/admin/orders/{id}`
@@ -1177,7 +1192,7 @@ The Online Clothing Store API allows customers to search for specific clothing i
 
   ```sh
   curl -X DELETE '{base_url}/api/v1/admin/orders/{id}' \
-  -H 'Authorization: Bearer {token}' \
+  -H 'Authorization: Bearer {admin_token}' \
   -H 'Content-Type: application/json'
   ```
 
