@@ -1,22 +1,30 @@
 {
-  "name": "json-parse",
+  "name": "online-clothing-store",
   "version": "1.0.0",
-  "description": "A simplified JSON parser implemented in TypeScript using regular expressions.",
-  "main": "index.js",
+  "description": "An API for an online clothing store, providing endpoints for user authentication, product management, and order handling.",
+  "main": "server.js",
   "type": "module",
   "scripts": {
     "build": "tsc",
     "test": "npx jest",
-    "start": "node dist/index.js"
+    "start": "node dist/server.js"
   },
   "author": "Marlena Dulęba",
   "license": "ISC",
   "devDependencies": {
+    "@types/express": "^4.17.21",
     "@types/jest": "^29.5.12",
+    "@types/node": "^20.14.12",
     "jest": "^29.7.0",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
     "tsx": "^4.10.5",
     "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "express": "^4.19.2",
+    "pg": "^8.12.0"
   }
 }
