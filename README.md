@@ -16,7 +16,7 @@
 The Online Clothing Store API allows customers to search for specific clothing items in their size, add items to their carts, and place orders. The API supports user authentication to provide a personalized shopping experience.
 
 
-## Technical Requirements
+## Technology Stack
 
 <img src="https://github.com/user-attachments/assets/9b53ecc0-c37a-433a-b146-66fe7340d7b2" alt="Node.js" height="24" align="center"/>&nbsp; **Node.js** - For running the server-side application.  
 
@@ -28,7 +28,7 @@ The Online Clothing Store API allows customers to search for specific clothing i
 
 <img src="https://github.com/user-attachments/assets/30e8c509-da90-44c4-9b85-c6e515fe4e30" alt="bcrypt" height="24" align="center"/>&nbsp; **bcrypt** - For hashing user passwords.
 
-<img src="https://github.com/user-attachments/assets/cc786919-f195-44c2-9c97-6df104017ab9" alt="JWT" height="24" align="center"/>&nbsp; **JWT** - For handling user authentication.  
+<img src="https://github.com/user-attachments/assets/cc786919-f195-44c2-9c97-6df104017ab9" alt="JWT" height="24" align="center"/>&nbsp; **Custom JWT Implementation** - For managing user authentication and authorization (implemented manually).
  
 <img src="https://github.com/user-attachments/assets/428687f9-ebcc-4507-9990-3f55f8ef0dbb" alt="Jest" height="24" align="center"/>&nbsp; **Jest** - For unit and integration testing.
 
@@ -39,35 +39,7 @@ The Online Clothing Store API allows customers to search for specific clothing i
 ## API Endpoints
 
 ### Authentication
-
-<details>
-  <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/account</code>&nbsp;&nbsp;<strong>- Get Current User</strong></summary>
-  
-- **Description**: This endpoint retrieves the details of the currently logged-in user.
-- **Endpoint**: `/api/v1/account`
-- **Method**: `GET`
-- **Response**:
-  - `200 OK` with currently logged user's details
-  - `401 Unauthorized` on invalid credentials
-    
-- **Example Request**:
-
-  ```sh
-  curl '{base_url}/api/v1/account' \
-  -H 'Authorization: Bearer {token}'
-  ```
-- **Example Response**:
-
-  ```json
-  {
-    "id": "1",
-    "email": "user@example.com",
-    "first_name": "Jon",
-    "last_name": "Snow",
-    "role": "user"  /Possible values: "admin", "user"
-  }
-  ```
-</details>  
+ 
 <details>
    <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center">&nbsp;&nbsp;<code>/api/v1/register</code>&nbsp;&nbsp;<strong>- User Registration</strong></summary>  
   
@@ -147,11 +119,11 @@ The Online Clothing Store API allows customers to search for specific clothing i
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/DEL-E4003A" align="center">&nbsp; &nbsp; <code>/api/v1/logout</code>&nbsp;&nbsp;<strong>- User Logout</strong></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-567189" align="center">&nbsp; &nbsp; <code>/api/v1/logout</code>&nbsp;&nbsp;<strong>- User Logout</strong></summary>
 
 - **Description**: This endpoint logs out the user by invalidating their JWT token. After successful logout, the token should no longer be accepted for authenticated requests.
 - **Endpoint**: `/api/v1/logout`
-- **Method**: `DELETE`
+- **Method**: `POST`
 - **Request Headers**:
   - `Authorization` (string, required) - The JWT token to be invalidated.
 - **Response**:
@@ -161,7 +133,7 @@ The Online Clothing Store API allows customers to search for specific clothing i
 - **Example Request**:
 
   ```sh
-  curl -X DELETE '{base_url}/api/v1/logout' \
+  curl -X POST '{base_url}/api/v1/logout' \
   -H 'Authorization: Bearer {token}'
   ```
 - **Example Response**:
@@ -170,8 +142,88 @@ The Online Clothing Store API allows customers to search for specific clothing i
   {}
   ```
 </details>
+
+<details>
+  <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/account</code>&nbsp;&nbsp;<strong>- Get Current User</strong></summary>
+  
+- **Description**: This endpoint retrieves the details of the currently logged-in user.
+- **Endpoint**: `/api/v1/account`
+- **Method**: `GET`
+- **Response**:
+  - `200 OK` with currently logged user's details
+  - `401 Unauthorized` on invalid credentials
+    
+- **Example Request**:
+
+  ```sh
+  curl '{base_url}/api/v1/account' \
+  -H 'Authorization: Bearer {token}'
+  ```
+- **Example Response**:
+
+  ```json
+  {
+    "id": "1",
+    "email": "user@example.com",
+    "first_name": "Jon",
+    "last_name": "Snow",
+    "role": "user"  /Possible values: "admin", "user"
+  }
+  ```
+</details> 
   
 ### Users
+
+<details>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center">&nbsp;&nbsp;<code>/api/v1/admin/users</code>&nbsp;&nbsp;<strong>- Create User (Admin Only)</strong></summary>
+
+- **Description**: This endpoint is used by administrators to create a new user in the system. The request must include the role of the new user, which is assigned by the administrator. This ensures that the user is assigned appropriate permissions from the moment of creation. Access to this endpoint is restricted to administrators.
+- **Endpoint**: `/api/v1/admin/users`
+- **Method**: `POST`
+- **Request Body**:
+  ```json
+  {
+    "first_name": "string",
+    "last_name": "string",
+    "email": "string",
+    "password": "string",
+    "role": "string" // Possible values: "user", "admin"
+  }
+  ```
+- **Request Headers**:
+  - `Authorization` (string, required) - The JWT token for authorization. Only users with admin roles or specific permissions should be able to access this endpoint.
+- **Response**:
+  - `201 Created` with details of the newly created user, including assigned role
+  - `400 Bad Request` if the request body is invalid or missing required fields
+  - `422 Unprocessable Entity` if the email is already in use or other validation errors
+  - `403 Forbidden` if the authenticated user does not have the necessary permissions to create a new user
+  
+- **Example Request**:
+
+  ```sh
+  curl -X POST '{base_url}/api/v1/admin/users' \
+  -H 'Authorization: Bearer {admin_token}' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "first_name": "Jon",
+    "last_name": "Snow",
+    "email": "user@example.com",
+    "password": "password123",
+    "role": "user"
+  }'
+  ```
+- **Example Response**:
+
+  ```json
+  {
+    "id": "1",
+    "email": "user@example.com",
+    "first_name": "Jon",
+    "last_name": "Snow",
+    "role": "user"
+  }
+  ```
+</details>
 
 <details>
 <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/admin/users</code>&nbsp;&nbsp;<strong>- Get All Users (Admin Only)</strong></summary>
@@ -248,57 +300,6 @@ The Online Clothing Store API allows customers to search for specific clothing i
   }
   ```
 </details> 
-
-<details>
-<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center">&nbsp;&nbsp;<code>/api/v1/admin/users</code>&nbsp;&nbsp;<strong>- Create User (Admin Only)</strong></summary>
-
-- **Description**: This endpoint is used by administrators to create a new user in the system. The request must include the role of the new user, which is assigned by the administrator. This ensures that the user is assigned appropriate permissions from the moment of creation. Access to this endpoint is restricted to administrators.
-- **Endpoint**: `/api/v1/admin/users`
-- **Method**: `POST`
-- **Request Body**:
-  ```json
-  {
-    "first_name": "string",
-    "last_name": "string",
-    "email": "string",
-    "password": "string",
-    "role": "string" // Possible values: "user", "admin"
-  }
-  ```
-- **Request Headers**:
-  - `Authorization` (string, required) - The JWT token for authorization. Only users with admin roles or specific permissions should be able to access this endpoint.
-- **Response**:
-  - `201 Created` with details of the newly created user, including assigned role
-  - `400 Bad Request` if the request body is invalid or missing required fields
-  - `422 Unprocessable Entity` if the email is already in use or other validation errors
-  - `403 Forbidden` if the authenticated user does not have the necessary permissions to create a new user
-  
-- **Example Request**:
-
-  ```sh
-  curl -X POST '{base_url}/api/v1/admin/users' \
-  -H 'Authorization: Bearer {admin_token}' \
-  -H 'Content-Type: application/json' \
-  -d '{
-    "first_name": "Jon",
-    "last_name": "Snow",
-    "email": "user@example.com",
-    "password": "password123",
-    "role": "user"
-  }'
-  ```
-- **Example Response**:
-
-  ```json
-  {
-    "id": "1",
-    "email": "user@example.com",
-    "first_name": "Jon",
-    "last_name": "Snow",
-    "role": "user"
-  }
-  ```
-</details>
 
 <details>
 <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/PUT-FF8C00" align="center">&nbsp; &nbsp; <code>/api/v1/admin/users/{id}</code>&nbsp;&nbsp;<strong>- Update User by ID (Admin Only)</strong></summary>
@@ -383,6 +384,61 @@ The Online Clothing Store API allows customers to search for specific clothing i
 </details>
 
 ### Products
+
+<details>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center">&nbsp;&nbsp;<code>/api/v1/admin/products</code>&nbsp;&nbsp;<strong>- Create Product (Admin Only)</strong></summary>
+
+- **Description**: This endpoint allows administrators to create a new product in the system. The request must include all necessary details about the product, including its name, description, price, brand, and category. Access to this endpoint is restricted to users with administrative roles.
+- **Endpoint**: `/api/v1/admin/products`
+- **Method**: `POST`
+- **Request Body**:
+  ```json
+  {
+    "name": "string",
+    "description": "string",
+    "price": "number",
+    "brand": "string",
+    "category": "string",
+    "size": "M"
+  }
+  ```
+- **Request Headers**:
+  - `Authorization` (string, required) - The JWT token for authorization. Only users with administrative roles or specific permissions should be able to access this endpoint.
+
+- **Response**:
+  - `201 Created` with details of the newly created product, including `id`, `name`, `description`, `price`, `brand`, and `category`
+  - `400 Bad Request` if the request body is invalid or missing required fields
+  - `403 Forbidden` if the authenticated user does not have the necessary permissions to create a new product
+
+- **Example Request**:
+
+  ```sh
+  curl -X POST '{base_url}/api/v1/admin/products' \
+  -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer {admin_token}' \
+  -d '{
+    "name": "Product 3",
+    "description": "Description of product 3",
+    "price": 200.00,
+    "brand": "Brand C",
+    "category": "Category Z",
+    "size": "M"
+  }'
+  ```
+- **Example Response**:
+
+  ```json
+  {
+    "id": "3",
+    "name": "Product 3",
+    "description": "Description of product 3",
+    "price": 200.00,
+    "brand": "Brand C",
+    "category": "Category Z",
+    "size": "M"
+  }
+  ```
+</details>
 
 <details>
 <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/products</code>&nbsp;&nbsp;<strong>- Get All Products</strong></summary>
@@ -511,61 +567,6 @@ The Online Clothing Store API allows customers to search for specific clothing i
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center">&nbsp;&nbsp;<code>/api/v1/admin/products</code>&nbsp;&nbsp;<strong>- Create Product (Admin Only)</strong></summary>
-
-- **Description**: This endpoint allows administrators to create a new product in the system. The request must include all necessary details about the product, including its name, description, price, brand, and category. Access to this endpoint is restricted to users with administrative roles.
-- **Endpoint**: `/api/v1/admin/products`
-- **Method**: `POST`
-- **Request Body**:
-  ```json
-  {
-    "name": "string",
-    "description": "string",
-    "price": "number",
-    "brand": "string",
-    "category": "string",
-    "size": "M"
-  }
-  ```
-- **Request Headers**:
-  - `Authorization` (string, required) - The JWT token for authorization. Only users with administrative roles or specific permissions should be able to access this endpoint.
-
-- **Response**:
-  - `201 Created` with details of the newly created product, including `id`, `name`, `description`, `price`, `brand`, and `category`
-  - `400 Bad Request` if the request body is invalid or missing required fields
-  - `403 Forbidden` if the authenticated user does not have the necessary permissions to create a new product
-
-- **Example Request**:
-
-  ```sh
-  curl -X POST '{base_url}/api/v1/admin/products' \
-  -H 'Content-Type: application/json' \
-  -H 'Authorization: Bearer {admin_token}' \
-  -d '{
-    "name": "Product 3",
-    "description": "Description of product 3",
-    "price": 200.00,
-    "brand": "Brand C",
-    "category": "Category Z",
-    "size": "M"
-  }'
-  ```
-- **Example Response**:
-
-  ```json
-  {
-    "id": "3",
-    "name": "Product 3",
-    "description": "Description of product 3",
-    "price": 200.00,
-    "brand": "Brand C",
-    "category": "Category Z",
-    "size": "M"
-  }
-  ```
-</details>
-
-<details>
 <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/PUT-FF8C00" align="center">&nbsp; &nbsp; <code>/api/v1/admin/products/{id}</code>&nbsp;&nbsp;<strong>- Update Product by ID (Admin Only)</strong></summary>
 
 - **Description**: This endpoint allows administrators to update the details of a specific product based on its ID. The request must include the updated product information. 
@@ -656,42 +657,6 @@ The Online Clothing Store API allows customers to search for specific clothing i
 ### Carts
 
 <details>
-<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/account/carts</code>&nbsp;&nbsp;<strong>- Get Current User's Cart</strong></summary>
-
-- **Description**: Retrieves the shopping cart of the currently logged-in user. This endpoint is accessible only to authenticated users. The request requires a valid JWT token to ensure that the user has access to their own cart.
-- **Endpoint**: `/api/v1/account/carts`
-- **Method**: `GET`
-- **Request Headers**:
-  - `Authorization` (string, required) - The JWT token for authorization. This token ensures that only the authenticated user can access their own cart.
-- **Response**:
-  - `200 OK` with cart details
-  - `401 Unauthorized` if the token is missing or invalid
-  - `404 Not Found` if the carts for the current user does not exist
-
-- **Example Request**:
-
-  ```sh
-  curl '{base_url}/api/v1/account/carts' \
-  -H 'Authorization: Bearer {token}'
-  ```
-
-- **Example Response**:
-
-  ```json
-  {
-    "id": "1",
-    "user_id": "1",
-    "items": [
-      {
-        "product_id": "1",
-        "quantity": 2
-      }
-    ]
-  }
-  ```
-
-</details>
-<details>
 <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center">&nbsp;&nbsp;<code>/api/v1/account/carts</code>&nbsp;&nbsp;<strong>- Add Item to Cart</strong></summary>
 
 - **Description**: Adds an item to the shopping cart of the currently logged-in user. This endpoint is accessible only to authenticated users. The request requires a valid JWT token to ensure that the user can modify their own cart.
@@ -746,6 +711,42 @@ The Online Clothing Store API allows customers to search for specific clothing i
   ```
 </details> 
 
+<details>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/account/carts</code>&nbsp;&nbsp;<strong>- Get Current User's Cart</strong></summary>
+
+- **Description**: Retrieves the shopping cart of the currently logged-in user. This endpoint is accessible only to authenticated users. The request requires a valid JWT token to ensure that the user has access to their own cart.
+- **Endpoint**: `/api/v1/account/carts`
+- **Method**: `GET`
+- **Request Headers**:
+  - `Authorization` (string, required) - The JWT token for authorization. This token ensures that only the authenticated user can access their own cart.
+- **Response**:
+  - `200 OK` with cart details
+  - `401 Unauthorized` if the token is missing or invalid
+  - `404 Not Found` if the carts for the current user does not exist
+
+- **Example Request**:
+
+  ```sh
+  curl '{base_url}/api/v1/account/carts' \
+  -H 'Authorization: Bearer {token}'
+  ```
+
+- **Example Response**:
+
+  ```json
+  {
+    "id": "1",
+    "user_id": "1",
+    "items": [
+      {
+        "product_id": "1",
+        "quantity": 2
+      }
+    ]
+  }
+  ```
+
+</details>
 
 <details>
 <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/PUT-FF8C00" align="center">&nbsp; &nbsp; <code>/api/v1/account/cart</code>&nbsp;&nbsp;<strong>- Update Cart</strong></summary>
@@ -851,6 +852,50 @@ The Online Clothing Store API allows customers to search for specific clothing i
 </details>
 
 ### Orders
+
+<details>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center">&nbsp;&nbsp;<code>/api/v1/account/orders</code>&nbsp;&nbsp;<strong>- Create Order</strong></summary>
+
+- **Description**: Creates a new order based on the shopping cart of the currently logged-in user. This endpoint is accessible only to authenticated users. The request requires a valid JWT token to ensure that the user can create an order from their own cart.
+- **Endpoint**: `/api/v1/account/orders`
+- **Method**: `POST`
+- **Request Headers**:
+  - `Authorization` (string, required) - The JWT token for authorization. This token ensures that only the authenticated user can create an order from their own cart.
+  - `Content-Type` (string, required) - Should be `application/json`.
+- **Response**:
+  - `201 Created` with order details
+  - `400 Bad Request` on validation error (e.g., invalid cart contents)
+  - `401 Unauthorized` if the token is missing or invalid
+  - `404 Not Found` if the cart is empty or doesn't exist
+
+- **Example Request**:
+
+  ```sh
+  curl -X POST '{base_url}/api/v1/account/orders' \
+  -H 'Authorization: Bearer {token}' \
+  -H 'Content-Type: application/json'
+  ```
+
+- **Example Response**:
+
+  ```json
+  {
+    "id": "1",
+    "user_id": "1",
+    "items": [
+      {
+        "product_id": "1",
+        "quantity": 2,
+        "price": 100.00,
+        "subtotal": 200.00
+      }
+    ],
+    "total": 200.00,
+    "created_at": "2024-07-16T10:00:00Z",
+    "updated_at": "2024-07-16T10:00:00Z"
+  }
+  ```
+</details>
 
 <details>
 <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/admin/orders</code>&nbsp;&nbsp;<strong>- Get All Orders (Admin Only)</strong></summary>
@@ -1057,50 +1102,6 @@ The Online Clothing Store API allows customers to search for specific clothing i
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center">&nbsp;&nbsp;<code>/api/v1/account/orders</code>&nbsp;&nbsp;<strong>- Create Order</strong></summary>
-
-- **Description**: Creates a new order based on the shopping cart of the currently logged-in user. This endpoint is accessible only to authenticated users. The request requires a valid JWT token to ensure that the user can create an order from their own cart.
-- **Endpoint**: `/api/v1/account/orders`
-- **Method**: `POST`
-- **Request Headers**:
-  - `Authorization` (string, required) - The JWT token for authorization. This token ensures that only the authenticated user can create an order from their own cart.
-  - `Content-Type` (string, required) - Should be `application/json`.
-- **Response**:
-  - `201 Created` with order details
-  - `400 Bad Request` on validation error (e.g., invalid cart contents)
-  - `401 Unauthorized` if the token is missing or invalid
-  - `404 Not Found` if the cart is empty or doesn't exist
-
-- **Example Request**:
-
-  ```sh
-  curl -X POST '{base_url}/api/v1/account/orders' \
-  -H 'Authorization: Bearer {token}' \
-  -H 'Content-Type: application/json'
-  ```
-
-- **Example Response**:
-
-  ```json
-  {
-    "id": "1",
-    "user_id": "1",
-    "items": [
-      {
-        "product_id": "1",
-        "quantity": 2,
-        "price": 100.00,
-        "subtotal": 200.00
-      }
-    ],
-    "total": 200.00,
-    "created_at": "2024-07-16T10:00:00Z",
-    "updated_at": "2024-07-16T10:00:00Z"
-  }
-  ```
-</details>
-
-<details>
 <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/PUT-FF8C00" align="center">&nbsp; &nbsp; <code>/api/v1/account/orders/{id}</code>&nbsp;&nbsp;<strong>- Update Order</strong></summary>
 
 - **Description**: Updates an existing order for the currently logged-in user, including the ability to remove a product from the order by setting its quantity to 0. This endpoint is accessible only to authenticated users. The request requires a valid JWT token to ensure that the user can update their own orders.
@@ -1209,48 +1210,36 @@ The Online Clothing Store API allows customers to search for specific clothing i
 
 To run the Online Clothing Store API using Docker, follow these steps:
 
-1. **Clone the Repository**
-    ```sh
-    git clone https://github.com/your-repo/online-clothing-store-api.git
-    cd online-clothing-store-api
-    ```
+1. **Clone the Repository**:
+   Clone the repository to your local machine.
 
-2. **Build the Docker Image**
-    Build the Docker image for the project using:
-    ```sh
-    docker build -t online-clothing-store-api .
-    ```
+   ```bash
+   git clone https://github.com/your-repo/online-clothing-store-api.git
+   cd online-clothing-store-api
+   ```
 
-3. **Create and Start Containers**
-    Use Docker Compose to create and start the containers. Make sure you have a `docker-compose.yml` file configured. Then, run:
-    ```sh
-    docker-compose up
-    ```
+2. **Build the Docker Image**:
+   Build the Docker image for the project.
 
-4. **Set Up Environment Variables**
-    Ensure your `.env` file is configured correctly. Docker Compose can use this file if it's specified in the `docker-compose.yml` configuration. A sample `.env` 
-    file might look like this:
-    ```env
-    DATABASE_URL=postgres://username:password@db:5432/yourdatabase
-    JWT_SECRET=your_jwt_secret
-    ```
+   ```bash
+   docker build -t online-clothing-store-api .
+   ```
 
-5. **Run Migrations**
-    If your project uses database migrations, apply them using a migration service inside the Docker container. For example, you might run:
-    ```sh
-    docker-compose exec web npx sequelize-cli db:migrate
-    ```
-    Replace `web` with the appropriate service name from your `docker-compose.yml`.
+3. **Create and Start Containers**:
+   Use Docker Compose to create and start the containers.
 
-6. **Access the API**
-    Once the containers are up and running, you should be able to access the API at `http://localhost:3000`.
+   ```bash
+   docker-compose up
+   ```
 
-7. **Testing**
-    To run tests, you can use:
-    ```sh
-    docker-compose exec web npm test
-    ```
-    Replace `web` with the appropriate service name from your `docker-compose.yml`.
+4. **Set Up Environment Variables**:
+   Ensure your `.env` file is correctly configured, including database connection details and JWT secret.
+
+5. **Access the API**:
+   Once the containers are up and running, the API should be accessible at `http://localhost:3000`.
+
+6. **Testing**:
+   To run tests, use the appropriate command inside the container.
 
 ---
 
