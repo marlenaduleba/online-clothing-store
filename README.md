@@ -119,7 +119,7 @@ The Online Clothing Store API allows customers to search for specific clothing i
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-567189" align="center">&nbsp; &nbsp; <code>/api/v1/logout</code>&nbsp;&nbsp;<strong>- User Logout</strong></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center">&nbsp;&nbsp;<code>/api/v1/logout</code>&nbsp;&nbsp;<strong>- User Logout</strong></summary>
 
 - **Description**: This endpoint logs out the user by invalidating their JWT token. After successful logout, the token should no longer be accepted for authenticated requests.
 - **Endpoint**: `/api/v1/logout`
