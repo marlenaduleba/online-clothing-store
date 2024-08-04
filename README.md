@@ -144,35 +144,6 @@ The Online Clothing Store API allows customers to search for specific clothing i
 </details>
 
 <details>
-  <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/account</code>&nbsp;&nbsp;<strong>- Get Current User</strong></summary>
-  
-- **Description**: This endpoint retrieves the details of the currently logged-in user.
-- **Endpoint**: `/api/v1/account`
-- **Method**: `GET`
-- **Response**:
-  - `200 OK` with currently logged user's details
-  - `401 Unauthorized` on invalid credentials
-    
-- **Example Request**:
-
-  ```sh
-  curl '{base_url}/api/v1/account' \
-  -H 'Authorization: Bearer {token}'
-  ```
-- **Example Response**:
-
-  ```json
-  {
-    "id": "1",
-    "email": "user@example.com",
-    "first_name": "Jon",
-    "last_name": "Snow",
-    "role": "user"  /Possible values: "admin", "user"
-  }
-  ```
-</details> 
-
-<details>
   <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center">&nbsp;&nbsp;<code>/api/v1/refresh</code>&nbsp;&nbsp;<strong>- Refresh Token</strong></summary>
 
 - **Description**: This endpoint refreshes the JWT token using a valid refresh token.
@@ -204,6 +175,35 @@ The Online Clothing Store API allows customers to search for specific clothing i
   }
   ```
 </details>
+
+<details>
+  <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/account</code>&nbsp;&nbsp;<strong>- Get Current User</strong></summary>
+  
+- **Description**: This endpoint retrieves the details of the currently logged-in user.
+- **Endpoint**: `/api/v1/account`
+- **Method**: `GET`
+- **Response**:
+  - `200 OK` with currently logged user's details
+  - `401 Unauthorized` on invalid credentials
+    
+- **Example Request**:
+
+  ```sh
+  curl '{base_url}/api/v1/account' \
+  -H 'Authorization: Bearer {token}'
+  ```
+- **Example Response**:
+
+  ```json
+  {
+    "id": "1",
+    "email": "user@example.com",
+    "first_name": "Jon",
+    "last_name": "Snow",
+    "role": "user"  /Possible values: "admin", "user"
+  }
+  ```
+</details> 
   
 ### Users
 
