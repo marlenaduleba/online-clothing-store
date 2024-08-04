@@ -171,6 +171,39 @@ The Online Clothing Store API allows customers to search for specific clothing i
   }
   ```
 </details> 
+
+<details>
+  <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center">&nbsp;&nbsp;<code>/api/v1/refresh</code>&nbsp;&nbsp;<strong>- Refresh Token</strong></summary>
+
+- **Description**: This endpoint refreshes the JWT token using a valid refresh token.
+- **Endpoint**: `/api/v1/refresh`
+- **Method**: `POST`
+- **Request Body**:
+  ```json
+  {
+    "refreshToken": "string"
+  }
+  ```
+- **Response**:
+  - `200 OK` with new JWT token
+  - `401 Unauthorized` if the refresh token is invalid or expired
+- **Example Request**:
+
+  ```sh
+  curl -X POST '{base_url}/api/v1/refresh' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "refreshToken": "dGhpcyBpcyBhIHNhbXBsZSByZWZyZXNoIHRva2Vu"
+  }'
+  ```
+- **Example Response**:
+
+  ```json
+  {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  }
+  ```
+</details>
   
 ### Users
 

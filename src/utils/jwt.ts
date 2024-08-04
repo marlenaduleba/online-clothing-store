@@ -13,7 +13,7 @@ interface JwtPayload {
   [key: string]: any;
 }
 
-const DEFAULT_EXPIRATION_TIME = 60 * 60; // Default expiration time: 1 hour in seconds
+const DEFAULT_EXPIRATION_TIME = 15 * 60; // Default expiration time: 15 minutes in seconds
 
 export const createJWT = (header: JwtHeader, payload: JwtPayload, secret: string): string => {
   // Set default expiration time if not provided
@@ -57,5 +57,16 @@ export const verifyJWT = (token: string, secret: string): boolean => {
   } catch (error) {
     console.error('Error verifying JWT:', error);
     return false;
+  }
+};
+
+export const parseJWTPayload = (token: string): JwtPayload | null => {
+  try {
+    const [, payloadB64] = token.split('.');
+    const payload = JSON.parse(Buffer.from(payloadB64, 'base64url').toString('utf-8'));
+    return payload;
+  } catch (error) {
+    console.error('Error parsing JWT payload:', error);
+    return null;
   }
 };
