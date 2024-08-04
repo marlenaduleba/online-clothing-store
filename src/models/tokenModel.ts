@@ -42,6 +42,6 @@ export const isTokenBlacklisted = async (token: string): Promise<boolean> => {
 };
 
 export const getRefreshTokenData = async (refreshToken: string): Promise<number | null> => {
-  const result = await query<{ user_id: number }>('SELECT user_id FROM refresh_tokens WHERE token = $1 AND valid = true AND expires_at > NOW()', [refreshToken]);
+  const result = await query<{ user_id: number }>('SELECT user_id FROM refresh_tokens WHERE token = $1 AND expires_at > NOW()', [refreshToken]);
   return result.rows.length > 0 ? result.rows[0].user_id : null;
 };

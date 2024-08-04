@@ -5,6 +5,12 @@ CREATE TABLE refresh_tokens (
     expires_at TIMESTAMP NOT NULL
 );
 
+CREATE TABLE token_blacklist (
+    id SERIAL PRIMARY KEY,
+    token VARCHAR(255) UNIQUE NOT NULL,
+    revoked_at TIMESTAMP NOT NULL
+);
+
 -- Creating a table for users
 CREATE TABLE users (
     id SERIAL PRIMARY KEY, -- Automatically incremented ID
