@@ -8,5 +8,5 @@
     "strict": true,
     "skipLibCheck": true
   },
-  "exclude": ["node_modules", "./*.ts", "__test__"]
+  "exclude": ["node_modules", "./*.ts", "test"]
 }

@@ -17,6 +17,7 @@ router.post('/logout', authenticateToken, logout);
 // Endpoint: Get Current User
 router.get('/account', authenticateToken, getCurrentUser);
 
+// Endpoint: Refresh Token
 router.post('/refresh', refreshToken);
 
 export default router;
