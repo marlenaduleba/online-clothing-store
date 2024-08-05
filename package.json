@@ -9,7 +9,8 @@
     "start:dev": "cross-env NODE_ENV=development nodemon",
     "dev": "tsx src/server.ts",
     "test": "npx jest",
-    "start": "cross-env NODE_ENV=production node dist/server.js"
+    "start": "cross-env NODE_ENV=production node dist/server.js",
+    "db:reset": "tsx src/utils/resetDatabase.ts"
   },
   "author": "Marlena Dulęba",
   "license": "ISC",

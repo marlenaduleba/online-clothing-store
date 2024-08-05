@@ -1,16 +1,3 @@
-CREATE TABLE refresh_tokens (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-    token VARCHAR(255) UNIQUE NOT NULL,
-    expires_at TIMESTAMP NOT NULL
-);
-
-CREATE TABLE token_blacklist (
-    id SERIAL PRIMARY KEY,
-    token VARCHAR(255) UNIQUE NOT NULL,
-    revoked_at TIMESTAMP NOT NULL
-);
-
 -- Creating a table for users
 CREATE TABLE users (
     id SERIAL PRIMARY KEY, -- Automatically incremented ID
@@ -31,14 +18,6 @@ CREATE TABLE products (
     category VARCHAR(50),                   -- Product category
     size VARCHAR(10)                        -- Product size
 );
-
--- Adding indexes to frequently used columns
-CREATE INDEX idx_products_brand ON products(brand);
-CREATE INDEX idx_products_category ON products(category);
-CREATE INDEX idx_products_size ON products(size);
-
--- Resetting the sequence to start from 1
-ALTER SEQUENCE public.products_id_seq RESTART WITH 1;
 
 -- Creating a table for carts
 CREATE TABLE carts (
@@ -71,10 +50,6 @@ CREATE TABLE cart_items (
         ON DELETE CASCADE
 );
 
--- Indexes for speeding up queries
-CREATE INDEX idx_cart_items_cart_id ON cart_items(cart_id);
-CREATE INDEX idx_cart_items_product_id ON cart_items(product_id);
-
 -- Creating a table for orders
 CREATE TABLE orders (
     id SERIAL PRIMARY KEY,                   -- Unique order ID
@@ -97,10 +72,29 @@ CREATE TABLE order_items (
     FOREIGN KEY (product_id) REFERENCES products(id) -- Foreign key to the products table
 );
 
--- Index on 'user_id' and 'order_id' columns in the 'order_items' table for better performance
+-- Creating a table for refresh tokens
+CREATE TABLE refresh_tokens (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    token VARCHAR(255) UNIQUE NOT NULL,
+    expires_at TIMESTAMP NOT NULL
+);
+
+-- Creating a table for token blacklist
+CREATE TABLE token_blacklist (
+    id SERIAL PRIMARY KEY,
+    token VARCHAR(255) UNIQUE NOT NULL,
+    revoked_at TIMESTAMP NOT NULL
+);
+
+-- Adding indexes to frequently used columns
+CREATE INDEX idx_products_brand ON products(brand);
+CREATE INDEX idx_products_category ON products(category);
+CREATE INDEX idx_products_size ON products(size);
+CREATE INDEX idx_cart_items_cart_id ON cart_items(cart_id);
+CREATE INDEX idx_cart_items_product_id ON cart_items(product_id);
 CREATE INDEX idx_order_items_order_id ON order_items(order_id);
 CREATE INDEX idx_order_items_product_id ON order_items(product_id);
 
--- Inserting sample data (optional)
--- INSERT INTO orders (user_id, total) VALUES (1, 200.00);
--- INSERT INTO order_items (order_id, product_id, quantity, price, subtotal) VALUES (1, 1, 2, 100.00, 200.00);
+-- Resetting the sequence to start from 1
+ALTER SEQUENCE public.products_id_seq RESTART WITH 1;
