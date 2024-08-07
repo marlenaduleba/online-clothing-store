@@ -12,7 +12,7 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
     // Check if the user already exists
     const existingUser = await getUserByEmail(email);
     if (existingUser) {
-      return res.status(400).json({ message: 'User already exists' });
+      return res.status(400).json({ message: `User already exists` });
     }
 
     // Create a new user
@@ -20,7 +20,7 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
 
     // Exclude the password from the response
     const { password: _, ...userWithoutPassword } = newUser;
-    res.status(201).json(userWithoutPassword);
+    res.status(201).json({message: "User registered", userWithoutPassword});
   } catch (error) {
     next(error);
   }
@@ -43,7 +43,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
 
     const refreshToken = await saveRefreshToken(user.id);
 
-    res.json({ token, refreshToken });
+    res.json({ message: 'Logged in', token, refreshToken });
   } catch (error) {
     next(error);
   }
