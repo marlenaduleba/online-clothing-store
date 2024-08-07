@@ -69,7 +69,7 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
       process.env.JWT_SECRET || 'secret'
     );
 
-    res.json({ token });
+    res.json({message: 'Token refreshed', token });
   } catch (error) {
     next(error);
   }
@@ -101,7 +101,7 @@ export const getCurrentUser = async (req: Request, res: Response, next: NextFunc
     }
 
     const { password, ...userWithoutPassword } = req.user;
-    res.json(userWithoutPassword);
+    res.json({message: 'User data retrieved successfully', userWithoutPassword});
   } catch (error) {
     next(error);
   }
