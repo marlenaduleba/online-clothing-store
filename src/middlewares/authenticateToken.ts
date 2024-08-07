@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { verifyJWT, parseJWTPayload } from '../utils/jwt.js';
 import { getUserById } from '../models/userModel.js';
+import { isTokenBlacklisted } from '../models/tokenModel.js';
 
 declare global {
   namespace Express {
@@ -24,6 +25,11 @@ export const authenticateToken = async (req: Request, res: Response, next: NextF
   if (!payload) return res.status(403).json({ message: 'Forbidden' });
 
   try {
+    // Sprawdzenie, czy token jest na czarnej liście
+    if (await isTokenBlacklisted(token)) {
+      return res.status(401).json({ message: 'Unauthorized - Token is blacklisted' });
+    }
+
     const userId = parseInt(payload.sub, 10); // Ensure userId is a number
     const user = await getUserById(userId);
     if (!user) {
