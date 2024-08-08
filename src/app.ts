@@ -1,11 +1,15 @@
 import express, { Request, Response, NextFunction } from "express";
 import morgan from "morgan";
 import cors from "cors";
-import chalk from "chalk";
 
 import authRoutes from "./routes/authRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
+import cartRoutes from "./routes/cartRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
 import { logMessages } from "./middlewares/logMessages.js";
+import { authenticateToken } from "./middlewares/authenticateToken.js";
+import { errorHandler } from "./middlewares/errorHandler.js";
 
 const app = express();
 
@@ -21,8 +25,14 @@ app.use(express.json());
 app.use(logMessages);
 
 // Public routes (no authentication required)
-app.use("/api/v1", authRoutes);
-app.use("/api/v1", productRoutes);
+app.use("/api/v1/auth", authRoutes);
+
+// Protected routes (authentication required)
+app.use("/api/v1/products", authenticateToken, productRoutes);
+app.use("/api/v1/users", authenticateToken, userRoutes);
+app.use("/api/v1/account/carts", authenticateToken, cartRoutes);
+app.use("/api/v1/account/orders", authenticateToken, orderRoutes);
+app.use("/api/v1/admin/orders", authenticateToken, orderRoutes);
 
 // Root route
 app.get("/api/v1", (req: Request, res: Response) => {
@@ -37,9 +47,6 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 });
 
 // Global error handling middleware
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-  console.error(chalk.red(err.message || 'An unknown error occurred'));
-  res.status(err.status || 500).json({ message: err.message || 'Internal Server Error' });
-});
+app.use(errorHandler);
 
 export default app;

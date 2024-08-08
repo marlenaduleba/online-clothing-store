@@ -42,10 +42,10 @@ The Online Clothing Store API allows customers to search for specific clothing i
 ### Authentication
 
 <details>
-   <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center">&nbsp;&nbsp;<code>/api/v1/register</code>&nbsp;&nbsp;<strong>- User Registration</strong></summary>
+   <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center">&nbsp;&nbsp;<code>/api/v1/auth/register</code>&nbsp;&nbsp;<strong>- User Registration</strong></summary>
 
 - **Description**: This endpoint registers a new user with the provided details. The role is automatically assigned as `user` and cannot be specified during registration.
-- **Endpoint**: `/api/v1/register`
+- **Endpoint**: `/api/v1/auth/register`
 - **Method**: `POST`
 - **Request Body**:
   ```json
@@ -62,7 +62,7 @@ The Online Clothing Store API allows customers to search for specific clothing i
 - **Example Request**:
 
   ```sh
-  curl -X POST '{base_url}/api/v1/register' \
+  curl -X POST '{base_url}/api/v1/auth/register' \
   -H 'Content-Type: application/json' \
   -d '{
     "email": "user@example.com",
@@ -90,10 +90,10 @@ The Online Clothing Store API allows customers to search for specific clothing i
   </details>
 
 <details>
-   <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center">&nbsp;&nbsp;<code>/api/v1/login</code>&nbsp;&nbsp;<strong>- User Login</strong></summary>
+   <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center">&nbsp;&nbsp;<code>/api/v1/auth/login</code>&nbsp;&nbsp;<strong>- User Login</strong></summary>
 
 - **Description**: This endpoint authenticates a user and returns a JWT token if the credentials are valid. The token can be used to access protected routes and resources.
-- **Endpoint**: `/api/v1/login`
+- **Endpoint**: `/api/v1/auth/login`
 - **Method**: `POST`
 - **Request Body**:
   ```json
@@ -108,7 +108,7 @@ The Online Clothing Store API allows customers to search for specific clothing i
 - **Example Request**:
 
   ```sh
-  curl -X POST '{base_url}/api/v1/login' \
+  curl -X POST '{base_url}/api/v1/auth/login' \
   -H 'Content-Type: application/json' \
   -d '{
     "email": "user@example.com",
@@ -129,10 +129,10 @@ The Online Clothing Store API allows customers to search for specific clothing i
   </details>
 
 <details>
-<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center">&nbsp;&nbsp;<code>/api/v1/logout</code>&nbsp;&nbsp;<strong>- User Logout</strong></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center">&nbsp;&nbsp;<code>/api/v1/auth/logout</code>&nbsp;&nbsp;<strong>- User Logout</strong></summary>
 
 - **Description**: This endpoint logs out the user by invalidating their JWT token and refresh token. After successful logout, the token should no longer be accepted for authenticated requests.
-- **Endpoint**: `/api/v1/logout`
+- **Endpoint**: `/api/v1/auth/logout`
 - **Method**: `POST`
 - **Request Headers**:
   - `Authorization` (string, required) - The JWT token to be invalidated.
@@ -149,7 +149,7 @@ The Online Clothing Store API allows customers to search for specific clothing i
 - **Example Request**:
 
   ```sh
-  curl -X POST '{base_url}/api/v1/logout' \
+  curl -X POST '{base_url}/api/v1/auth/logout' \
   -H 'Authorization: Bearer {token}' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -166,10 +166,10 @@ The Online Clothing Store API allows customers to search for specific clothing i
     </details>
 
 <details>
-  <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center">&nbsp;&nbsp;<code>/api/v1/refresh</code>&nbsp;&nbsp;<strong>- Refresh Token</strong></summary>
+  <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center">&nbsp;&nbsp;<code>/api/v1/auth/refresh</code>&nbsp;&nbsp;<strong>- Refresh Token</strong></summary>
 
 - **Description**: This endpoint refreshes the JWT token using a valid refresh token.
-- **Endpoint**: `/api/v1/refresh`
+- **Endpoint**: `/api/v1/auth/refresh`
 - **Method**: `POST`
 - **Request Body**:
   ```json
@@ -183,7 +183,7 @@ The Online Clothing Store API allows customers to search for specific clothing i
 - **Example Request**:
 
   ```sh
-  curl -X POST '{base_url}/api/v1/refresh' \
+  curl -X POST '{base_url}/api/v1/auth/refresh' \
   -H 'Content-Type: application/json' \
   -d '{
     "refreshToken": "dGhpcyBpcyBhIHNhbXBsZSByZWZyZXNoIHRva2Vu"
@@ -207,6 +207,8 @@ The Online Clothing Store API allows customers to search for specific clothing i
 - **Description**: This endpoint retrieves the details of the currently logged-in user.
 - **Endpoint**: `/api/v1/account`
 - **Method**: `GET`
+- **Request Headers**:
+  - `Authorization` (string, required) - The JWT token for authorization.
 - **Response**:
   - `200 OK` with currently logged user's details
   - `401 Unauthorized` on invalid credentials

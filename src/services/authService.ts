@@ -22,7 +22,7 @@ export const loginUser = async (email: string, password: string) => {
 
   const token = createJWT(
     { alg: 'HS256', typ: 'JWT' },
-    { sub: user.id.toString(), name: user.email, iat: Math.floor(Date.now() / 1000) },
+    { sub: user.id.toString(), name: user.email, role: user.role, iat: Math.floor(Date.now() / 1000) },
     process.env.JWT_SECRET || 'secret'
   );
 
@@ -43,7 +43,7 @@ export const refreshUserToken = async (refreshToken: string) => {
 
   const token = createJWT(
     { alg: 'HS256', typ: 'JWT' },
-    { sub: user.id.toString(), name: user.email, iat: Math.floor(Date.now() / 1000) },
+    { sub: user.id.toString(), name: user.email, role: user.role, iat: Math.floor(Date.now() / 1000) },
     process.env.JWT_SECRET || 'secret'
   );
 
