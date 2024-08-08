@@ -458,9 +458,7 @@ curl '{base_url}/api/v1/account' \
 ### Products
 
 <details>
-<summary>&nbsp;&nbsp;<img alt="Static Badge"
-
- src="https://img.shields.io/badge/POST-0F67B1" align="center">&nbsp;&nbsp;<code>/api/v1/admin/products</code>&nbsp;&nbsp;<strong>- Create Product (Admin Only)</strong></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center">&nbsp;&nbsp;<code>/api/v1/admin/products</code>&nbsp;&nbsp;<strong>- Create Product (Admin Only)</strong></summary>
 
 - **Description**: This endpoint is used by administrators to create a new product in the system. Access to this endpoint is restricted to administrators.
 - **Endpoint**: `/api/v1/admin/products`
