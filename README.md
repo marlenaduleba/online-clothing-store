@@ -908,25 +908,44 @@ curl '{base_url}/api/v1/account' \
 <details>
 <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center">&nbsp;&nbsp;<code>/api/v1/account/orders</code>&nbsp;&nbsp;<strong>- Create Order</strong></summary>
 
-- **Description**: Creates a new order based on the shopping cart of the currently logged-in user. This endpoint is accessible only to authenticated users. The request requires a valid JWT token to ensure that the user can create an order from their own cart.
+- **Description**: Creates a new order for the currently logged-in user. This endpoint is accessible only to authenticated users.
 - **Endpoint**: `/api/v1/account/orders`
 - **Method**: `POST`
 - **Request Headers**:
-  - `Authorization` (string, required) - The JWT token for authorization. This token ensures that only the authenticated user can create an order from their own cart.
+  - `Authorization` (string, required) - The JWT token for authorization.
   - `Content-Type` (string, required) - Should be `application/json`.
+- **Request Body**:
+  ```json
+  {
+    "items": [
+      {
+        "product_id": "number",
+        "quantity": "number",
+        "price": "number"
+      }
+    ]
+  }
+  ```
 - **Response**:
-
-  - `201 Created` with order details
-  - `400 Bad Request` on validation error (e.g., invalid cart contents)
+  - `201 Created` with the details of the created order
+  - `400 Bad Request` on validation error
   - `401 Unauthorized` if the token is missing or invalid
-  - `404 Not Found` if the cart is empty or doesn't exist
 
 - **Example Request**:
 
   ```sh
   curl -X POST '{base_url}/api/v1/account/orders' \
   -H 'Authorization: Bearer {token}' \
-  -H 'Content-Type: application/json'
+  -H 'Content-Type: application/json' \
+  -d '{
+    "items": [
+      {
+        "product_id": 1,
+        "quantity": 2,
+        "price": 50.0
+      }
+    ]
+  }'
   ```
 
 - **Example Response**:
@@ -935,34 +954,27 @@ curl '{base_url}/api/v1/account' \
   {
     "id": "1",
     "user_id": "1",
-    "items": [
-      {
-        "product_id": "1",
-        "quantity": 2,
-        "price": 100.0,
-        "subtotal": 200.0
-      }
-    ],
-    "total": 200.0,
+    "total": 100.0,
     "created_at": "2024-07-16T10:00:00Z",
-    "updated_at": "2024-07-16T10:00:00Z"
+    "updated_at": "2024-07-16T10:10:00Z"
   }
   ```
 
-  </details>
+</details>
 
 <details>
 <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/admin/orders</code>&nbsp;&nbsp;<strong>- Get All Orders (Admin Only)</strong></summary>
 
-- **Description**: Retrieves a list of all orders in the system. This endpoint is restricted to administrators only to ensure that order data is protected and only accessible by authorized personnel.
+- **Description**: Retrieves a list of all orders in the system. This endpoint is restricted to administrators.
 - **Endpoint**: `/api/v1/admin/orders`
 - **Method**: `GET`
 - **Request Headers**:
-  - `Authorization` (string, required) - The JWT token for authorization. Only users with admin roles or specific permissions should be able to access this endpoint.
+  - `Authorization` (string, required) - The JWT token for authorization.
 - **Response**:
   - `200 OK` with a list of orders
-  - `401 Unauthorized` if the user is not authorized or the token is missing/invalid
-  - `403 Forbidden` if the authenticated user does not have the necessary admin role or permissions
+  - `401 Unauthorized` if the token is missing or invalid
+  - `403 Forbidden` if the authenticated user does not have the necessary permissions
+
 - **Example Request**:
 
   ```sh
@@ -977,59 +989,42 @@ curl '{base_url}/api/v1/account' \
     {
       "id": "1",
       "user_id": "1",
-      "items": [
-        {
-          "product_id": "1",
-          "quantity": 2,
-          "price": 100.0,
-          "subtotal": 200.0
-        }
-      ],
-      "total": 200.0,
+      "total": 100.0,
       "created_at": "2024-07-16T10:00:00Z",
-      "updated_at": "2024-07-16T10:00:00Z"
+      "updated_at": "2024-07-16T10:10:00Z"
     },
     {
       "id": "2",
       "user_id": "2",
-      "items": [
-        {
-          "product_id": "2",
-          "quantity": 1,
-          "price": 150.0,
-          "subtotal": 150.0
-        }
-      ],
-      "total": 150.0,
-      "created_at": "2024-07-16T11:00:00Z",
-      "updated_at": "2024-07-16T11:10:00Z"
+      "total": 200.0,
+      "created_at": "2024-07-17T11:00:00Z",
+      "updated_at": "2024-07-17T11:10:00Z"
     }
   ]
   ```
 
-  </details>
+</details>
 
 <details>
 <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/admin/orders/{id}</code>&nbsp;&nbsp;<strong>- Get Order by ID (Admin Only)</strong></summary>
 
-- **Description**: Retrieves the details of a specific order by its ID. This endpoint is accessible only to authenticated users with administrative privileges. It provides detailed information about the order, including items, quantities, and pricing. This endpoint helps administrators to view individual orders for management or support purposes.
+- **Description**: Retrieves detailed information about a specific order based on the order ID. This endpoint is restricted to administrators.
 - **Endpoint**: `/api/v1/admin/orders/{id}`
 - **Method**: `GET`
 - **Path Parameters**:
-  - `id` (string, required) - The ID of the order to retrieve.
+  - `id` (string, required) - The ID of the order to be retrieved
 - **Request Headers**:
-  - `Authorization` (string, required) - The JWT token for authorization. This token ensures that only authenticated administrators can access this endpoint.
+  - `Authorization` (string, required) - The JWT token for authorization.
 - **Response**:
-
-  - `200 OK` with order details. This includes the order's ID, user ID, items (with product ID, quantity, price, and subtotal), total amount, and timestamps for creation and last update.
-  - `404 Not Found` if the specified order does not exist in the database.
-  - `401 Unauthorized` if the request lacks valid authorization credentials.
-  - `403 Forbidden` if the user is not authorized to access this endpoint (e.g., not an admin).
+  - `200 OK` with order details
+  - `401 Unauthorized` if the token is missing or invalid
+  - `403 Forbidden` if the authenticated user does not have the necessary permissions
+  - `404 Not Found` if the order does not exist
 
 - **Example Request**:
 
   ```sh
-  curl -X GET '{base_url}/api/v1/admin/orders/{id}' \
+  curl '{base_url}/api/v1/admin/orders/{id}' \
   -H 'Authorization: Bearer {admin_token}'
   ```
 
@@ -1039,17 +1034,9 @@ curl '{base_url}/api/v1/account' \
   {
     "id": "1",
     "user_id": "1",
-    "items": [
-      {
-        "product_id": "1",
-        "quantity": 2,
-        "price": 100.0,
-        "subtotal": 200.0
-      }
-    ],
-    "total": 200.0,
+    "total": 100.0,
     "created_at": "2024-07-16T10:00:00Z",
-    "updated_at": "2024-07-16T10:00:00Z"
+    "updated_at": "2024-07-16T10:10:00Z"
   }
   ```
 
@@ -1058,15 +1045,15 @@ curl '{base_url}/api/v1/account' \
 <details>
 <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/account/orders</code>&nbsp;&nbsp;<strong>- Get Current User's Orders</strong></summary>
 
-- **Description**: Retrieves all orders placed by the currently logged-in user. This endpoint is accessible only to authenticated users. The request requires a valid JWT token to ensure that the user can access their own orders.
+- **Description**: Retrieves a list of all orders placed by the currently logged-in user. This endpoint is accessible only to authenticated users.
 - **Endpoint**: `/api/v1/account/orders`
 - **Method**: `GET`
 - **Request Headers**:
-  - `Authorization` (string, required) - The JWT token for authorization. This token ensures that only the authenticated user can access their own orders.
+  - `Authorization` (string, required) - The JWT token for authorization.
 - **Response**:
-
   - `200 OK` with a list of the user's orders
   - `401 Unauthorized` if the token is missing or invalid
+  - `404 Not Found` if the user has no orders
 
 - **Example Request**:
 
@@ -1082,54 +1069,29 @@ curl '{base_url}/api/v1/account' \
     {
       "id": "1",
       "user_id": "1",
-      "items": [
-        {
-          "product_id": "1",
-          "quantity": 2,
-          "price": 100.0,
-          "subtotal": 200.0
-        }
-      ],
-      "total": 200.0,
+      "total": 100.0,
       "created_at": "2024-07-16T10:00:00Z",
       "updated_at": "2024-07-16T10:10:00Z"
-    },
-    {
-      "id": "2",
-      "user_id": "1",
-      "items": [
-        {
-          "product_id": "2",
-          "quantity": 1,
-          "price": 50.0,
-          "subtotal": 50.0
-        }
-      ],
-      "total": 50.0,
-      "created_at": "2024-07-17T11:00:00Z",
-      "updated_at": "2024-07-17T11:10:00Z"
     }
   ]
   ```
 
-  </details>
+</details>
 
 <details>
 <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/account/orders/{id}</code>&nbsp;&nbsp;<strong>- Get Current User's Order by ID</strong></summary>
 
-- **Description**: Retrieves details of a specific order placed by the currently logged-in user. This endpoint is accessible only to authenticated users. The request requires a valid JWT token to ensure that the user can access their own order details.
+- **Description**: Retrieves detailed information about a specific order placed by the currently logged-in user based on the order ID. This endpoint is accessible only to authenticated users.
 - **Endpoint**: `/api/v1/account/orders/{id}`
 - **Method**: `GET`
 - **Path Parameters**:
-  - `id` (string, required) - The ID of the order to be retrieved.
+  - `id` (string, required) - The ID of the order to be retrieved
 - **Request Headers**:
-  - `Authorization` (string, required) - The JWT token for authorization. This token ensures that only the authenticated user can access their own order details.
+  - `Authorization` (string, required) - The JWT token for authorization.
 - **Response**:
-
-  - `200 OK` with details of the specified order
+  - `200 OK` with order details
   - `401 Unauthorized` if the token is missing or invalid
-  - `403 Forbidden` if the user tries to access an order that does not belong to them
-  - `404 Not Found` if the order does not exist
+  - `404 Not Found` if the order does not exist or does not belong to the current user
 
 - **Example Request**:
 
@@ -1142,53 +1104,40 @@ curl '{base_url}/api/v1/account' \
 
   ```json
   {
-    "id": "1",
+    "id": "
+
+1",
     "user_id": "1",
-    "items": [
-      {
-        "product_id": "1",
-        "quantity": 2,
-        "price": 100.0,
-        "subtotal": 200.0
-      }
-    ],
-    "total": 200.0,
+    "total": 100.0,
     "created_at": "2024-07-16T10:00:00Z",
     "updated_at": "2024-07-16T10:10:00Z"
   }
   ```
 
-  </details>
+</details>
 
 <details>
 <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/PUT-FF8C00" align="center">&nbsp; &nbsp; <code>/api/v1/account/orders/{id}</code>&nbsp;&nbsp;<strong>- Update Order</strong></summary>
 
-- **Description**: Updates an existing order for the currently logged-in user, including the ability to remove a product from the order by setting its quantity to 0. This endpoint is accessible only to authenticated users. The request requires a valid JWT token to ensure that the user can update their own orders.
+- **Description**: Updates the details of a specific order placed by the currently logged-in user. This endpoint is accessible only to authenticated users.
 - **Endpoint**: `/api/v1/account/orders/{id}`
 - **Method**: `PUT`
 - **Path Parameters**:
-  - `id` (string, required) - The ID of the order to be updated.
+  - `id` (string, required) - The ID of the order to be updated
 - **Request Headers**:
-  - `Authorization` (string, required) - The JWT token for authorization. This token ensures that only the authenticated user can update their own order.
+  - `Authorization` (string, required) - The JWT token for authorization.
   - `Content-Type` (string, required) - Should be `application/json`.
 - **Request Body**:
   ```json
   {
-    "items": [
-      {
-        "product_id": "string", // The ID of the product in the order
-        "quantity": "number" // The updated quantity of the product. Use 0 to remove the product.
-      }
-    ]
+    "total": "number" // The updated total for the order
   }
   ```
 - **Response**:
-
-  - `200 OK` with updated order details
-  - `400 Bad Request` on validation error (e.g., invalid product ID, quantity not a positive integer)
+  - `200 OK` with the updated order details
+  - `400 Bad Request` on validation error
   - `401 Unauthorized` if the token is missing or invalid
-  - `403 Forbidden` if the user tries to update an order that does not belong to them
-  - `404 Not Found` if the order does not exist
+  - `404 Not Found` if the order does not exist or does not belong to the current user
 
 - **Example Request**:
 
@@ -1197,16 +1146,7 @@ curl '{base_url}/api/v1/account' \
   -H 'Authorization: Bearer {token}' \
   -H 'Content-Type: application/json' \
   -d '{
-    "items": [
-      {
-        "product_id": "1",
-        "quantity": 3
-      },
-      {
-        "product_id": "2",
-        "quantity": 0
-      }
-    ]
+    "total": 150.0
   }'
   ```
 
@@ -1216,58 +1156,44 @@ curl '{base_url}/api/v1/account' \
   {
     "id": "1",
     "user_id": "1",
-    "items": [
-      {
-        "product_id": "1",
-        "quantity": 3,
-        "price": 100.0,
-        "subtotal": 300.0
-      }
-    ],
-    "total": 300.0,
+    "total": 150.0,
     "created_at": "2024-07-16T10:00:00Z",
     "updated_at": "2024-07-16T10:20:00Z"
   }
   ```
 
-  </details>
+</details>
 
 <details>
 <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/DEL-E4003A" align="center">&nbsp; &nbsp; <code>/api/v1/admin/orders/{id}</code>&nbsp;&nbsp;<strong>- Delete Order by ID (Admin Only)</strong></summary>
 
-- **Description**: Deletes an existing order by its ID. This endpoint is accessible only to authenticated users with admin privileges. The request requires a valid JWT token to ensure that the user has the necessary permissions to delete orders.
+- **Description**: Deletes a specific order based on the order ID. This endpoint is restricted to administrators.
 - **Endpoint**: `/api/v1/admin/orders/{id}`
 - **Method**: `DELETE`
 - **Path Parameters**:
-  - `id` (string, required) - The ID of the order to be deleted.
+  - `id` (string, required) - The ID of the order to be deleted
 - **Request Headers**:
-  - `Authorization` (string, required) - The JWT token for authorization. This token ensures that only an authenticated admin can delete orders.
-  - `Content-Type` (string, required) - Should be `application/json`.
+  - `Authorization` (string, required) - The JWT token for authorization.
 - **Response**:
-
-  - `200 OK` on successful deletion of the order
-  - `400 Bad Request` if the order ID is invalid
+  - `200 OK` on successful deletion
   - `401 Unauthorized` if the token is missing or invalid
-  - `403 Forbidden` if the user does not have admin privileges
+  - `403 Forbidden` if the authenticated user does not have the necessary permissions
   - `404 Not Found` if the order does not exist
 
 - **Example Request**:
 
   ```sh
   curl -X DELETE '{base_url}/api/v1/admin/orders/{id}' \
-  -H 'Authorization: Bearer {admin_token}' \
-  -H 'Content-Type: application/json'
+  -H 'Authorization: Bearer {admin_token}'
   ```
 
 - **Example Response**:
 
   ```json
-  {
-    "message": "Order with ID {id} has been successfully deleted."
-  }
+  {}
   ```
 
-  </details>
+</details>
 
 ## Running the Project
 
