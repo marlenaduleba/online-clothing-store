@@ -736,13 +736,13 @@ curl '{base_url}/api/v1/account' \
 - **Request Body**:
   ```json
   {
-    "product_id": "string", // The ID of the product to be added to the cart
-    "quantity": "integer" // The quantity of the product to be added
+    "product_id": "number", // The ID of the product to be added to the cart
+    "quantity": "number", // The quantity of the product to be added
+    "price": "number" // The price of the product to be added
   }
   ```
 - **Response**:
-
-  - `200 OK` with updated cart details
+  - `201 Created` with details of the added cart item
   - `400 Bad Request` on validation error (e.g., invalid product ID, quantity not a positive integer)
   - `401 Unauthorized` if the token is missing or invalid
   - `404 Not Found` if the specified product does not exist
@@ -754,8 +754,9 @@ curl '{base_url}/api/v1/account' \
   -H 'Authorization: Bearer {token}' \
   -H 'Content-Type: application/json' \
   -d '{
-    "product_id": "1",
-    "quantity": 2
+    "product_id": 1,
+    "quantity": 2,
+    "price": 50.0
   }'
   ```
 
@@ -764,22 +765,15 @@ curl '{base_url}/api/v1/account' \
   ```json
   {
     "id": "1",
-    "user_id": "1",
-    "items": [
-      {
-        "product_id": "1",
-        "quantity": 2,
-        "price": 50.0,
-        "subtotal": 100.0
-      }
-    ],
-    "total": 100.0,
-    "created_at": "2024-07-16T10:00:00Z",
-    "updated_at": "2024-07-16T10:10:00Z"
+    "cart_id": "1",
+    "product_id": "1",
+    "quantity": 2,
+    "price": 50.0,
+    "subtotal": 100.0
   }
   ```
 
-  </details>
+</details>
 
 <details>
 <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/account/carts</code>&nbsp;&nbsp;<strong>- Get Current User's Cart</strong></summary>
@@ -790,10 +784,9 @@ curl '{base_url}/api/v1/account' \
 - **Request Headers**:
   - `Authorization` (string, required) - The JWT token for authorization. This token ensures that only the authenticated user can access their own cart.
 - **Response**:
-
   - `200 OK` with cart details
   - `401 Unauthorized` if the token is missing or invalid
-  - `404 Not Found` if the carts for the current user does not exist
+  - `404 Not Found` if the cart for the current user does not exist
 
 - **Example Request**:
 
@@ -810,20 +803,27 @@ curl '{base_url}/api/v1/account' \
     "user_id": "1",
     "items": [
       {
+        "id": "1",
+        "cart_id": "1",
         "product_id": "1",
-        "quantity": 2
+        "quantity": 2,
+        "price": 50.0,
+        "subtotal": 100.0
       }
-    ]
+    ],
+    "total": 100.0,
+    "created_at": "2024-07-16T10:00:00Z",
+    "updated_at": "2024-07-16T10:10:00Z"
   }
   ```
 
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/PUT-FF8C00" align="center">&nbsp; &nbsp; <code>/api/v1/account/cart</code>&nbsp;&nbsp;<strong>- Update Cart</strong></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/PUT-FF8C00" align="center">&nbsp; &nbsp; <code>/api/v1/account/carts</code>&nbsp;&nbsp;<strong>- Update Cart</strong></summary>
 
-- **Description**: Updates the shopping cart of the currently logged-in user. This endpoint allows for updating the quantity of items in the cart, and removing items by setting their quantity to 0. This endpoint is accessible only to authenticated users. The request requires a valid JWT token to ensure that the user can modify their own cart.
-- **Endpoint**: `/api/v1/account/cart`
+- **Description**: Updates the shopping cart of the currently logged-in user. This endpoint allows for updating the quantity of items in the cart. This endpoint is accessible only to authenticated users. The request requires a valid JWT token to ensure that the user can modify their own cart.
+- **Endpoint**: `/api/v1/account/carts`
 - **Method**: `PUT`
 - **Request Headers**:
   - `Authorization` (string, required) - The JWT token for authorization. This token ensures that only the authenticated user can modify their own cart.
@@ -831,39 +831,25 @@ curl '{base_url}/api/v1/account' \
 - **Request Body**:
   ```json
   {
-    "items": [
-      {
-        "product_id": "string", // The ID of the product in the cart
-        "quantity": "number" // The updated quantity of the product. Use 0 to remove the product.
-      }
-    ]
+    "cart_item_id": "number", // The ID of the cart item
+    "quantity": "number" // The updated quantity of the product
   }
   ```
 - **Response**:
-
-  - `200 OK` with updated cart details
-  - `400 Bad Request` on validation error (e.g., invalid product ID, quantity not a positive integer)
+  - `200 OK` with updated cart item details
+  - `400 Bad Request` on validation error (e.g., invalid cart item ID, quantity not a positive integer)
   - `401 Unauthorized` if the token is missing or invalid
-  - `403 Forbidden` if the user tries to update a cart that does not belong to them
-  - `404 Not Found` if the cart or product does not exist
+  - `404 Not Found` if the cart item does not exist
 
 - **Example Request**:
 
   ```sh
-  curl -X PUT '{base_url}/api/v1/account/cart' \
+  curl -X PUT '{base_url}/api/v1/account/carts' \
   -H 'Authorization: Bearer {token}' \
   -H 'Content-Type: application/json' \
   -d '{
-    "items": [
-      {
-        "product_id": "1",
-        "quantity": 3
-      },
-      {
-        "product_id": "2",
-        "quantity": 0
-      }
-    ]
+    "cart_item_id": 1,
+    "quantity": 3
   }'
   ```
 
@@ -872,23 +858,16 @@ curl '{base_url}/api/v1/account' \
   ```json
   {
     "id": "1",
-    "user_id": "1",
-    "items": [
-      {
-        "product_id": "1",
-        "quantity": 3,
-        "price": 100.0,
-        "subtotal": 300.0
-      }
-    ],
-    "total": 300.0,
-    "created_at": "2024-07-16T10:00:00Z",
-    "updated_at": "2024-07-16T10:20:00Z"
+    "cart_id": "1",
+    "product_id": "1",
+    "quantity": 3,
+    "price": 50.0,
+    "subtotal": 150.0
   }
   ```
 
 </details>
-  
+
 <details>
 <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/DEL-E4003A" align="center">&nbsp; &nbsp; <code>/api/v1/account/carts</code>&nbsp;&nbsp;<strong>- Clear Cart</strong></summary>
 
@@ -896,12 +875,11 @@ curl '{base_url}/api/v1/account' \
 - **Endpoint**: `/api/v1/account/carts`
 - **Method**: `DELETE`
 - **Request Headers**:
-  - `Authorization` (string, required) - The JWT token for authorization. This token ensures that only the authenticated user can clear their own carts.
+  - `Authorization` (string, required) - The JWT token for authorization. This token ensures that only the authenticated user can clear their own cart.
 - **Response**:
-
   - `200 OK` with the empty cart details
-  - `404 Not Found` if the cart does not exist
   - `401 Unauthorized` if the token is missing or invalid
+  - `404 Not Found` if the cart does not exist
 
 - **Example Request**:
 
@@ -923,7 +901,7 @@ curl '{base_url}/api/v1/account' \
   }
   ```
 
-  </details>
+</details>
 
 ### Orders
 

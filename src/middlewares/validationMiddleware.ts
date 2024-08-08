@@ -60,3 +60,29 @@ export const validateUserUpdate = [
     next();
   }
 ];
+
+export const validateAddItemToCart = [
+  body('product_id').isInt().withMessage('Product ID must be an integer'),
+  body('quantity').isInt({ min: 1 }).withMessage('Quantity must be at least 1'),
+  body('price').isFloat({ min: 0 }).withMessage('Price must be a positive number'),
+  (req: Request, res: Response, next: NextFunction) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    next();
+  }
+];
+
+export const validateUpdateCartItem = [
+  body('cart_item_id').isInt().withMessage('Cart Item ID must be an integer'),
+  body('quantity').isInt({ min: 1 }).withMessage('Quantity must be at least 1'),
+  (req: Request, res: Response, next: NextFunction) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    next();
+  }
+];
+
