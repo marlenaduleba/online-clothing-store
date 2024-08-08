@@ -287,7 +287,7 @@ curl '{base_url}/api/v1/account' \
   }
   ```
 
-  </details>
+</details>
 
 <details>
 <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/admin/users</code>&nbsp;&nbsp;<strong>- Get All Users (Admin Only)</strong></summary>
@@ -329,7 +329,7 @@ curl '{base_url}/api/v1/account' \
   ]
   ```
 
-  </details>
+</details>
 
 <details>
 <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/admin/users/{id}</code>&nbsp;&nbsp;<strong>- Get User by ID (Admin Only)</strong></summary>
@@ -366,7 +366,7 @@ curl '{base_url}/api/v1/account' \
   }
   ```
 
-  </details>
+</details>
 
 <details>
 <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/PUT-FF8C00" align="center">&nbsp; &nbsp; <code>/api/v1/admin/users/{id}</code>&nbsp;&nbsp;<strong>- Update User by ID (Admin Only)</strong></summary>
@@ -422,7 +422,7 @@ curl '{base_url}/api/v1/account' \
   }
   ```
 
-  </details>
+</details>
 
 <details>
 <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/DEL-E4003A" align="center">&nbsp; &nbsp; <code>/api/v1/admin/users/{id}</code>&nbsp;&nbsp;<strong>- Delete User by ID (Admin Only)</strong></summary>
@@ -453,14 +453,16 @@ curl '{base_url}/api/v1/account' \
   {}
   ```
 
-  </details>
+</details>
 
 ### Products
 
 <details>
-<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center">&nbsp;&nbsp;<code>/api/v1/admin/products</code>&nbsp;&nbsp;<strong>- Create Product (Admin Only)</strong></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge"
 
-- **Description**: This endpoint allows administrators to create a new product in the system. The request must include all necessary details about the product, including its name, description, price, brand, and category. Access to this endpoint is restricted to users with administrative roles.
+ src="https://img.shields.io/badge/POST-0F67B1" align="center">&nbsp;&nbsp;<code>/api/v1/admin/products</code>&nbsp;&nbsp;<strong>- Create Product (Admin Only)</strong></summary>
+
+- **Description**: This endpoint is used by administrators to create a new product in the system. Access to this endpoint is restricted to administrators.
 - **Endpoint**: `/api/v1/admin/products`
 - **Method**: `POST`
 - **Request Body**:
@@ -471,31 +473,27 @@ curl '{base_url}/api/v1/account' \
     "price": "number",
     "brand": "string",
     "category": "string",
-    "size": "M"
+    "size": "string"
   }
   ```
 - **Request Headers**:
-
-  - `Authorization` (string, required) - The JWT token for authorization. Only users with administrative roles or specific permissions should be able to access this endpoint.
-
+  - `Authorization` (string, required) - The JWT token for authorization. Only users with admin roles or specific permissions should be able to access this endpoint.
 - **Response**:
-
-  - `201 Created` with details of the newly created product, including `id`, `name`, `description`, `price`, `brand`, and `category`
+  - `201 Created` with details of the newly created product
   - `400 Bad Request` if the request body is invalid or missing required fields
   - `403 Forbidden` if the authenticated user does not have the necessary permissions to create a new product
-
 - **Example Request**:
 
   ```sh
   curl -X POST '{base_url}/api/v1/admin/products' \
-  -H 'Content-Type: application/json' \
   -H 'Authorization: Bearer {admin_token}' \
+  -H 'Content-Type: application/json' \
   -d '{
-    "name": "Product 3",
-    "description": "Description of product 3",
-    "price": 200.00,
-    "brand": "Brand C",
-    "category": "Category Z",
+    "name": "Product Name",
+    "description": "Product Description",
+    "price": 19.99,
+    "brand": "Brand Name",
+    "category": "Category Name",
     "size": "M"
   }'
   ```
@@ -504,36 +502,31 @@ curl '{base_url}/api/v1/account' \
 
   ```json
   {
-    "id": "3",
-    "name": "Product 3",
-    "description": "Description of product 3",
-    "price": 200.0,
-    "brand": "Brand C",
-    "category": "Category Z",
+    "id": "1",
+    "name": "Product Name",
+    "description": "Product Description",
+    "price": 19.99,
+    "brand": "Brand Name",
+    "category": "Category Name",
     "size": "M"
   }
   ```
 
-  </details>
+</details>
 
 <details>
 <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/products</code>&nbsp;&nbsp;<strong>- Get All Products</strong></summary>
 
-- **Description**: Retrieves a list of all products available in the system, with the option to filter by brand, category, and size. The response includes details such as ID, name, description, price, brand, category, and size. This endpoint is publicly accessible and does not require authentication or authorization.
+- **Description**: This endpoint retrieves a list of all products in the system. Access to this endpoint is public.
 - **Endpoint**: `/api/v1/products`
 - **Method**: `GET`
-- **Query Parameters**:
-  - `brand` (string, optional) - Filter products by brand.
-  - `category` (string, optional) - Filter products by category.
-  - `size` (string, optional) - Filter products by size.
 - **Response**:
-
-  - `200 OK` with a list of products matching the specified filters. Each product includes details such as ID, name, description, price, brand, category, and size.
-
+  - `200 OK` with a list of products
+  - `500 Internal Server Error` if there is a server error
 - **Example Request**:
 
   ```sh
-  curl '{base_url}/api/v1/products?brand=BrandA&category=CategoryX&size=M'
+  curl '{base_url}/api/v1/products'
   ```
 
 - **Example Response**:
@@ -542,20 +535,20 @@ curl '{base_url}/api/v1/account' \
   [
     {
       "id": "1",
-      "name": "Product 1",
-      "description": "Description of product 1",
-      "price": 100.0,
-      "brand": "Brand A",
-      "category": "Category X",
+      "name": "Product Name",
+      "description": "Product Description",
+      "price": 19.99,
+      "brand": "Brand Name",
+      "category": "Category Name",
       "size": "M"
     },
     {
       "id": "2",
-      "name": "Product 2",
-      "description": "Description of product 2",
-      "price": 150.0,
-      "brand": "Brand A",
-      "category": "Category X",
+      "name": "Another Product",
+      "description": "Another Description",
+      "price": 29.99,
+      "brand": "Another Brand",
+      "category": "Another Category",
       "size": "L"
     }
   ]
@@ -566,15 +559,16 @@ curl '{base_url}/api/v1/account' \
 <details>
 <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/products/{id}</code>&nbsp;&nbsp;<strong>- Get Product by ID</strong></summary>
 
-- **Description**: Retrieves detailed information about a specific product based on its ID. This endpoint provides all available details about the product, including its name, description, price, brand, and category. This endpoint is accessible to all users, regardless of their role or authorization status.
+- **Description**: Retrieves detailed information about a specific product based on the product ID. Access to this endpoint is public.
 - **Endpoint**: `/api/v1/products/{id}`
 - **Method**: `GET`
 - **Path Parameters**:
-  - `id` (string, required) - The ID of the product to retrieve
+  - `id` (string, required) - The ID of the product whose details are being retrieved
 - **Response**:
 
   - `200 OK` with product details
   - `404 Not Found` if the product does not exist
+  - `500 Internal Server Error` if there is a server error
 
 - **Example Request**:
 
@@ -587,36 +581,35 @@ curl '{base_url}/api/v1/account' \
   ```json
   {
     "id": "1",
-    "name": "Product 1",
-    "description": "Description of product 1",
-    "price": 100.0,
-    "brand": "Brand A",
-    "category": "Category X",
+    "name": "Product Name",
+    "description": "Product Description",
+    "price": 19.99,
+    "brand": "Brand Name",
+    "category": "Category Name",
     "size": "M"
   }
   ```
 
-  </details>
+</details>
 
 <details>
 <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/products/search</code>&nbsp;&nbsp;<strong>- Search Products</strong></summary>
 
-- **Description**: Searches for products based on a query string that can match either the product name or description. This endpoint provides a way to find products that contain the specified search term in their name or description. It is publicly accessible and does not require authentication or authorization.
+- **Description**: This endpoint allows users to search for products based on a query parameter. Access to this endpoint is public.
 - **Endpoint**: `/api/v1/products/search`
 - **Method**: `GET`
 - **Query Parameters**:
-  - `query` (string, required) - The search term used to find products by name or description. The search is case-insensitive and will return products where the term appears in either the name or description.
-  - `brand` (string, optional) - Filter results by brand.
-  - `category` (string, optional) - Filter results by category.
-  - `size` (string, optional) - Filter results by size.
+  - `q` (string, required) - The search term for the products
 - **Response**:
 
-  - `200 OK` with a list of products matching the search criteria. Each product includes details such as ID, name, description, price, brand, category, and size.
+  - `200 OK` with a list of products matching the search term
+  - `400 Bad Request` if the query parameter is missing
+  - `500 Internal Server Error` if there is a server error
 
 - **Example Request**:
 
   ```sh
-  curl '{base_url}/api/v1/products/search?query=shirt&brand=BrandA&category=CategoryX'
+  curl '{base_url}/api/v1/products/search?q=term'
   ```
 
 - **Example Response**:
@@ -625,21 +618,12 @@ curl '{base_url}/api/v1/account' \
   [
     {
       "id": "1",
-      "name": "Cool Shirt",
-      "description": "A cool shirt with a stylish design.",
-      "price": 29.99,
-      "brand": "Brand A",
-      "category": "Category X",
+      "name": "Product Name",
+      "description": "Product Description",
+      "price": 19.99,
+      "brand": "Brand Name",
+      "category": "Category Name",
       "size": "M"
-    },
-    {
-      "id": "2",
-      "name": "Stylish Shirt",
-      "description": "A stylish shirt that is perfect for any occasion.",
-      "price": 35.0,
-      "brand": "Brand A",
-      "category": "Category X",
-      "size": "L"
     }
   ]
   ```
@@ -649,13 +633,13 @@ curl '{base_url}/api/v1/account' \
 <details>
 <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/PUT-FF8C00" align="center">&nbsp; &nbsp; <code>/api/v1/admin/products/{id}</code>&nbsp;&nbsp;<strong>- Update Product by ID (Admin Only)</strong></summary>
 
-- **Description**: This endpoint allows administrators to update the details of a specific product based on its ID. The request must include the updated product information.
+- **Description**: Updates the details of a specific product based on the product ID. This endpoint is accessible only to administrators.
 - **Endpoint**: `/api/v1/admin/products/{id}`
 - **Method**: `PUT`
 - **Path Parameters**:
-  - `id` (string, required) - The ID of the product to update
+  - `id` (string, required) - The ID of the product whose details are being updated
 - **Request Headers**:
-  - `Authorization` (string, required) - The JWT token for authorization. Only users with admin roles or specific permissions should be able to access this endpoint.
+  - `Authorization` (string, required) - The JWT token for authorization. Only administrators with a valid token should be able to access this endpoint.
 - **Request Body**:
   ```json
   {
@@ -664,29 +648,29 @@ curl '{base_url}/api/v1/account' \
     "price": "number",
     "brand": "string",
     "category": "string",
-    "size": "M"
+    "size": "string"
   }
   ```
 - **Response**:
 
   - `200 OK` with updated product details
   - `400 Bad Request` on validation error
-  - `404 Not Found` if the product doesn't exist
-  - `403 Forbidden` if the authenticated user does not have the necessary permissions to update the product
+  - `404 Not Found` if the product does not exist
+  - `403 Forbidden` if the authenticated user does not have admin privileges
 
 - **Example Request**:
 
   ```sh
   curl -X PUT '{base_url}/api/v1/admin/products/{id}' \
-  -H 'Authorization: Bearer {admin_token}' \
   -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer {admin_token}' \
   -d '{
-    "name": "Updated Product",
-    "description": "Updated description",
-    "price": 250.00,
-    "brand": "New Brand",
-    "category": "New Category",
-    "size": "M"
+    "name": "Updated Product Name",
+    "description": "Updated Product Description",
+    "price": 24.99,
+    "brand": "Updated Brand Name",
+    "category": "Updated Category Name",
+    "size": "L"
   }'
   ```
 
@@ -695,32 +679,34 @@ curl '{base_url}/api/v1/account' \
   ```json
   {
     "id": "1",
-    "name": "Updated Product",
-    "description": "Updated description",
-    "price": 250.0,
-    "brand": "New Brand",
-    "category": "New Category",
+    "name": "Updated Product Name",
+    "description": "Updated Product Description",
+    "price": 24.99,
+    "brand": "Updated Brand Name",
+    "category": "Updated Category Name",
     "size": "L"
   }
   ```
 
-  </details>
+</details>
 
 <details>
 <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/DEL-E4003A" align="center">&nbsp; &nbsp; <code>/api/v1/admin/products/{id}</code>&nbsp;&nbsp;<strong>- Delete Product by ID (Admin Only)</strong></summary>
 
-- **Description**: This endpoint allows administrators to delete a specific product based on its ID. Only users with admin roles or specific permissions should be able to access this endpoint to ensure that only authorized personnel can remove products from the system.
+- **Description**: This endpoint allows administrators to delete a specific product from the system based on the product ID. Access to this endpoint is restricted to administrators.
 - **Endpoint**: `/api/v1/admin/products/{id}`
 - **Method**: `DELETE`
 - **Path Parameters**:
-  - `id` (string, required) - The ID of the product to delete
+  - `id` (string, required) - The ID of the product to be deleted
 - **Request Headers**:
   - `Authorization` (string, required) - The JWT token for authorization. Only users with admin roles or specific permissions should be able to access this endpoint.
 - **Response**:
 
-  - `200 OK` if the product is successfully deleted
+  - `200 OK` on successful deletion
   - `404 Not Found` if the product does not exist
-  - `403 Forbidden` if the authenticated user does not have the necessary permissions to delete the product
+  - `403 Forbidden` if the
+
+ authenticated user does not have permission to delete the product
 
 - **Example Request**:
 
@@ -736,6 +722,7 @@ curl '{base_url}/api/v1/account' \
   ```
 
 </details>
+
 
 ### Carts
 
