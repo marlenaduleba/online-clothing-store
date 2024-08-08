@@ -43,3 +43,28 @@ export const getUserById = async (id: number): Promise<User | null> => {
   return result.rows[0] || null;
 };
 
+// Get all users
+export const getAllUsers = async (): Promise<User[]> => {
+  const result = await query<User>('SELECT * FROM users');
+  return result.rows;
+};
+
+// Update user by ID
+export const updateUserById = async (id: number, user: Partial<User>): Promise<User | null> => {
+  const fields = Object.keys(user);
+  const values = Object.values(user);
+  const setString = fields.map((field, index) => `${field} = $${index + 1}`).join(', ');
+
+  const result = await query<User>(
+    `UPDATE users SET ${setString} WHERE id = $${fields.length + 1} RETURNING *`,
+    [...values, id]
+  );
+
+  return result.rows[0] || null;
+};
+
+// Delete user by ID
+export const deleteUserById = async (id: number): Promise<void> => {
+  await query('DELETE FROM users WHERE id = $1', [id]);
+};
+
