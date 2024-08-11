@@ -30,8 +30,8 @@ app.use("/api/v1/auth", authRoutes);
 // Protected routes (authentication required)
 app.use("/api/v1/products", authenticateToken, productRoutes);
 app.use("/api/v1/users", authenticateToken, userRoutes);
-app.use("/api/v1/current/carts", authenticateToken, cartRoutes);
-app.use("/api/v1/current/orders", authenticateToken, orderRoutes);
+app.use("/api/v1/me/cart", authenticateToken, cartRoutes);
+app.use("/api/v1/me/orders", authenticateToken, orderRoutes);
 app.use("/api/v1/admin/orders", authenticateToken, orderRoutes);
 
 // Root route

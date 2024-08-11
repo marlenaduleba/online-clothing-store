@@ -15,24 +15,24 @@ const router = Router();
 
 // Endpoint: Add Item to Cart
 router.post(
-  "/current/carts",
+  "/me/cart",
   authenticateToken,
   validateAddItemToCart,
   addItemToCart
 );
 
 // Endpoint: Get Current User's Cart
-router.get("/current/carts", authenticateToken, getCurrentUserCart);
+router.get("/me/cart", authenticateToken, getCurrentUserCart);
 
 // Endpoint: Update Cart Item
 router.put(
-  "/current/carts",
+  "/me/cart",
   authenticateToken,
   validateUpdateCartItem,
   updateCartItem
 );
 
 // Endpoint: Clear Cart
-router.delete("/current/carts", authenticateToken, clearCart);
+router.delete("/me/cart", authenticateToken, clearCart);
 
 export default router;

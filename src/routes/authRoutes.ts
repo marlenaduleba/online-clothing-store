@@ -24,7 +24,7 @@ router.post("/login", validateLogin, login);
 router.post("/logout", authenticateToken, logout);
 
 // Endpoint: Get Current User
-router.get("/current", authenticateToken, getCurrentUser);
+router.get("/me", authenticateToken, getCurrentUser);
 
 // Endpoint: Refresh Token
 router.post("/refresh", refreshToken);
