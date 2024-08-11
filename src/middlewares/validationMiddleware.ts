@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { body, validationResult } from "express-validator";
 
-// Walidacja rejestracji
+// Registration Validation
 export const validateRegister = [
   body("email").isEmail().withMessage("Invalid email format"),
   body("password")
@@ -18,7 +18,7 @@ export const validateRegister = [
   },
 ];
 
-// Walidacja logowania
+// Login Validation
 export const validateLogin = [
   body("email").isEmail().withMessage("Invalid email format"),
   body("password").notEmpty().withMessage("Password is required"),
@@ -31,7 +31,7 @@ export const validateLogin = [
   },
 ];
 
-// Walidacja tworzenia użytkownika (Admin Only)
+// User creation validation (Admin Only)
 export const validateUserCreation = [
   body("email").isEmail().withMessage("Invalid email format"),
   body("password")
@@ -51,7 +51,7 @@ export const validateUserCreation = [
   },
 ];
 
-// Walidacja aktualizacji użytkownika (Admin Only)
+// User Update Validation (Admin Only)
 export const validateUserUpdate = [
   body("email").optional().isEmail().withMessage("Invalid email format"),
   body("password")

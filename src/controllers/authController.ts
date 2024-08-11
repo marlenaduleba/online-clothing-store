@@ -16,8 +16,8 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
 export const login = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email, password } = req.body;
-    const { token, refreshToken } = await loginUser(email, password);
-    res.json({ message: 'Logged in', token, refreshToken });
+    const { token, refreshToken, role } = await loginUser(email, password); 
+    res.json({ message: 'Logged in', token, refreshToken, role }); 
   } catch (error) {
     next(error);
   }
@@ -27,8 +27,8 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
 export const refreshToken = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { refreshToken } = req.body;
-    const token = await refreshUserToken(refreshToken);
-    res.json({ message: 'Token refreshed', token });
+    const {token, role} = await refreshUserToken(refreshToken);
+    res.json({ message: 'Token refreshed', token, role });
   } catch (error) {
     next(error);
   }

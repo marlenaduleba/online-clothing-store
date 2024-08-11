@@ -122,11 +122,12 @@ The Online Clothing Store API allows customers to search for specific clothing i
   {
     "message": "Logged in",
     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-    "refreshToken": "741012fe4f41d2f43ebab8b28c4e9..."
+    "refreshToken": "1eaac022e8618075693da556a2039...",
+    "role": "user"
   }
   ```
 
-  </details>
+    </details>
 
 <details>
 <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center">&nbsp;&nbsp;<code>/api/v1/auth/logout</code>&nbsp;&nbsp;<strong>- User Logout</strong></summary>
@@ -202,10 +203,10 @@ The Online Clothing Store API allows customers to search for specific clothing i
     </details>
 
 <details>
-  <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/account</code>&nbsp;&nbsp;<strong>- Get Current User</strong></summary>
+  <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/current</code>&nbsp;&nbsp;<strong>- Get Current User</strong></summary>
   
 - **Description**: This endpoint retrieves the details of the currently logged-in user.
-- **Endpoint**: `/api/v1/account`
+- **Endpoint**: `/api/v1/current`
 - **Method**: `GET`
 - **Request Headers**:
   - `Authorization` (string, required) - The JWT token for authorization.
@@ -216,7 +217,7 @@ The Online Clothing Store API allows customers to search for specific clothing i
 - **Example Request**:
 
 ```sh
-curl '{base_url}/api/v1/account' \
+curl '{base_url}/api/v1/current' \
 -H 'Authorization: Bearer {token}'
 ```
 
@@ -706,7 +707,7 @@ curl '{base_url}/api/v1/account' \
   - `404 Not Found` if the product does not exist
   - `403 Forbidden` if the
 
- authenticated user does not have permission to delete the product
+authenticated user does not have permission to delete the product
 
 - **Example Request**:
 
@@ -723,14 +724,13 @@ curl '{base_url}/api/v1/account' \
 
 </details>
 
-
 ### Carts
 
 <details>
-<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center">&nbsp;&nbsp;<code>/api/v1/account/carts</code>&nbsp;&nbsp;<strong>- Add Item to Cart</strong></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center">&nbsp;&nbsp;<code>/api/v1/current/carts</code>&nbsp;&nbsp;<strong>- Add Item to Cart</strong></summary>
 
 - **Description**: Adds an item to the shopping cart of the currently logged-in user. This endpoint is accessible only to authenticated users. The request requires a valid JWT token to ensure that the user can modify their own cart.
-- **Endpoint**: `/api/v1/account/carts`
+- **Endpoint**: `/api/v1/current/carts`
 - **Method**: `POST`
 - **Request Headers**:
   - `Authorization` (string, required) - The JWT token for authorization. This token ensures that only the authenticated user can modify their own cart.
@@ -744,6 +744,7 @@ curl '{base_url}/api/v1/account' \
   }
   ```
 - **Response**:
+
   - `201 Created` with details of the added cart item
   - `400 Bad Request` on validation error (e.g., invalid product ID, quantity not a positive integer)
   - `401 Unauthorized` if the token is missing or invalid
@@ -752,7 +753,7 @@ curl '{base_url}/api/v1/account' \
 - **Example Request**:
 
   ```sh
-  curl -X POST '{base_url}/api/v1/account/carts' \
+  curl -X POST '{base_url}/api/v1/current/carts' \
   -H 'Authorization: Bearer {token}' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -778,14 +779,15 @@ curl '{base_url}/api/v1/account' \
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/account/carts</code>&nbsp;&nbsp;<strong>- Get Current User's Cart</strong></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/current/carts</code>&nbsp;&nbsp;<strong>- Get Current User's Cart</strong></summary>
 
 - **Description**: Retrieves the shopping cart of the currently logged-in user. This endpoint is accessible only to authenticated users. The request requires a valid JWT token to ensure that the user has access to their own cart.
-- **Endpoint**: `/api/v1/account/carts`
+- **Endpoint**: `/api/v1/current/carts`
 - **Method**: `GET`
 - **Request Headers**:
   - `Authorization` (string, required) - The JWT token for authorization. This token ensures that only the authenticated user can access their own cart.
 - **Response**:
+
   - `200 OK` with cart details
   - `401 Unauthorized` if the token is missing or invalid
   - `404 Not Found` if the cart for the current user does not exist
@@ -793,7 +795,7 @@ curl '{base_url}/api/v1/account' \
 - **Example Request**:
 
   ```sh
-  curl '{base_url}/api/v1/account/carts' \
+  curl '{base_url}/api/v1/current/carts' \
   -H 'Authorization: Bearer {token}'
   ```
 
@@ -822,10 +824,10 @@ curl '{base_url}/api/v1/account' \
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/PUT-FF8C00" align="center">&nbsp; &nbsp; <code>/api/v1/account/carts</code>&nbsp;&nbsp;<strong>- Update Cart</strong></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/PUT-FF8C00" align="center">&nbsp; &nbsp; <code>/api/v1/current/carts</code>&nbsp;&nbsp;<strong>- Update Cart</strong></summary>
 
 - **Description**: Updates the shopping cart of the currently logged-in user. This endpoint allows for updating the quantity of items in the cart. This endpoint is accessible only to authenticated users. The request requires a valid JWT token to ensure that the user can modify their own cart.
-- **Endpoint**: `/api/v1/account/carts`
+- **Endpoint**: `/api/v1/current/carts`
 - **Method**: `PUT`
 - **Request Headers**:
   - `Authorization` (string, required) - The JWT token for authorization. This token ensures that only the authenticated user can modify their own cart.
@@ -838,6 +840,7 @@ curl '{base_url}/api/v1/account' \
   }
   ```
 - **Response**:
+
   - `200 OK` with updated cart item details
   - `400 Bad Request` on validation error (e.g., invalid cart item ID, quantity not a positive integer)
   - `401 Unauthorized` if the token is missing or invalid
@@ -846,7 +849,7 @@ curl '{base_url}/api/v1/account' \
 - **Example Request**:
 
   ```sh
-  curl -X PUT '{base_url}/api/v1/account/carts' \
+  curl -X PUT '{base_url}/api/v1/current/carts' \
   -H 'Authorization: Bearer {token}' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -871,14 +874,15 @@ curl '{base_url}/api/v1/account' \
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/DEL-E4003A" align="center">&nbsp; &nbsp; <code>/api/v1/account/carts</code>&nbsp;&nbsp;<strong>- Clear Cart</strong></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/DEL-E4003A" align="center">&nbsp; &nbsp; <code>/api/v1/current/carts</code>&nbsp;&nbsp;<strong>- Clear Cart</strong></summary>
 
 - **Description**: Clears all items from the shopping cart of the currently logged-in user. This endpoint is accessible only to authenticated users. The request requires a valid JWT token to ensure that the user can modify their own cart.
-- **Endpoint**: `/api/v1/account/carts`
+- **Endpoint**: `/api/v1/current/carts`
 - **Method**: `DELETE`
 - **Request Headers**:
   - `Authorization` (string, required) - The JWT token for authorization. This token ensures that only the authenticated user can clear their own cart.
 - **Response**:
+
   - `200 OK` with the empty cart details
   - `401 Unauthorized` if the token is missing or invalid
   - `404 Not Found` if the cart does not exist
@@ -886,7 +890,7 @@ curl '{base_url}/api/v1/account' \
 - **Example Request**:
 
   ```sh
-  curl -X DELETE '{base_url}/api/v1/account/carts' \
+  curl -X DELETE '{base_url}/api/v1/current/carts' \
   -H 'Authorization: Bearer {token}'
   ```
 
@@ -908,10 +912,10 @@ curl '{base_url}/api/v1/account' \
 ### Orders
 
 <details>
-<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center">&nbsp;&nbsp;<code>/api/v1/account/orders</code>&nbsp;&nbsp;<strong>- Create Order</strong></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center">&nbsp;&nbsp;<code>/api/v1/current/orders</code>&nbsp;&nbsp;<strong>- Create Order</strong></summary>
 
 - **Description**: Creates a new order for the currently logged-in user. This endpoint is accessible only to authenticated users.
-- **Endpoint**: `/api/v1/account/orders`
+- **Endpoint**: `/api/v1/current/orders`
 - **Method**: `POST`
 - **Request Headers**:
   - `Authorization` (string, required) - The JWT token for authorization.
@@ -929,6 +933,7 @@ curl '{base_url}/api/v1/account' \
   }
   ```
 - **Response**:
+
   - `201 Created` with the details of the created order
   - `400 Bad Request` on validation error
   - `401 Unauthorized` if the token is missing or invalid
@@ -936,7 +941,7 @@ curl '{base_url}/api/v1/account' \
 - **Example Request**:
 
   ```sh
-  curl -X POST '{base_url}/api/v1/account/orders' \
+  curl -X POST '{base_url}/api/v1/current/orders' \
   -H 'Authorization: Bearer {token}' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -973,6 +978,7 @@ curl '{base_url}/api/v1/account' \
 - **Request Headers**:
   - `Authorization` (string, required) - The JWT token for authorization.
 - **Response**:
+
   - `200 OK` with a list of orders
   - `401 Unauthorized` if the token is missing or invalid
   - `403 Forbidden` if the authenticated user does not have the necessary permissions
@@ -1018,6 +1024,7 @@ curl '{base_url}/api/v1/account' \
 - **Request Headers**:
   - `Authorization` (string, required) - The JWT token for authorization.
 - **Response**:
+
   - `200 OK` with order details
   - `401 Unauthorized` if the token is missing or invalid
   - `403 Forbidden` if the authenticated user does not have the necessary permissions
@@ -1045,14 +1052,15 @@ curl '{base_url}/api/v1/account' \
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/account/orders</code>&nbsp;&nbsp;<strong>- Get Current User's Orders</strong></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/current/orders</code>&nbsp;&nbsp;<strong>- Get Current User's Orders</strong></summary>
 
 - **Description**: Retrieves a list of all orders placed by the currently logged-in user. This endpoint is accessible only to authenticated users.
-- **Endpoint**: `/api/v1/account/orders`
+- **Endpoint**: `/api/v1/current/orders`
 - **Method**: `GET`
 - **Request Headers**:
   - `Authorization` (string, required) - The JWT token for authorization.
 - **Response**:
+
   - `200 OK` with a list of the user's orders
   - `401 Unauthorized` if the token is missing or invalid
   - `404 Not Found` if the user has no orders
@@ -1060,7 +1068,7 @@ curl '{base_url}/api/v1/account' \
 - **Example Request**:
 
   ```sh
-  curl '{base_url}/api/v1/account/orders' \
+  curl '{base_url}/api/v1/current/orders' \
   -H 'Authorization: Bearer {token}'
   ```
 
@@ -1081,16 +1089,17 @@ curl '{base_url}/api/v1/account' \
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/account/orders/{id}</code>&nbsp;&nbsp;<strong>- Get Current User's Order by ID</strong></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/current/orders/{id}</code>&nbsp;&nbsp;<strong>- Get Current User's Order by ID</strong></summary>
 
 - **Description**: Retrieves detailed information about a specific order placed by the currently logged-in user based on the order ID. This endpoint is accessible only to authenticated users.
-- **Endpoint**: `/api/v1/account/orders/{id}`
+- **Endpoint**: `/api/v1/current/orders/{id}`
 - **Method**: `GET`
 - **Path Parameters**:
   - `id` (string, required) - The ID of the order to be retrieved
 - **Request Headers**:
   - `Authorization` (string, required) - The JWT token for authorization.
 - **Response**:
+
   - `200 OK` with order details
   - `401 Unauthorized` if the token is missing or invalid
   - `404 Not Found` if the order does not exist or does not belong to the current user
@@ -1098,7 +1107,7 @@ curl '{base_url}/api/v1/account' \
 - **Example Request**:
 
   ```sh
-  curl '{base_url}/api/v1/account/orders/{id}' \
+  curl '{base_url}/api/v1/current/orders/{id}' \
   -H 'Authorization: Bearer {token}'
   ```
 
@@ -1107,35 +1116,39 @@ curl '{base_url}/api/v1/account' \
   ```json
   {
     "id": "
+  ```
 
 1",
-    "user_id": "1",
-    "total": 100.0,
-    "created_at": "2024-07-16T10:00:00Z",
-    "updated_at": "2024-07-16T10:10:00Z"
-  }
-  ```
+"user_id": "1",
+"total": 100.0,
+"created_at": "2024-07-16T10:00:00Z",
+"updated_at": "2024-07-16T10:10:00Z"
+}
+
+````
 
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/PUT-FF8C00" align="center">&nbsp; &nbsp; <code>/api/v1/account/orders/{id}</code>&nbsp;&nbsp;<strong>- Update Order</strong></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/PUT-FF8C00" align="center">&nbsp; &nbsp; <code>/api/v1/current/orders/{id}</code>&nbsp;&nbsp;<strong>- Update Order</strong></summary>
 
 - **Description**: Updates the details of a specific order placed by the currently logged-in user. This endpoint is accessible only to authenticated users.
-- **Endpoint**: `/api/v1/account/orders/{id}`
+- **Endpoint**: `/api/v1/current/orders/{id}`
 - **Method**: `PUT`
 - **Path Parameters**:
-  - `id` (string, required) - The ID of the order to be updated
+- `id` (string, required) - The ID of the order to be updated
 - **Request Headers**:
-  - `Authorization` (string, required) - The JWT token for authorization.
-  - `Content-Type` (string, required) - Should be `application/json`.
+- `Authorization` (string, required) - The JWT token for authorization.
+- `Content-Type` (string, required) - Should be `application/json`.
 - **Request Body**:
-  ```json
-  {
-    "total": "number" // The updated total for the order
-  }
-  ```
+```json
+{
+  "total": "number" // The updated total for the order
+}
+````
+
 - **Response**:
+
   - `200 OK` with the updated order details
   - `400 Bad Request` on validation error
   - `401 Unauthorized` if the token is missing or invalid
@@ -1144,7 +1157,7 @@ curl '{base_url}/api/v1/account' \
 - **Example Request**:
 
   ```sh
-  curl -X PUT '{base_url}/api/v1/account/orders/{id}' \
+  curl -X PUT '{base_url}/api/v1/current/orders/{id}' \
   -H 'Authorization: Bearer {token}' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -1177,6 +1190,7 @@ curl '{base_url}/api/v1/account' \
 - **Request Headers**:
   - `Authorization` (string, required) - The JWT token for authorization.
 - **Response**:
+
   - `200 OK` on successful deletion
   - `401 Unauthorized` if the token is missing or invalid
   - `403 Forbidden` if the authenticated user does not have the necessary permissions
