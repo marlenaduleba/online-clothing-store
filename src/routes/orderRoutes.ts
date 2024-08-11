@@ -18,7 +18,12 @@ import {
 const router = Router();
 
 // Endpoint: Create Order
-router.post("/me/orders", authenticateToken, validateCreateOrder, createOrder);
+router.post(
+  "/current/orders",
+  authenticateToken,
+  validateCreateOrder,
+  createOrder
+);
 
 // Endpoint: Get All Orders (Admin Only)
 router.get("/admin/orders", authenticateToken, isAdmin, getAllOrders);
@@ -27,14 +32,14 @@ router.get("/admin/orders", authenticateToken, isAdmin, getAllOrders);
 router.get("/admin/orders/:id", authenticateToken, isAdmin, getOrderById);
 
 // Endpoint: Get Current User's Orders
-router.get("/me/orders", authenticateToken, getCurrentUserOrders);
+router.get("/current/orders", authenticateToken, getCurrentUserOrders);
 
 // Endpoint: Get Current User's Order by ID
-router.get("/me/orders/:id", authenticateToken, getCurrentUserOrderById);
+router.get("/current/orders/:id", authenticateToken, getCurrentUserOrderById);
 
 // Endpoint: Update Order
 router.put(
-  "/me/orders/:id",
+  "/current/orders/:id",
   authenticateToken,
   validateUpdateOrder,
   updateOrder
