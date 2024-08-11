@@ -203,10 +203,10 @@ The Online Clothing Store API allows customers to search for specific clothing i
     </details>
 
 <details>
-  <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/current</code>&nbsp;&nbsp;<strong>- Get Current User</strong></summary>
+  <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/me</code>&nbsp;&nbsp;<strong>- Get Current User</strong></summary>
   
 - **Description**: This endpoint retrieves the details of the currently logged-in user.
-- **Endpoint**: `/api/v1/current`
+- **Endpoint**: `/api/v1/me`
 - **Method**: `GET`
 - **Request Headers**:
   - `Authorization` (string, required) - The JWT token for authorization.
@@ -217,7 +217,7 @@ The Online Clothing Store API allows customers to search for specific clothing i
 - **Example Request**:
 
 ```sh
-curl '{base_url}/api/v1/current' \
+curl '{base_url}/api/v1/me' \
 -H 'Authorization: Bearer {token}'
 ```
 
@@ -727,10 +727,10 @@ authenticated user does not have permission to delete the product
 ### Carts
 
 <details>
-<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center">&nbsp;&nbsp;<code>/api/v1/current/carts</code>&nbsp;&nbsp;<strong>- Add Item to Cart</strong></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center">&nbsp;&nbsp;<code>/api/v1/me/cart</code>&nbsp;&nbsp;<strong>- Add Item to Cart</strong></summary>
 
 - **Description**: Adds an item to the shopping cart of the currently logged-in user. This endpoint is accessible only to authenticated users. The request requires a valid JWT token to ensure that the user can modify their own cart.
-- **Endpoint**: `/api/v1/current/carts`
+- **Endpoint**: `/api/v1/me/cart`
 - **Method**: `POST`
 - **Request Headers**:
   - `Authorization` (string, required) - The JWT token for authorization. This token ensures that only the authenticated user can modify their own cart.
@@ -753,7 +753,7 @@ authenticated user does not have permission to delete the product
 - **Example Request**:
 
   ```sh
-  curl -X POST '{base_url}/api/v1/current/carts' \
+  curl -X POST '{base_url}/api/v1/me/cart' \
   -H 'Authorization: Bearer {token}' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -779,10 +779,10 @@ authenticated user does not have permission to delete the product
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/current/carts</code>&nbsp;&nbsp;<strong>- Get Current User's Cart</strong></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/me/cart</code>&nbsp;&nbsp;<strong>- Get Current User's Cart</strong></summary>
 
 - **Description**: Retrieves the shopping cart of the currently logged-in user. This endpoint is accessible only to authenticated users. The request requires a valid JWT token to ensure that the user has access to their own cart.
-- **Endpoint**: `/api/v1/current/carts`
+- **Endpoint**: `/api/v1/me/cart`
 - **Method**: `GET`
 - **Request Headers**:
   - `Authorization` (string, required) - The JWT token for authorization. This token ensures that only the authenticated user can access their own cart.
@@ -795,7 +795,7 @@ authenticated user does not have permission to delete the product
 - **Example Request**:
 
   ```sh
-  curl '{base_url}/api/v1/current/carts' \
+  curl '{base_url}/api/v1/me/cart' \
   -H 'Authorization: Bearer {token}'
   ```
 
@@ -824,10 +824,10 @@ authenticated user does not have permission to delete the product
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/PUT-FF8C00" align="center">&nbsp; &nbsp; <code>/api/v1/current/carts</code>&nbsp;&nbsp;<strong>- Update Cart</strong></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/PUT-FF8C00" align="center">&nbsp; &nbsp; <code>/api/v1/me/cart</code>&nbsp;&nbsp;<strong>- Update Cart</strong></summary>
 
 - **Description**: Updates the shopping cart of the currently logged-in user. This endpoint allows for updating the quantity of items in the cart. This endpoint is accessible only to authenticated users. The request requires a valid JWT token to ensure that the user can modify their own cart.
-- **Endpoint**: `/api/v1/current/carts`
+- **Endpoint**: `/api/v1/me/cart`
 - **Method**: `PUT`
 - **Request Headers**:
   - `Authorization` (string, required) - The JWT token for authorization. This token ensures that only the authenticated user can modify their own cart.
@@ -849,7 +849,7 @@ authenticated user does not have permission to delete the product
 - **Example Request**:
 
   ```sh
-  curl -X PUT '{base_url}/api/v1/current/carts' \
+  curl -X PUT '{base_url}/api/v1/me/cart' \
   -H 'Authorization: Bearer {token}' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -874,10 +874,10 @@ authenticated user does not have permission to delete the product
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/DEL-E4003A" align="center">&nbsp; &nbsp; <code>/api/v1/current/carts</code>&nbsp;&nbsp;<strong>- Clear Cart</strong></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/DEL-E4003A" align="center">&nbsp; &nbsp; <code>/api/v1/me/cart</code>&nbsp;&nbsp;<strong>- Clear Cart</strong></summary>
 
 - **Description**: Clears all items from the shopping cart of the currently logged-in user. This endpoint is accessible only to authenticated users. The request requires a valid JWT token to ensure that the user can modify their own cart.
-- **Endpoint**: `/api/v1/current/carts`
+- **Endpoint**: `/api/v1/me/cart`
 - **Method**: `DELETE`
 - **Request Headers**:
   - `Authorization` (string, required) - The JWT token for authorization. This token ensures that only the authenticated user can clear their own cart.
@@ -890,7 +890,7 @@ authenticated user does not have permission to delete the product
 - **Example Request**:
 
   ```sh
-  curl -X DELETE '{base_url}/api/v1/current/carts' \
+  curl -X DELETE '{base_url}/api/v1/me/cart' \
   -H 'Authorization: Bearer {token}'
   ```
 
@@ -912,10 +912,10 @@ authenticated user does not have permission to delete the product
 ### Orders
 
 <details>
-<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center">&nbsp;&nbsp;<code>/api/v1/current/orders</code>&nbsp;&nbsp;<strong>- Create Order</strong></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/POST-0F67B1" align="center">&nbsp;&nbsp;<code>/api/v1/me/orders</code>&nbsp;&nbsp;<strong>- Create Order</strong></summary>
 
 - **Description**: Creates a new order for the currently logged-in user. This endpoint is accessible only to authenticated users.
-- **Endpoint**: `/api/v1/current/orders`
+- **Endpoint**: `/api/v1/me/orders`
 - **Method**: `POST`
 - **Request Headers**:
   - `Authorization` (string, required) - The JWT token for authorization.
@@ -941,7 +941,7 @@ authenticated user does not have permission to delete the product
 - **Example Request**:
 
   ```sh
-  curl -X POST '{base_url}/api/v1/current/orders' \
+  curl -X POST '{base_url}/api/v1/me/orders' \
   -H 'Authorization: Bearer {token}' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -1052,10 +1052,10 @@ authenticated user does not have permission to delete the product
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/current/orders</code>&nbsp;&nbsp;<strong>- Get Current User's Orders</strong></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/me/orders</code>&nbsp;&nbsp;<strong>- Get Current User's Orders</strong></summary>
 
 - **Description**: Retrieves a list of all orders placed by the currently logged-in user. This endpoint is accessible only to authenticated users.
-- **Endpoint**: `/api/v1/current/orders`
+- **Endpoint**: `/api/v1/me/orders`
 - **Method**: `GET`
 - **Request Headers**:
   - `Authorization` (string, required) - The JWT token for authorization.
@@ -1068,7 +1068,7 @@ authenticated user does not have permission to delete the product
 - **Example Request**:
 
   ```sh
-  curl '{base_url}/api/v1/current/orders' \
+  curl '{base_url}/api/v1/me/orders' \
   -H 'Authorization: Bearer {token}'
   ```
 
@@ -1089,10 +1089,10 @@ authenticated user does not have permission to delete the product
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/current/orders/{id}</code>&nbsp;&nbsp;<strong>- Get Current User's Order by ID</strong></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/GET-399918" align="center">&nbsp; &nbsp; <code>/api/v1/me/orders/{id}</code>&nbsp;&nbsp;<strong>- Get Current User's Order by ID</strong></summary>
 
 - **Description**: Retrieves detailed information about a specific order placed by the currently logged-in user based on the order ID. This endpoint is accessible only to authenticated users.
-- **Endpoint**: `/api/v1/current/orders/{id}`
+- **Endpoint**: `/api/v1/me/orders/{id}`
 - **Method**: `GET`
 - **Path Parameters**:
   - `id` (string, required) - The ID of the order to be retrieved
@@ -1107,7 +1107,7 @@ authenticated user does not have permission to delete the product
 - **Example Request**:
 
   ```sh
-  curl '{base_url}/api/v1/current/orders/{id}' \
+  curl '{base_url}/api/v1/me/orders/{id}' \
   -H 'Authorization: Bearer {token}'
   ```
 
@@ -1130,10 +1130,10 @@ authenticated user does not have permission to delete the product
 </details>
 
 <details>
-<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/PUT-FF8C00" align="center">&nbsp; &nbsp; <code>/api/v1/current/orders/{id}</code>&nbsp;&nbsp;<strong>- Update Order</strong></summary>
+<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/PUT-FF8C00" align="center">&nbsp; &nbsp; <code>/api/v1/me/orders/{id}</code>&nbsp;&nbsp;<strong>- Update Order</strong></summary>
 
 - **Description**: Updates the details of a specific order placed by the currently logged-in user. This endpoint is accessible only to authenticated users.
-- **Endpoint**: `/api/v1/current/orders/{id}`
+- **Endpoint**: `/api/v1/me/orders/{id}`
 - **Method**: `PUT`
 - **Path Parameters**:
 - `id` (string, required) - The ID of the order to be updated
@@ -1157,7 +1157,7 @@ authenticated user does not have permission to delete the product
 - **Example Request**:
 
   ```sh
-  curl -X PUT '{base_url}/api/v1/current/orders/{id}' \
+  curl -X PUT '{base_url}/api/v1/me/orders/{id}' \
   -H 'Authorization: Bearer {token}' \
   -H 'Content-Type: application/json' \
   -d '{
