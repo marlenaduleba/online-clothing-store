@@ -1123,10 +1123,7 @@ authenticated user does not have permission to delete the product
   }
   ```
 
-````
-
 </details>
-
 
 <details>
 <summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/DEL-E4003A" align="center">&nbsp; &nbsp; <code>/api/v1/admin/orders/{id}</code>&nbsp;&nbsp;<strong>- Delete Order by ID (Admin Only)</strong></summary>
@@ -1196,4 +1193,3 @@ To run the Online Clothing Store API using Docker, follow these steps:
    To run tests, use the appropriate command inside the container.
 
 ---
-````
