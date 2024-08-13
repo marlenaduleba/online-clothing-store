@@ -1115,15 +1115,13 @@ authenticated user does not have permission to delete the product
 
   ```json
   {
-    "id": "
+    "id": "1",
+    "user_id": "1",
+    "total": 100.0,
+    "created_at": "2024-07-16T10:00:00Z",
+    "updated_at": "2024-07-16T10:10:00Z"
+  }
   ```
-
-1",
-"user_id": "1",
-"total": 100.0,
-"created_at": "2024-07-16T10:00:00Z",
-"updated_at": "2024-07-16T10:10:00Z"
-}
 
 ````
 
