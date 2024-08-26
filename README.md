@@ -3,7 +3,7 @@
 ## Content
 
 - [Description](#description)
-- [Technical Requirements](#technical-requirements)
+- [Technology Stack](#technology-stack)
 - [Base URL](#base-url)
 - [API Endpoints](#api-endpoints)
   - [Authentication](#authentication)
@@ -140,13 +140,13 @@ The Online Clothing Store API allows customers to search for specific clothing i
 - **Request Body**:
   ```json
   {
-    "refreshToken": "string" // Optional but recommended for complete logout
+    "refreshToken": "string"
   }
   ```
 - **Response**:
-  - `200 OK` with an empty response indicating successful logout
+  - `200 OK` with a JSON response indicating successful logout
   - `401 Unauthorized` if the token is invalid or missing
-  - `400 Bad Request` if the refresh token is missing but required for complete logout
+  - `400 Bad Request` if the refresh token is missing
 - **Example Request**:
 
   ```sh
@@ -1115,65 +1115,11 @@ authenticated user does not have permission to delete the product
 
   ```json
   {
-    "id": "
-  ```
-
-1",
-"user_id": "1",
-"total": 100.0,
-"created_at": "2024-07-16T10:00:00Z",
-"updated_at": "2024-07-16T10:10:00Z"
-}
-
-````
-
-</details>
-
-<details>
-<summary>&nbsp;&nbsp;<img alt="Static Badge" src="https://img.shields.io/badge/PUT-FF8C00" align="center">&nbsp; &nbsp; <code>/api/v1/me/orders/{id}</code>&nbsp;&nbsp;<strong>- Update Order</strong></summary>
-
-- **Description**: Updates the details of a specific order placed by the currently logged-in user. This endpoint is accessible only to authenticated users.
-- **Endpoint**: `/api/v1/me/orders/{id}`
-- **Method**: `PUT`
-- **Path Parameters**:
-- `id` (string, required) - The ID of the order to be updated
-- **Request Headers**:
-- `Authorization` (string, required) - The JWT token for authorization.
-- `Content-Type` (string, required) - Should be `application/json`.
-- **Request Body**:
-```json
-{
-  "total": "number" // The updated total for the order
-}
-````
-
-- **Response**:
-
-  - `200 OK` with the updated order details
-  - `400 Bad Request` on validation error
-  - `401 Unauthorized` if the token is missing or invalid
-  - `404 Not Found` if the order does not exist or does not belong to the current user
-
-- **Example Request**:
-
-  ```sh
-  curl -X PUT '{base_url}/api/v1/me/orders/{id}' \
-  -H 'Authorization: Bearer {token}' \
-  -H 'Content-Type: application/json' \
-  -d '{
-    "total": 150.0
-  }'
-  ```
-
-- **Example Response**:
-
-  ```json
-  {
     "id": "1",
     "user_id": "1",
-    "total": 150.0,
+    "total": 100.0,
     "created_at": "2024-07-16T10:00:00Z",
-    "updated_at": "2024-07-16T10:20:00Z"
+    "updated_at": "2024-07-16T10:10:00Z"
   }
   ```
 
