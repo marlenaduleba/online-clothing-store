@@ -1316,28 +1316,56 @@ To run the Online Clothing Store API using Docker, follow these steps:
    cd online-clothing-store-api
    ```
 
-2. **Build the Docker Image**:
-   Build the Docker image for the project.
+2. **Set Up Environment Variables**:
+   Create a `.env` file in the root of your project by copying the `.env.example` file provided in the repository. Ensure this file is correctly configured with your database connection details, JWT secret, and any other required environment variables.
 
    ```bash
-   docker build -t online-clothing-store-api .
+   cp .env.example .env
    ```
 
-3. **Create and Start Containers**:
-   Use Docker Compose to create and start the containers.
+   Edit the `.env` file as needed to include your specific configuration.
+
+3. **Build and Start Containers**:
+   Use Docker Compose to build the Docker images and start the containers.
 
    ```bash
-   docker-compose up
+   docker-compose up --build
    ```
 
-4. **Set Up Environment Variables**:
-   Ensure your `.env` file is correctly configured, including database connection details and JWT secret.
+   - The `--build` flag ensures that Docker Compose rebuilds the images before starting the containers. This is useful if you've made changes to the Dockerfile or the application code.
 
-5. **Access the API**:
+4. **Access the API**:
    Once the containers are up and running, the API should be accessible at `http://localhost:3000`.
 
-6. **Testing**:
-   To run tests, use the appropriate command inside the container.
+5. **Testing**:
+   To run tests, you can execute commands inside the application container. First, get the container ID or name using `docker ps`, then use `docker exec` to run commands inside it.
+
+   ```bash
+   docker exec -it <container_name_or_id> npm test
+   ```
+
+   Alternatively, if you have configured a specific test command in your `docker-compose.yml`, you can run:
+
+   ```bash
+   docker-compose exec app npm test
+   ```
+
+6. **Stopping the Containers**:
+   When you're done, you can stop the containers with:
+
+   ```bash
+   docker-compose down
+   ```
+
+   This command will stop and remove the containers, networks, and volumes created by Docker Compose.
+
+### Optional: **Rebuild Without Cache**
+   If you need to rebuild the Docker images without using the cache (for example, if dependencies have changed), use:
+
+   ```bash
+   docker-compose build --no-cache
+   ```
+
 
 ---
 
