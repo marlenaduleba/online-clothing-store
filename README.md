@@ -4,6 +4,7 @@
 
 - [Description](#description)
 - [Technology Stack](#technology-stack)
+- [Database Schema](#database-schema)
 - [Base URL](#base-url)
 - [API Endpoints](#api-endpoints)
   - [Authentication](#authentication)
@@ -32,6 +33,152 @@ The Online Clothing Store API allows customers to search for specific clothing i
 <img src="https://github.com/user-attachments/assets/cc786919-f195-44c2-9c97-6df104017ab9" alt="JWT" height="24" align="center"/>&nbsp; **Custom JWT Implementation** - For managing user authentication and authorization (implemented manually).
 
 <img src="https://github.com/user-attachments/assets/428687f9-ebcc-4507-9990-3f55f8ef0dbb" alt="Jest" height="24" align="center"/>&nbsp; **Jest** - For unit and integration testing.
+
+## Database Schema
+<details>
+  <summary><strong>Tables</strong></summary>
+
+#### Users
+
+The `users` table stores information about the users of the application.
+
+| Column      | Data Type    | Constraints              | Description                                        |
+|-------------|--------------|--------------------------|----------------------------------------------------|
+| id          | SERIAL       | Primary Key              | Unique identifier for each user.                   |
+| first_name  | VARCHAR(50)  | Not Null                 | First name of the user.                            |
+| last_name   | VARCHAR(50)  | Not Null                 | Last name of the user.                             |
+| email       | VARCHAR(100) | Not Null, Unique         | Email address of the user.                         |
+| password    | VARCHAR(255) | Not Null                 | Hashed password of the user.                       |
+| role        | VARCHAR(20)  | Not Null, CHECK (role IN ('user', 'admin')) | Role of the user, either `user` or `admin`.         |
+
+#### Products
+
+The `products` table stores information about the products available in the store.
+
+| Column      | Data Type    | Constraints              | Description                                        |
+|-------------|--------------|--------------------------|----------------------------------------------------|
+| id          | SERIAL       | Primary Key              | Unique identifier for each product.                |
+| name        | VARCHAR(100) | Not Null                 | Name of the product.                               |
+| description | TEXT         |                          | Detailed description of the product.               |
+| price       | DECIMAL(10, 2) | Not Null               | Price of the product, accurate to two decimal places. |
+| brand       | VARCHAR(50)  |                          | Brand of the product.                              |
+| category    | VARCHAR(50)  |                          | Category of the product.                           |
+| size        | VARCHAR(10)  |                          | Size of the product.                               |
+
+#### Carts
+
+The `carts` table stores information about the shopping carts created by users.
+
+| Column      | Data Type    | Constraints              | Description                                        |
+|-------------|--------------|--------------------------|----------------------------------------------------|
+| id          | SERIAL       | Primary Key              | Unique identifier for each cart.                   |
+| user_id     | INTEGER      | Not Null, Foreign Key    | References `users(id)`; ID of the user who owns the cart. |
+| total       | DECIMAL(10, 2) | Default 0.00           | Total cost of the cart.                            |
+| created_at  | TIMESTAMPTZ  | Default CURRENT_TIMESTAMP | Timestamp when the cart was created.               |
+| updated_at  | TIMESTAMPTZ  | Default CURRENT_TIMESTAMP | Timestamp when the cart was last updated.          |
+
+#### Cart Items
+
+The `cart_items` table stores the individual items added to a user's cart.
+
+| Column      | Data Type    | Constraints              | Description                                        |
+|-------------|--------------|--------------------------|----------------------------------------------------|
+| id          | SERIAL       | Primary Key              | Unique identifier for each cart item.              |
+| cart_id     | INTEGER      | Not Null, Foreign Key    | References `carts(id)`; ID of the cart containing this item. |
+| product_id  | INTEGER      | Not Null, Foreign Key    | References `products(id)`; ID of the product in the cart. |
+| quantity    | INTEGER      | Not Null, CHECK (quantity > 0) | Quantity of the product in the cart (must be positive). |
+| price       | DECIMAL(10, 2) | Not Null               | Price of the product at the time it was added to the cart. |
+| subtotal    | DECIMAL(10, 2) | Not Null               | Subtotal cost for this item (quantity * price).    |
+
+#### Orders
+
+The `orders` table stores information about orders placed by users.
+
+| Column      | Data Type    | Constraints              | Description                                        |
+|-------------|--------------|--------------------------|----------------------------------------------------|
+| id          | SERIAL       | Primary Key              | Unique identifier for each order.                  |
+| user_id     | INTEGER      | Not Null, Foreign Key    | References `users(id)`; ID of the user who placed the order. |
+| total       | DECIMAL(10, 2) | Not Null               | Total cost of the order.                           |
+| created_at  | TIMESTAMPTZ  | Default CURRENT_TIMESTAMP | Timestamp when the order was created.              |
+| updated_at  | TIMESTAMPTZ  | Default CURRENT_TIMESTAMP | Timestamp when the order was last updated.         |
+
+#### Order Items
+
+The `order_items` table stores information about the products included in each order.
+
+| Column      | Data Type    | Constraints              | Description                                        |
+|-------------|--------------|--------------------------|----------------------------------------------------|
+| id          | SERIAL       | Primary Key              | Unique identifier for each order item.             |
+| order_id    | INTEGER      | Not Null, Foreign Key    | References `orders(id)`; ID of the order containing this item. |
+| product_id  | INTEGER      | Not Null, Foreign Key    | References `products(id)`; ID of the product in the order. |
+| quantity    | INTEGER      | Not Null                 | Quantity of the product in the order.              |
+| price       | DECIMAL(10, 2) | Not Null               | Price of the product at the time it was ordered.   |
+| subtotal    | DECIMAL(10, 2) | Not Null               | Subtotal cost for this item (quantity * price).    |
+
+#### Refresh Tokens
+
+The `refresh_tokens` table stores refresh tokens for user sessions.
+
+| Column      | Data Type    | Constraints              | Description                                        |
+|-------------|--------------|--------------------------|----------------------------------------------------|
+| id          | SERIAL       | Primary Key              | Unique identifier for each refresh token.          |
+| user_id     | INTEGER      | Foreign Key, Not Null    | References `users(id)`; ID of the user who owns the token. |
+| token       | VARCHAR(255) | Not Null, Unique         | The refresh token itself.                          |
+| expires_at  | TIMESTAMP    | Not Null                 | Expiration time of the refresh token.              |
+
+#### Token Blacklist
+
+The `token_blacklist` table stores tokens that have been revoked and should no longer be accepted.
+
+| Column      | Data Type    | Constraints              | Description                                        |
+|-------------|--------------|--------------------------|----------------------------------------------------|
+| id          | SERIAL       | Primary Key              | Unique identifier for each blacklisted token.      |
+| token       | VARCHAR(255) | Not Null, Unique         | The token that has been blacklisted.               |
+| revoked_at  | TIMESTAMP    | Not Null                 | Timestamp when the token was revoked.              |
+
+</details>
+<details>
+<summary><strong>Indexes</strong></summary> 
+
+Indexes are created to optimize the performance of database queries, especially for frequently searched columns.
+
+- **Products Table**:
+  - `idx_products_brand` on `brand`
+  - `idx_products_category` on `category`
+  - `idx_products_size` on `size`
+- **Cart Items Table**:
+  - `idx_cart_items_cart_id` on `cart_id`
+  - `idx_cart_items_product_id` on `product_id`
+- **Order Items Table**:
+  - `idx_order_items_order_id` on `order_id`
+  - `idx_order_items_product_id` on `product_id`
+</details>
+<details>
+<summary><strong>Relationships</strong></summary>
+
+- **Users to Orders**: One-to-Many relationship.
+  - Each user can place multiple orders, but each order is associated with a single user.
+- **Users to Carts**: One-to-One relationship.
+  - Each user has one active cart at a time.
+- **Carts to CartItems**: One-to-Many relationship.
+  - Each cart can contain multiple items, but each cart item references a single cart.
+- **Orders to OrderItems**: One-to-Many relationship.
+  - Each order can contain multiple items, but each order item references a single order.
+- **Products to CartItems** and **Products to OrderItems**: One-to-Many relationship.
+  - Each product can appear in multiple cart or order items, but each item references a single product.
+</details>
+<details>
+<summary><strong>Additional Information</strong></summary>
+
+- **Automatic Increment**: The `SERIAL` data type is used for primary keys to ensure automatic incrementing of ID values.
+- **Timestamps**: The `created_at` and `updated_at` columns in tables like `carts`, `orders`, and `order_items` track when records are created and last updated, providing an audit trail.
+- **Cascade Deletions**: Foreign key constraints are set to `ON DELETE CASCADE` where appropriate to ensure that related records are automatically removed when a parent record is deleted, maintaining referential integrity.
+</details>
+<details>
+<summary><strong>Schema Maintenance</strong></summary>
+
+- **Resetting Sequences**: The sequence for the `products` table has been reset using `ALTER SEQUENCE public.products_id_seq RESTART WITH 1` to start the auto-increment from 1.
+</details>
 
 ## Base URL
 
