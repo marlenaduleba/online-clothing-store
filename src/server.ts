@@ -3,14 +3,19 @@ import { query } from "./utils/db.js";
 import { QueryResult } from "pg";
 import dotenv from "dotenv";
 
+// Load environment variables from .env file
 dotenv.config();
 
 const PORT = process.env.PORT || 3000;
 
+/**
+ * Starts the Express server and optionally performs a sample database query
+ * to confirm the database connection.
+ */
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 
-  // Optional: Sample Database Query
+  // Optional: Sample Database Query to check connection
   query("SELECT NOW()", [])
     .then((res: QueryResult) => {
       // We type the response as QueryResult

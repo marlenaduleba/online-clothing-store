@@ -1,7 +1,18 @@
 import { Request, Response, NextFunction } from 'express';
 import chalk from 'chalk';
 
-// Middleware to log messages and errors
+/**
+ * Middleware to log messages and errors.
+ *
+ * This middleware overrides the `res.send` function to log specific messages from the response body
+ * and handles errors by logging them with different colors based on the status code.
+ *
+ * @param req - The request object.
+ * @param res - The response object, which is modified to log messages.
+ * @param next - The next middleware function in the stack.
+ *
+ * @returns Proceeds to the next middleware, logging messages and errors as needed.
+ */
 export const logMessages = (req: Request, res: Response, next: NextFunction) => {
   // Save the original res.send function
   const originalSend = res.send;

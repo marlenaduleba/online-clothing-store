@@ -17,7 +17,16 @@ interface CartItem {
   subtotal: number;
 }
 
-// Add an item to the cart
+/**
+ * Adds an item to the user's cart.
+ *
+ * @param userId - The ID of the user.
+ * @param productId - The ID of the product to be added to the cart.
+ * @param quantity - The quantity of the product to add.
+ * @param price - The price of the product.
+ *
+ * @returns The newly added cart item.
+ */
 export const addItemToCart = async (userId: number, productId: number, quantity: number, price: number): Promise<CartItem> => {
   const subtotal = quantity * price;
   const cart = await getOrCreateCart(userId);
@@ -29,7 +38,13 @@ export const addItemToCart = async (userId: number, productId: number, quantity:
   return result.rows[0];
 };
 
-// Get or create a cart for the user
+/**
+ * Retrieves the user's cart or creates a new one if it doesn't exist.
+ *
+ * @param userId - The ID of the user.
+ *
+ * @returns The user's cart.
+ */
 const getOrCreateCart = async (userId: number): Promise<Cart> => {
   const result = await query<Cart>('SELECT * FROM carts WHERE user_id = $1', [userId]);
   if (result.rows.length > 0) {
@@ -39,14 +54,27 @@ const getOrCreateCart = async (userId: number): Promise<Cart> => {
   return newCart.rows[0];
 };
 
-// Get current user's cart
+/**
+ * Retrieves the current user's cart along with its items.
+ *
+ * @param userId - The ID of the user.
+ *
+ * @returns The user's cart including the items.
+ */
 export const getCurrentUserCart = async (userId: number): Promise<Cart & { items: CartItem[] }> => {
   const cart = await getOrCreateCart(userId);
   const itemsResult = await query<CartItem>('SELECT * FROM cart_items WHERE cart_id = $1', [cart.id]);
   return { ...cart, items: itemsResult.rows };
 };
 
-// Update cart item quantity
+/**
+ * Updates the quantity of a specific item in the cart.
+ *
+ * @param cartItemId - The ID of the cart item to update.
+ * @param quantity - The new quantity for the cart item.
+ *
+ * @returns The updated cart item or null if not found.
+ */
 export const updateCartItem = async (cartItemId: number, quantity: number): Promise<CartItem | null> => {
   const result = await query<CartItem>('UPDATE cart_items SET quantity = $1, subtotal = quantity * price WHERE id = $2 RETURNING *', [quantity, cartItemId]);
   if (result.rows.length === 0) {
@@ -56,14 +84,26 @@ export const updateCartItem = async (cartItemId: number, quantity: number): Prom
   return result.rows[0];
 };
 
-// Clear cart
+/**
+ * Clears all items from the user's cart.
+ *
+ * @param userId - The ID of the user.
+ *
+ * @returns void
+ */
 export const clearCart = async (userId: number): Promise<void> => {
   const cart = await getOrCreateCart(userId);
   await query('DELETE FROM cart_items WHERE cart_id = $1', [cart.id]);
   await updateCartTotal(cart.id);
 };
 
-// Update cart total
+/**
+ * Updates the total cost of the cart.
+ *
+ * @param cartId - The ID of the cart to update.
+ *
+ * @returns void
+ */
 const updateCartTotal = async (cartId: number): Promise<void> => {
   await query('UPDATE carts SET total = (SELECT COALESCE(SUM(subtotal), 0) FROM cart_items WHERE cart_id = $1) WHERE id = $1', [cartId]);
 };

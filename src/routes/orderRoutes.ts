@@ -17,22 +17,46 @@ import {
 
 const router = Router();
 
-// Endpoint: Create Order
+/**
+ * @route POST /me/orders
+ * @description Create a new order for the current user.
+ * @access Private (requires authentication)
+ */
 router.post("/me/orders", authenticateToken, validateCreateOrder, createOrder);
 
-// Endpoint: Get All Orders (Admin Only)
+/**
+ * @route GET /admin/orders
+ * @description Get all orders (Admin only).
+ * @access Private (requires authentication and admin role)
+ */
 router.get("/admin/orders", authenticateToken, isAdmin, getAllOrders);
 
-// Endpoint: Get Order by ID (Admin Only)
+/**
+ * @route GET /admin/orders/:id
+ * @description Get an order by its ID (Admin only).
+ * @access Private (requires authentication and admin role)
+ */
 router.get("/admin/orders/:id", authenticateToken, isAdmin, getOrderById);
 
-// Endpoint: Get Current User's Orders
+/**
+ * @route GET /me/orders
+ * @description Get all orders of the current user.
+ * @access Private (requires authentication)
+ */
 router.get("/me/orders", authenticateToken, getCurrentUserOrders);
 
-// Endpoint: Get Current User's Order by ID
+/**
+ * @route GET /me/orders/:id
+ * @description Get a specific order of the current user by its ID.
+ * @access Private (requires authentication)
+ */
 router.get("/me/orders/:id", authenticateToken, getCurrentUserOrderById);
 
-// Endpoint: Update Order
+/**
+ * @route PUT /me/orders/:id
+ * @description Update an order of the current user by its ID.
+ * @access Private (requires authentication)
+ */
 router.put(
   "/me/orders/:id",
   authenticateToken,
@@ -40,7 +64,11 @@ router.put(
   updateOrder
 );
 
-// Endpoint: Delete Order by ID (Admin Only)
+/**
+ * @route DELETE /admin/orders/:id
+ * @description Delete an order by its ID (Admin only).
+ * @access Private (requires authentication and admin role)
+ */
 router.delete("/admin/orders/:id", authenticateToken, isAdmin, deleteOrder);
 
 export default router;

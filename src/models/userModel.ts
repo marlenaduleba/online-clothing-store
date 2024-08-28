@@ -10,7 +10,13 @@ interface User {
   role: string;
 }
 
-// Creating a new user
+/**
+ * Creates a new user with the provided details.
+ *
+ * @param user - The user data, excluding the ID.
+ *
+ * @returns The newly created user.
+ */
 export const createUser = async (user: Omit<User, 'id'>): Promise<User> => {
   const { first_name, last_name, email, password, role } = user;
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -23,7 +29,13 @@ export const createUser = async (user: Omit<User, 'id'>): Promise<User> => {
   return result.rows[0];
 };
 
-// Downloading user by email
+/**
+ * Retrieves a user by their email address.
+ *
+ * @param email - The email address of the user.
+ *
+ * @returns The user with the specified email, or null if not found.
+ */
 export const getUserByEmail = async (email: string): Promise<User | null> => {
   const result = await query<User>(
     'SELECT * FROM users WHERE email = $1',
@@ -33,7 +45,13 @@ export const getUserByEmail = async (email: string): Promise<User | null> => {
   return result.rows[0] || null;
 };
 
-// Get user by ID
+/**
+ * Retrieves a user by their ID.
+ *
+ * @param id - The ID of the user.
+ *
+ * @returns The user with the specified ID, or null if not found.
+ */
 export const getUserById = async (id: number): Promise<User | null> => {
   const result = await query<User>(
     'SELECT * FROM users WHERE id = $1',
@@ -43,13 +61,24 @@ export const getUserById = async (id: number): Promise<User | null> => {
   return result.rows[0] || null;
 };
 
-// Get all users
+/**
+ * Retrieves all users.
+ *
+ * @returns An array of all users.
+ */
 export const getAllUsers = async (): Promise<User[]> => {
   const result = await query<User>('SELECT * FROM users');
   return result.rows;
 };
 
-// Update user by ID
+/**
+ * Updates a user by their ID.
+ *
+ * @param id - The ID of the user to update.
+ * @param user - The new data for the user.
+ *
+ * @returns The updated user, or null if not found.
+ */
 export const updateUserById = async (id: number, user: Partial<User>): Promise<User | null> => {
   const fields = Object.keys(user);
   const values = Object.values(user);
@@ -63,8 +92,13 @@ export const updateUserById = async (id: number, user: Partial<User>): Promise<U
   return result.rows[0] || null;
 };
 
-// Delete user by ID
+/**
+ * Deletes a user by their ID.
+ *
+ * @param id - The ID of the user to delete.
+ *
+ * @returns void
+ */
 export const deleteUserById = async (id: number): Promise<void> => {
   await query('DELETE FROM users WHERE id = $1', [id]);
 };
-

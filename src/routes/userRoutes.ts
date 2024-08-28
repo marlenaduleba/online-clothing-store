@@ -6,19 +6,39 @@ import { validateUserCreation, validateUserUpdate } from '../middlewares/validat
 
 const router = Router();
 
-// Endpoint: Create User (Admin Only)
+/**
+ * @route POST /admin/users
+ * @description Create a new user (Admin only).
+ * @access Private (requires authentication and admin role)
+ */
 router.post('/admin/users', authenticateToken, isAdmin, validateUserCreation, createUser);
 
-// Endpoint: Get All Users (Admin Only)
+/**
+ * @route GET /admin/users
+ * @description Get all users (Admin only).
+ * @access Private (requires authentication and admin role)
+ */
 router.get('/admin/users', authenticateToken, isAdmin, getAllUsers);
 
-// Endpoint: Get User by ID (Admin Only)
+/**
+ * @route GET /admin/users/:id
+ * @description Get a user by their ID (Admin only).
+ * @access Private (requires authentication and admin role)
+ */
 router.get('/admin/users/:id', authenticateToken, isAdmin, getUserById);
 
-// Endpoint: Update User by ID (Admin Only)
+/**
+ * @route PUT /admin/users/:id
+ * @description Update a user by their ID (Admin only).
+ * @access Private (requires authentication and admin role)
+ */
 router.put('/admin/users/:id', authenticateToken, isAdmin, validateUserUpdate, updateUser);
 
-// Endpoint: Delete User by ID (Admin Only)
+/**
+ * @route DELETE /admin/users/:id
+ * @description Delete a user by their ID (Admin only).
+ * @access Private (requires authentication and admin role)
+ */
 router.delete('/admin/users/:id', authenticateToken, isAdmin, deleteUser);
 
 export default router;

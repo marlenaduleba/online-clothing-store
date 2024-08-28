@@ -17,7 +17,14 @@ interface OrderItem {
   subtotal: number;
 }
 
-// Create a new order
+/**
+ * Creates a new order for a user.
+ *
+ * @param userId - The ID of the user placing the order.
+ * @param items - The items included in the order.
+ *
+ * @returns The newly created order.
+ */
 export const createOrder = async (userId: number, items: { product_id: number, quantity: number, price: number }[]): Promise<Order> => {
   const total = items.reduce((sum, item) => sum + item.quantity * item.price, 0);
   const orderResult = await query<Order>(
@@ -37,31 +44,60 @@ export const createOrder = async (userId: number, items: { product_id: number, q
   return order;
 };
 
-// Get all orders
+/**
+ * Retrieves all orders.
+ *
+ * @returns An array of all orders.
+ */
 export const getAllOrders = async (): Promise<Order[]> => {
   const result = await query<Order>('SELECT * FROM orders');
   return result.rows;
 };
 
-// Get an order by ID
+/**
+ * Retrieves an order by its ID.
+ *
+ * @param id - The ID of the order to retrieve.
+ *
+ * @returns The order with the specified ID, or null if not found.
+ */
 export const getOrderById = async (id: number): Promise<Order | null> => {
   const result = await query<Order>('SELECT * FROM orders WHERE id = $1', [id]);
   return result.rows[0] || null;
 };
 
-// Get orders by user ID
+/**
+ * Retrieves all orders placed by a specific user.
+ *
+ * @param userId - The ID of the user whose orders are to be retrieved.
+ *
+ * @returns An array of the user's orders.
+ */
 export const getOrdersByUserId = async (userId: number): Promise<Order[]> => {
   const result = await query<Order>('SELECT * FROM orders WHERE user_id = $1', [userId]);
   return result.rows;
 };
 
-// Update an order
+/**
+ * Updates the total amount of an order.
+ *
+ * @param id - The ID of the order to update.
+ * @param total - The new total amount for the order.
+ *
+ * @returns The updated order, or null if not found.
+ */
 export const updateOrder = async (id: number, total: number): Promise<Order | null> => {
   const result = await query<Order>('UPDATE orders SET total = $1, updated_at = NOW() WHERE id = $2 RETURNING *', [total, id]);
   return result.rows[0] || null;
 };
 
-// Delete an order by ID
+/**
+ * Deletes an order by its ID.
+ *
+ * @param id - The ID of the order to delete.
+ *
+ * @returns void
+ */
 export const deleteOrder = async (id: number): Promise<void> => {
   await query('DELETE FROM orders WHERE id = $1', [id]);
 };

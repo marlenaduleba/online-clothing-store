@@ -11,6 +11,15 @@ declare global {
   }
 }
 
+/**
+ * Middleware function to authenticate a user's JWT token.
+ *
+ * @param req - The request object containing the authorization header with the JWT token.
+ * @param res - The response object to send an error message if authentication fails.
+ * @param next - The next middleware function in the stack.
+ *
+ * @returns Proceeds to the next middleware if authentication is successful, otherwise returns an error response.
+ */
 export const authenticateToken = async (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
   const token = authHeader && authHeader.split(' ')[1];
@@ -25,7 +34,7 @@ export const authenticateToken = async (req: Request, res: Response, next: NextF
   if (!payload) return res.status(403).json({ message: 'Forbidden' });
 
   try {
-    // Sprawdzenie, czy token jest na czarnej liście
+    // Check if the token is blacklisted
     if (await isTokenBlacklisted(token)) {
       return res.status(401).json({ message: 'Unauthorized - Token is blacklisted' });
     }

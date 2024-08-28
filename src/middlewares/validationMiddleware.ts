@@ -1,7 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import { body, validationResult } from "express-validator";
 
-// Registration Validation
+/**
+ * Middleware to validate user registration data.
+ */
 export const validateRegister = [
   body("email").isEmail().withMessage("Invalid email format"),
   body("password")
@@ -18,7 +20,9 @@ export const validateRegister = [
   },
 ];
 
-// Login Validation
+/**
+ * Middleware to validate user login data.
+ */
 export const validateLogin = [
   body("email").isEmail().withMessage("Invalid email format"),
   body("password").notEmpty().withMessage("Password is required"),
@@ -31,7 +35,9 @@ export const validateLogin = [
   },
 ];
 
-// User creation validation (Admin Only)
+/**
+ * Middleware to validate user creation data (Admin Only).
+ */
 export const validateUserCreation = [
   body("email").isEmail().withMessage("Invalid email format"),
   body("password")
@@ -51,7 +57,9 @@ export const validateUserCreation = [
   },
 ];
 
-// User Update Validation (Admin Only)
+/**
+ * Middleware to validate user update data (Admin Only).
+ */
 export const validateUserUpdate = [
   body("email").optional().isEmail().withMessage("Invalid email format"),
   body("password")
@@ -76,6 +84,9 @@ export const validateUserUpdate = [
   },
 ];
 
+/**
+ * Middleware to validate data for adding an item to the cart.
+ */
 export const validateAddItemToCart = [
   body("product_id").isInt().withMessage("Product ID must be an integer"),
   body("quantity").isInt({ min: 1 }).withMessage("Quantity must be at least 1"),
@@ -91,6 +102,9 @@ export const validateAddItemToCart = [
   },
 ];
 
+/**
+ * Middleware to validate data for updating a cart item.
+ */
 export const validateUpdateCartItem = [
   body("cart_item_id").isInt().withMessage("Cart Item ID must be an integer"),
   body("quantity").isInt({ min: 1 }).withMessage("Quantity must be at least 1"),
@@ -103,6 +117,9 @@ export const validateUpdateCartItem = [
   },
 ];
 
+/**
+ * Middleware to validate data for creating an order.
+ */
 export const validateCreateOrder = [
   body("items").isArray().withMessage("Items must be an array"),
   body("items.*.product_id")
@@ -123,6 +140,9 @@ export const validateCreateOrder = [
   },
 ];
 
+/**
+ * Middleware to validate data for updating an order.
+ */
 export const validateUpdateOrder = [
   body("total")
     .isFloat({ min: 0 })

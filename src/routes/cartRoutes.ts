@@ -13,7 +13,11 @@ import {
 
 const router = Router();
 
-// Endpoint: Add Item to Cart
+/**
+ * @route POST /me/cart
+ * @description Add an item to the current user's cart.
+ * @access Private (requires authentication)
+ */
 router.post(
   "/me/cart",
   authenticateToken,
@@ -21,10 +25,18 @@ router.post(
   addItemToCart
 );
 
-// Endpoint: Get Current User's Cart
+/**
+ * @route GET /me/cart
+ * @description Get the current user's cart.
+ * @access Private (requires authentication)
+ */
 router.get("/me/cart", authenticateToken, getCurrentUserCart);
 
-// Endpoint: Update Cart Item
+/**
+ * @route PUT /me/cart
+ * @description Update an item in the current user's cart.
+ * @access Private (requires authentication)
+ */
 router.put(
   "/me/cart",
   authenticateToken,
@@ -32,7 +44,11 @@ router.put(
   updateCartItem
 );
 
-// Endpoint: Clear Cart
+/**
+ * @route DELETE /me/cart
+ * @description Clear the current user's cart.
+ * @access Private (requires authentication)
+ */
 router.delete("/me/cart", authenticateToken, clearCart);
 
 export default router;

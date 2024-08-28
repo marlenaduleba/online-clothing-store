@@ -15,6 +15,15 @@ interface JwtPayload {
 
 const DEFAULT_EXPIRATION_TIME = 15 * 60; // Default expiration time: 15 minutes in seconds
 
+/**
+ * Creates a JSON Web Token (JWT) using the provided header, payload, and secret.
+ *
+ * @param header - The JWT header containing algorithm and type.
+ * @param payload - The JWT payload containing claims.
+ * @param secret - The secret key used to sign the token.
+ *
+ * @returns The signed JWT as a string.
+ */
 export const createJWT = (header: JwtHeader, payload: JwtPayload, secret: string): string => {
   // Set default expiration time if not provided
   if (!payload.exp) {
@@ -34,6 +43,14 @@ export const createJWT = (header: JwtHeader, payload: JwtPayload, secret: string
   return `${token}.${signature}`;
 };
 
+/**
+ * Verifies the validity of a JWT.
+ *
+ * @param token - The JWT string to verify.
+ * @param secret - The secret key used to verify the token's signature.
+ *
+ * @returns A boolean indicating whether the JWT is valid.
+ */
 export const verifyJWT = (token: string, secret: string): boolean => {
   try {
     const [headerB64, payloadB64, receivedSignature] = token.split('.');
@@ -60,6 +77,13 @@ export const verifyJWT = (token: string, secret: string): boolean => {
   }
 };
 
+/**
+ * Parses the payload of a JWT.
+ *
+ * @param token - The JWT string to parse.
+ *
+ * @returns The parsed JWT payload as an object, or null if parsing fails.
+ */
 export const parseJWTPayload = (token: string): JwtPayload | null => {
   try {
     const [, payloadB64] = token.split('.');

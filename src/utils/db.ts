@@ -15,7 +15,14 @@ pool.on('connect', () => {
   console.log('Connected to the database');
 });
 
-// Function to execute SQL queries
+/**
+ * Executes an SQL query against the database.
+ *
+ * @param text - The SQL query string.
+ * @param params - Optional parameters to be passed with the query.
+ *
+ * @returns A promise that resolves to the query result.
+ */
 export const query = <T extends QueryResultRow = any>(
   text: string,
   params?: any[]
@@ -23,7 +30,11 @@ export const query = <T extends QueryResultRow = any>(
   return pool.query<T>(text, params);
 };
 
-// Function to close the database connection
+/**
+ * Closes the connection to the database.
+ *
+ * @returns A promise that resolves when the connection is closed.
+ */
 export const closeConnection = async () => {
   await pool.end();
 };

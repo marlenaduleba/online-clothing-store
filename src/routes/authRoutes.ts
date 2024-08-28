@@ -14,19 +14,39 @@ import {
 
 const router = Router();
 
-// Endpoint: User Registration
+/**
+ * @route POST /register
+ * @description Register a new user.
+ * @access Public
+ */
 router.post("/register", validateRegister, register);
 
-// Endpoint: User Login
+/**
+ * @route POST /login
+ * @description Log in a user.
+ * @access Public
+ */
 router.post("/login", validateLogin, login);
 
-// Endpoint: User Logout
+/**
+ * @route POST /logout
+ * @description Log out a user.
+ * @access Private (requires authentication)
+ */
 router.post("/logout", authenticateToken, logout);
 
-// Endpoint: Get Current User
+/**
+ * @route GET /me
+ * @description Get the currently authenticated user's details.
+ * @access Private (requires authentication)
+ */
 router.get("/me", authenticateToken, getCurrentUser);
 
-// Endpoint: Refresh Token
+/**
+ * @route POST /refresh
+ * @description Refresh the authentication token.
+ * @access Public
+ */
 router.post("/refresh", refreshToken);
 
 export default router;
