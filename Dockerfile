@@ -13,14 +13,11 @@ RUN npm install
 # Copy the rest of the application files to the working directory
 COPY . .
 
-# Compile TypeScript to JavaScript
-RUN npm run build
-
 # Set the environment variable
-ENV NODE_ENV=production
+ENV NODE_ENV=${NODE_ENV}
 
 # Expose the application port
 EXPOSE 3000
 
-# Start the application
-CMD ["node", "dist/server.js"]
+# Command to run the app in different environments
+CMD if [ "${NODE_ENV}" = "development" ]; then npm run dev; else npm run start; fi
