@@ -34,8 +34,8 @@ const executeScript = async (filePath: string) => {
 const main = async () => {
   try {
     const dropTablesScript = path.join(__dirname, '../../database/dropTables.sql');
-    const schemaScript = path.join(__dirname, '../../database/schema.sql');
-    const dataScript = path.join(__dirname, '../../database/initialData.sql');
+    const schemaScript = path.join(__dirname, '../../database/migrations/01-schema.sql');
+    const dataScript = path.join(__dirname, '../../database/migrations/02-initialData.sql');
 
     await executeScript(dropTablesScript);
     console.log('Dropping tables...');
