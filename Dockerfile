@@ -1,26 +1,26 @@
-# Użyj obrazu node jako bazowy
+# Use the Node.js image as the base
 FROM node:18
 
-# Ustaw katalog roboczy w kontenerze
+# Set the working directory inside the container
 WORKDIR /app
 
-# Skopiuj pliki package.json i package-lock.json do katalogu roboczego
+# Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
 
-# Zainstaluj zależności
+# Install dependencies
 RUN npm install
 
-# Skopiuj resztę plików aplikacji do katalogu roboczego
+# Copy the rest of the application files to the working directory
 COPY . .
 
-# Skompiluj TypeScript do JavaScript
+# Compile TypeScript to JavaScript
 RUN npm run build
 
-# Ustaw zmienną środowiskową
+# Set the environment variable
 ENV NODE_ENV=production
 
-# Expose port aplikacji
+# Expose the application port
 EXPOSE 3000
 
-# Uruchom aplikację
+# Start the application
 CMD ["node", "dist/server.js"]
