@@ -2,16 +2,16 @@ import { Request, Response, NextFunction } from "express";
 const chalk = require("chalk");
 
 /**
- * Middleware to log messages and errors.
+ * Middleware to log success messages and other non-error messages.
  *
- * This middleware overrides the `res.send` function to log specific messages from the response body
- * and handles errors by logging them with different colors based on the status code.
+ * This middleware overrides the `res.send` function to log specific messages from the response body.
+ * Errors are passed to the global error handler middleware without additional logging.
  *
  * @param req - The request object.
  * @param res - The response object, which is modified to log messages.
  * @param next - The next middleware function in the stack.
  *
- * @returns Proceeds to the next middleware, logging messages and errors as needed.
+ * @returns Proceeds to the next middleware, logging messages as needed.
  */
 export const logMessages = (
   req: Request,
@@ -19,7 +19,7 @@ export const logMessages = (
   next: NextFunction
 ) => {
   // Save the original res.send function
-  const originalSend = res.send;
+  const originalSend = res.send.bind(res);
 
   // Override res.send to log messages
   res.send = function (body) {
@@ -55,43 +55,20 @@ export const logMessages = (
       // Color the message green for success responses (200-299)
       if (res.statusCode >= 200 && res.statusCode < 300) {
         coloredMessage = chalk.green(messageToLog);
-        // Color the message yellow for client error responses (400-499)
       } else if (res.statusCode >= 400 && res.statusCode < 500) {
+        // Color the message yellow for client errors (400-499)
         coloredMessage = chalk.yellow(messageToLog);
       } else {
         // Color other messages blue
-        coloredMessage = chalk.white(messageToLog);
+        coloredMessage = chalk.blue(messageToLog);
       }
       console.log(coloredMessage);
     }
 
     // Call the original send function with the body
-    return originalSend.call(this, body);
-  };
-
-  // Save the original next function
-  const originalNext = next;
-
-  // Override next to handle errors
-  const errorHandler = (err: any) => {
-    // Log the error message
-    if (err) {
-      console.error(chalk.red(err.message || "An unknown error occurred"));
-    }
-
-    // Call the original next function with the error
-    originalNext(err);
+    return originalSend(body);
   };
 
   // Call the next middleware in the stack
-  next = (err?: any) => {
-    if (err) {
-      errorHandler(err);
-    } else {
-      originalNext();
-    }
-  };
-
-  // Call the next middleware
   next();
 };
