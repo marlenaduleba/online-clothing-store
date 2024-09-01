@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { body, validationResult } from "express-validator";
+import CustomError from "../errors/CustomError.js";
 
 /**
  * Middleware to validate user registration data.
@@ -14,7 +15,8 @@ export const validateRegister = [
   (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      const error = new CustomError("Validation Error", 400, errors.array());
+      return next(error);
     }
     next();
   },
@@ -29,7 +31,8 @@ export const validateLogin = [
   (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      const error = new CustomError("Validation Error", 400, errors.array());
+      return next(error);
     }
     next();
   },
@@ -51,7 +54,8 @@ export const validateUserCreation = [
   (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      const error = new CustomError("Validation Error", 400, errors.array());
+      return next(error);
     }
     next();
   },
@@ -78,7 +82,8 @@ export const validateUserUpdate = [
   (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      const error = new CustomError("Validation Error", 400, errors.array());
+      return next(error);
     }
     next();
   },
@@ -96,7 +101,8 @@ export const validateAddItemToCart = [
   (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      const error = new CustomError("Validation Error", 400, errors.array());
+      return next(error);
     }
     next();
   },
@@ -111,7 +117,8 @@ export const validateUpdateCartItem = [
   (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      const error = new CustomError("Validation Error", 400, errors.array());
+      return next(error);
     }
     next();
   },
@@ -134,7 +141,8 @@ export const validateCreateOrder = [
   (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      const error = new CustomError("Validation Error", 400, errors.array());
+      return next(error);
     }
     next();
   },
@@ -150,7 +158,8 @@ export const validateUpdateOrder = [
   (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      const error = new CustomError("Validation Error", 400, errors.array());
+      return next(error);
     }
     next();
   },
