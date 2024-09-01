@@ -7,8 +7,12 @@ dotenv.config();
 // Create a new Pool instance for database connection
 const { Pool } = pg;
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  user: process.env.POSTGRES_USER,
+  host: 'localhost',
+  database: process.env.POSTGRES_DB,
+  password: process.env.POSTGRES_PASSWORD,
 });
+
 
 // Log when the connection to the database is established
 pool.on('connect', () => {
