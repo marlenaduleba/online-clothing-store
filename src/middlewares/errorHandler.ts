@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import chalk from "chalk";
+const chalk = require('chalk');
+
 
 /**
  * Middleware function to handle errors in the application.

@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from 'express';
-import chalk from 'chalk';
+import { Request, Response, NextFunction } from "express";
+const chalk = require("chalk");
 
 /**
  * Middleware to log messages and errors.
@@ -13,7 +13,11 @@ import chalk from 'chalk';
  *
  * @returns Proceeds to the next middleware, logging messages and errors as needed.
  */
-export const logMessages = (req: Request, res: Response, next: NextFunction) => {
+export const logMessages = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   // Save the original res.send function
   const originalSend = res.send;
 
@@ -22,24 +26,26 @@ export const logMessages = (req: Request, res: Response, next: NextFunction) => 
     let messageToLog: string | null = null;
 
     // Check if the response body is a string
-    if (typeof body === 'string') {
+    if (typeof body === "string") {
       try {
         // Try to parse the body as JSON
         const parsedBody = JSON.parse(body);
         if (parsedBody.message) {
           messageToLog = parsedBody.message;
         } else if (parsedBody.errors && parsedBody.errors.length) {
-          messageToLog = parsedBody.errors.map((error: any) => error.msg).join(', ');
+          messageToLog = parsedBody.errors
+            .map((error: any) => error.msg)
+            .join(", ");
         }
       } catch (err) {
         // If JSON parsing fails, we keep the original body
       }
-    } else if (body && typeof body === 'object') {
+    } else if (body && typeof body === "object") {
       // If the body is an object, check for message or errors
       if (body.message) {
         messageToLog = body.message;
       } else if (body.errors && body.errors.length) {
-        messageToLog = body.errors.map((error: any) => error.msg).join(', ');
+        messageToLog = body.errors.map((error: any) => error.msg).join(", ");
       }
     }
 
@@ -49,7 +55,7 @@ export const logMessages = (req: Request, res: Response, next: NextFunction) => 
       // Color the message green for success responses (200-299)
       if (res.statusCode >= 200 && res.statusCode < 300) {
         coloredMessage = chalk.green(messageToLog);
-      // Color the message yellow for client error responses (400-499)
+        // Color the message yellow for client error responses (400-499)
       } else if (res.statusCode >= 400 && res.statusCode < 500) {
         coloredMessage = chalk.yellow(messageToLog);
       } else {
@@ -70,7 +76,7 @@ export const logMessages = (req: Request, res: Response, next: NextFunction) => 
   const errorHandler = (err: any) => {
     // Log the error message
     if (err) {
-      console.error(chalk.red(err.message || 'An unknown error occurred'));
+      console.error(chalk.red(err.message || "An unknown error occurred"));
     }
 
     // Call the original next function with the error
