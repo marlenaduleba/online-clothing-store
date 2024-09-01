@@ -26,26 +26,26 @@ jest.mock("../../../src/utils/jwt");
 jest.mock("bcrypt");
 
 describe("authService", () => {
-  // Define the secret key for JWT
   const secret = process.env.JWT_SECRET || "secret";
 
   afterEach(() => {
-    // Clear mock calls after each test to avoid interference
     jest.clearAllMocks();
   });
 
   describe("registerUser", () => {
     it("should register a new user", async () => {
-      // Mock user data
       const mockUser = {
         id: 1,
         email: "test@example.com",
         password: "hashedpassword",
+        first_name: "John",
+        last_name: "Doe",
+        role: "user",
       };
       (getUserByEmail as jest.Mock).mockResolvedValue(null);
+      (bcrypt.hash as jest.Mock).mockResolvedValue("hashedpassword");
       (createUser as jest.Mock).mockResolvedValue(mockUser);
 
-      // Call the service function
       const result = await registerUser(
         "test@example.com",
         "password",
@@ -53,28 +53,31 @@ describe("authService", () => {
         "Doe"
       );
 
-      // Assertions
       expect(getUserByEmail).toHaveBeenCalledWith("test@example.com");
+      expect(bcrypt.hash).toHaveBeenCalledWith("password", 10);
       expect(createUser).toHaveBeenCalledWith({
         email: "test@example.com",
-        password: "password",
+        password: "hashedpassword", // Expect the hashed password here
         first_name: "John",
         last_name: "Doe",
         role: "user",
       });
-      expect(result).toEqual({ id: 1, email: "test@example.com" });
+      expect(result).toEqual({
+        id: 1,
+        email: "test@example.com",
+        first_name: "John",
+        last_name: "Doe",
+        role: "user",
+      });
     });
 
     it("should throw an error if user already exists", async () => {
-      // Mock the case where the user already exists
       (getUserByEmail as jest.Mock).mockResolvedValue({ id: 1 });
 
-      // Call the service function and expect an error
       await expect(
         registerUser("test@example.com", "password", "John", "Doe")
       ).rejects.toThrow("User already exists");
 
-      // Assertions
       expect(getUserByEmail).toHaveBeenCalledWith("test@example.com");
       expect(createUser).not.toHaveBeenCalled();
     });
