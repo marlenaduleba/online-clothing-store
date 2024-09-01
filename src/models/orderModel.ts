@@ -96,8 +96,9 @@ export const updateOrder = async (id: number, total: number): Promise<Order | nu
  *
  * @param id - The ID of the order to delete.
  *
- * @returns void
+ * @returns The number of rows deleted.
  */
-export const deleteOrder = async (id: number): Promise<void> => {
-  await query('DELETE FROM orders WHERE id = $1', [id]);
+export const deleteOrder = async (id: number): Promise<number> => {
+  const result = await query('DELETE FROM orders WHERE id = $1', [id]);
+  return result.rowCount || 0; // Zwróć rowCount lub 0, jeśli rowCount jest null
 };

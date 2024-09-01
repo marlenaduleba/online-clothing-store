@@ -60,8 +60,10 @@ export const updateOrderService = async (id: number, total: number) => {
  *
  * @param id - The ID of the order to delete.
  *
- * @returns void
+ * @returns The number of rows deleted.
  */
-export const deleteOrderService = async (id: number) => {
-  await deleteOrder(id);
+export const deleteOrderService = async (id: number): Promise<number> => {
+  return await deleteOrder(id);
 };
+
+

@@ -134,9 +134,14 @@ export const updateOrder = async (req: Request, res: Response, next: NextFunctio
  */
 export const deleteOrder = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    await deleteOrderService(parseInt(req.params.id));
+    const deletedRows = await deleteOrderService(parseInt(req.params.id));
+    if (deletedRows === 0) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
     res.status(200).json({ message: 'Order successfully deleted' });
   } catch (error) {
     next(error);
   }
 };
+
+
