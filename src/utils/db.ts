@@ -13,12 +13,6 @@ const pool = new Pool({
   password: process.env.POSTGRES_PASSWORD,
 });
 
-
-// Log when the connection to the database is established
-pool.on('connect', () => {
-  console.log('Connected to the database');
-});
-
 /**
  * Executes an SQL query against the database.
  *
