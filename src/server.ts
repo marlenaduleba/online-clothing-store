@@ -18,11 +18,11 @@ app.listen(PORT, () => {
   // Optional: Sample Database Query to check connection
   query("SELECT NOW()", [])
     .then((res: QueryResult) => {
-      // We type the response as QueryResult
       console.log("Database connected:", res.rows[0]);
     })
     .catch((err: Error) => {
       // We type the error as Error
       console.error("Database connection error:", err.message);
+      process.exit(1);
     });
 });
