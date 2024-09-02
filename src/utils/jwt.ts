@@ -20,7 +20,7 @@ interface JwtPayload {
   [key: string]: any;
 }
 
-const DEFAULT_EXPIRATION_TIME = 15 * 60; // Default expiration time: 15 minutes in seconds
+const DEFAULT_EXPIRATION_TIME = 30 * 60; // Default expiration time: 30 minutes in seconds
 
 /**
  * Creates a JSON Web Token (JWT) with the specified header, payload, and secret.
