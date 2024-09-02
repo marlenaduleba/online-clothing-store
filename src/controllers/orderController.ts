@@ -1,5 +1,11 @@
-import { Request, Response, NextFunction } from 'express';
-import { createOrderService, getAllOrdersService, getOrderByIdService, getOrdersByUserIdService, updateOrderService, deleteOrderService } from '../services/orderService.js';
+import { Request, Response, NextFunction } from "express";
+import {
+  createOrderService,
+  getAllOrdersService,
+  getOrderByIdService,
+  getOrdersByUserIdService,
+  deleteOrderService,
+} from "../services/orderService.js";
 
 /**
  * Creates a new order for the user.
@@ -10,7 +16,11 @@ import { createOrderService, getAllOrdersService, getOrderByIdService, getOrders
  *
  * @returns A response with the created order data.
  */
-export const createOrder = async (req: Request, res: Response, next: NextFunction) => {
+export const createOrder = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const userId = req.user.id;
     const items = req.body.items;
@@ -30,7 +40,11 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
  *
  * @returns A response with the list of all orders.
  */
-export const getAllOrders = async (req: Request, res: Response, next: NextFunction) => {
+export const getAllOrders = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const orders = await getAllOrdersService();
     res.status(200).json(orders);
@@ -48,11 +62,15 @@ export const getAllOrders = async (req: Request, res: Response, next: NextFuncti
  *
  * @returns A response with the order data, or an error message if the order is not found.
  */
-export const getOrderById = async (req: Request, res: Response, next: NextFunction) => {
+export const getOrderById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const order = await getOrderByIdService(parseInt(req.params.id));
     if (!order) {
-      return res.status(404).json({ message: 'Order not found' });
+      return res.status(404).json({ message: "Order not found" });
     }
     res.status(200).json(order);
   } catch (error) {
@@ -69,7 +87,11 @@ export const getOrderById = async (req: Request, res: Response, next: NextFuncti
  *
  * @returns A response with the user's orders.
  */
-export const getCurrentUserOrders = async (req: Request, res: Response, next: NextFunction) => {
+export const getCurrentUserOrders = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const userId = req.user.id;
     const orders = await getOrdersByUserIdService(userId);
@@ -88,34 +110,16 @@ export const getCurrentUserOrders = async (req: Request, res: Response, next: Ne
  *
  * @returns A response with the order data, or an error message if the order is not found or does not belong to the user.
  */
-export const getCurrentUserOrderById = async (req: Request, res: Response, next: NextFunction) => {
+export const getCurrentUserOrderById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const userId = req.user.id;
     const order = await getOrderByIdService(parseInt(req.params.id));
     if (!order || order.user_id !== userId) {
-      return res.status(404).json({ message: 'Order not found' });
-    }
-    res.status(200).json(order);
-  } catch (error) {
-    next(error);
-  }
-};
-
-/**
- * Updates a specific order by its ID.
- *
- * @param req - The request object containing the updated order details.
- * @param res - The response object to confirm the order was updated.
- * @param next - The next middleware function in the stack.
- *
- * @returns A response with the updated order data, or an error message if the order is not found.
- */
-export const updateOrder = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const total = req.body.total;
-    const order = await updateOrderService(parseInt(req.params.id), total);
-    if (!order) {
-      return res.status(404).json({ message: 'Order not found' });
+      return res.status(404).json({ message: "Order not found" });
     }
     res.status(200).json(order);
   } catch (error) {
@@ -132,16 +136,18 @@ export const updateOrder = async (req: Request, res: Response, next: NextFunctio
  *
  * @returns A response with a message confirming the order was deleted.
  */
-export const deleteOrder = async (req: Request, res: Response, next: NextFunction) => {
+export const deleteOrder = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const deletedRows = await deleteOrderService(parseInt(req.params.id));
     if (deletedRows === 0) {
-      return res.status(404).json({ message: 'Order not found' });
+      return res.status(404).json({ message: "Order not found" });
     }
-    res.status(200).json({ message: 'Order successfully deleted' });
+    res.status(200).json({ message: "Order successfully deleted" });
   } catch (error) {
     next(error);
   }
 };
-
-
