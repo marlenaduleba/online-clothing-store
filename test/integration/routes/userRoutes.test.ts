@@ -4,7 +4,7 @@ import { query, closeConnection } from "../../../src/utils/db.js";
 import path from "path";
 import fs from "fs";
 
-// Ścieżki do skryptów SQL
+// Paths to SQL scripts
 const dropTablesScript = path.join(
   __dirname,
   "../../../database/dropTables.sql"
@@ -18,15 +18,14 @@ const dataScript = path.join(
   "../../../database/migrations/02-initialData.sql"
 );
 
-// Funkcja resetująca bazę danych
+// Function to reset the database by executing SQL scripts
 const resetDatabase = async () => {
   const executeScript = async (filePath: string) => {
     try {
       const script = fs.readFileSync(filePath, "utf-8");
       const queries = script.split(";").filter((query) => query.trim() !== "");
       for (const queryText of queries) {
-        console.log("Executing query:", queryText); // Logowanie każdego zapytania
-        await query(queryText);
+        await query(queryText); // Execute each SQL query in the script
       }
     } catch (err) {
       console.error("Error executing script", err);
@@ -38,13 +37,13 @@ const resetDatabase = async () => {
   await executeScript(dataScript);
 };
 
-// Użytkownik `admin` do autoryzacji
+// Admin user credentials for authorization
 const adminCredentials = {
   email: "admin@example.com",
   password: "password123",
 };
 
-// Użytkownik `user` do autoryzacji
+// Regular user credentials for authorization
 const userCredentials = {
   email: "user@example.com",
   password: "password123",
@@ -53,28 +52,29 @@ const userCredentials = {
 let adminToken: string;
 let userToken: string;
 
-// Logowanie i pobieranie tokenów przed testami
+// Log in and get tokens before tests
 beforeAll(async () => {
   await resetDatabase();
 
-  // Logowanie admina
+  // Admin login
   const adminLoginResponse = await request(app)
     .post("/api/v1/auth/login")
     .send(adminCredentials);
   adminToken = adminLoginResponse.body.token;
 
-  // Logowanie zwykłego użytkownika
+  // Regular user login
   const userLoginResponse = await request(app)
     .post("/api/v1/auth/login")
     .send(userCredentials);
   userToken = userLoginResponse.body.token;
 });
 
-// Resetowanie bazy danych przed każdym testem
+// Reset the database before each test
 beforeEach(async () => {
   await resetDatabase();
 });
 
+// Close the database connection after all tests
 afterAll(async () => {
   await closeConnection();
 });
