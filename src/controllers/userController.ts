@@ -1,5 +1,11 @@
-import { Request, Response, NextFunction } from 'express';
-import { createUserService, getAllUsersService, getUserByIdService, updateUserService, deleteUserService } from '../services/userService.js';
+import { Request, Response, NextFunction } from "express";
+import {
+  createUserService,
+  getAllUsersService,
+  getUserByIdService,
+  updateUserService,
+  deleteUserService,
+} from "../services/userService.js";
 
 /**
  * Creates a new user.
@@ -10,7 +16,11 @@ import { createUserService, getAllUsersService, getUserByIdService, updateUserSe
  *
  * @returns A response with a message confirming the user was created.
  */
-export const createUser = async (req: Request, res: Response, next: NextFunction) => {
+export const createUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const user = await createUserService(req.body);
     res.status(201).json({ message: "User created successfully", user });
@@ -28,7 +38,11 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
  *
  * @returns A response with the list of all users.
  */
-export const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
+export const getAllUsers = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const users = await getAllUsersService();
     res.status(200).json(users);
@@ -46,11 +60,15 @@ export const getAllUsers = async (req: Request, res: Response, next: NextFunctio
  *
  * @returns A response with the user data, or an error message if the user is not found.
  */
-export const getUserById = async (req: Request, res: Response, next: NextFunction) => {
+export const getUserById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const user = await getUserByIdService(parseInt(req.params.id));
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
     res.status(200).json(user);
   } catch (error) {
@@ -67,10 +85,24 @@ export const getUserById = async (req: Request, res: Response, next: NextFunctio
  *
  * @returns A response with a message confirming the user's data was updated.
  */
-export const updateUser = async (req: Request, res: Response, next: NextFunction) => {
+export const updateUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-    const user = await updateUserService(parseInt(req.params.id), req.body);
-    res.status(200).json({ message: 'User updated successfully', user });
+    const user = await getUserByIdService(parseInt(req.params.id)); // Dodano sprawdzenie istnienia użytkownika
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const updatedUser = await updateUserService(
+      parseInt(req.params.id),
+      req.body
+    );
+    res
+      .status(200)
+      .json({ message: "User updated successfully", user: updatedUser });
   } catch (error) {
     next(error);
   }
@@ -85,10 +117,19 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
  *
  * @returns A response with a message confirming the user was deleted.
  */
-export const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
+export const deleteUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
+    const user = await getUserByIdService(parseInt(req.params.id)); // Dodano sprawdzenie istnienia użytkownika
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
     await deleteUserService(parseInt(req.params.id));
-    res.status(200).json({ message: 'User deleted successfully' });
+    res.status(200).json({ message: "User deleted successfully" });
   } catch (error) {
     next(error);
   }
