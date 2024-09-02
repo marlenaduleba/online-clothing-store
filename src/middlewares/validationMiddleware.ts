@@ -147,20 +147,3 @@ export const validateCreateOrder = [
     next();
   },
 ];
-
-/**
- * Middleware to validate data for updating an order.
- */
-export const validateUpdateOrder = [
-  body("total")
-    .isFloat({ min: 0 })
-    .withMessage("Total must be a positive number"),
-  (req: Request, res: Response, next: NextFunction) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      const error = new CustomError("Validation Error", 400, errors.array());
-      return next(error);
-    }
-    next();
-  },
-];
