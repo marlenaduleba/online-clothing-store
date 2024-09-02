@@ -12,18 +12,11 @@ import { isAdmin } from "../middlewares/isAdmin.js";
 const router = Router();
 
 /**
- * @route POST /api/v1/admin/products
- * @description Create a new product (Admin only).
- * @access Private (requires authentication and admin role)
- */
-router.post("/", isAdmin, createProduct);
-
-/**
- * @route GET /api/v1/products
- * @description Get all products.
+ * @route GET /api/v1/products/search
+ * @description Search for products by name, brand, or category.
  * @access Public
  */
-router.get("/", getAllProducts);
+router.get("/search", searchProducts);
 
 /**
  * @route GET /api/v1/products/{id}
@@ -33,11 +26,18 @@ router.get("/", getAllProducts);
 router.get("/:id", getProductById);
 
 /**
- * @route GET /api/v1/products/search
- * @description Search for products by name, brand, or category.
+ * @route GET /api/v1/products
+ * @description Get all products.
  * @access Public
  */
-router.get("/search", searchProducts);
+router.get("/", getAllProducts);
+
+/**
+ * @route POST /api/v1/admin/products
+ * @description Create a new product (Admin only).
+ * @access Private (requires authentication and admin role)
+ */
+router.post("/", isAdmin, createProduct);
 
 /**
  * @route PUT /api/v1/admin/products/{id}
