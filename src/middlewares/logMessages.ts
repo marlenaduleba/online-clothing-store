@@ -1,34 +1,34 @@
-import { Request, Response, NextFunction } from "express";
-const chalk = require("chalk");
+import chalk from "chalk";
+import { NextFunction, Request, Response } from "express";
 
 /**
- * Middleware to log success messages and other non-error messages.
+ * Middleware function to log specific messages from JSON responses.
  *
- * This middleware overrides the `res.send` function to log specific messages from the response body.
- * Errors are passed to the global error handler middleware without additional logging.
+ * This middleware intercepts the response's `send` method to check if the response body
+ * contains a message or errors in JSON format. Depending on the HTTP status code of the response,
+ * the message is logged with appropriate coloring for better visibility.
  *
- * @param req - The request object.
- * @param res - The response object, which is modified to log messages.
+ * @param req - The request object from the client.
+ * @param res - The response object used to send the response to the client.
  * @param next - The next middleware function in the stack.
- *
- * @returns Proceeds to the next middleware, logging messages as needed.
  */
 export const logMessages = (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  // Save the original res.send function
   const originalSend = res.send.bind(res);
 
-  // Override res.send to log messages
-  res.send = function (body) {
-    let messageToLog: string | null = null;
+  res.send = function (body: any) {
+    let messageToLog = null;
 
-    // Check if the response body is a string
-    if (typeof body === "string") {
+    // Check if the response is in JSON format
+    const contentType = res.getHeader("Content-Type");
+    const isJsonResponse =
+      contentType && contentType.toString().includes("application/json");
+
+    if (isJsonResponse && typeof body === "string") {
       try {
-        // Try to parse the body as JSON
         const parsedBody = JSON.parse(body);
         if (parsedBody.message) {
           messageToLog = parsedBody.message;
@@ -37,11 +37,11 @@ export const logMessages = (
             .map((error: any) => error.msg)
             .join(", ");
         }
-      } catch (err) {
-        // If JSON parsing fails, we keep the original body
+      } catch (error) {
+        // Log error parsing JSON only if necessary, otherwise ignore it
+        console.error("Error parsing JSON body:", error);
       }
     } else if (body && typeof body === "object") {
-      // If the body is an object, check for message or errors
       if (body.message) {
         messageToLog = body.message;
       } else if (body.errors && body.errors.length) {
@@ -49,26 +49,22 @@ export const logMessages = (
       }
     }
 
-    // Log the message if it exists
-    if (messageToLog) {
-      let coloredMessage: string;
-      // Color the message green for success responses (200-299)
+    if (messageToLog && res.statusCode !== 500) {
+      let coloredMessage;
       if (res.statusCode >= 200 && res.statusCode < 300) {
         coloredMessage = chalk.green(messageToLog);
+      } else if (res.statusCode >= 300 && res.statusCode < 400) {
+        coloredMessage = chalk.gray(messageToLog);
       } else if (res.statusCode >= 400 && res.statusCode < 500) {
-        // Color the message yellow for client errors (400-499)
         coloredMessage = chalk.yellow(messageToLog);
       } else {
-        // Color other messages blue
         coloredMessage = chalk.blue(messageToLog);
       }
       console.log(coloredMessage);
     }
 
-    // Call the original send function with the body
     return originalSend(body);
   };
 
-  // Call the next middleware in the stack
   next();
 };
