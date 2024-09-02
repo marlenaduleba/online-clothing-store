@@ -1,4 +1,10 @@
-import { createOrder, getAllOrders, getOrderById, getOrdersByUserId, updateOrder, deleteOrder } from '../models/orderModel.js';
+import {
+  createOrder,
+  getAllOrders,
+  getOrderById,
+  getOrdersByUserId,
+  deleteOrder,
+} from "../models/orderModel.js";
 
 /**
  * Service to create a new order for the user.
@@ -8,7 +14,10 @@ import { createOrder, getAllOrders, getOrderById, getOrdersByUserId, updateOrder
  *
  * @returns The newly created order.
  */
-export const createOrderService = async (userId: number, items: { product_id: number, quantity: number, price: number }[]) => {
+export const createOrderService = async (
+  userId: number,
+  items: { product_id: number; quantity: number; price: number }[]
+) => {
   return await createOrder(userId, items);
 };
 
@@ -44,18 +53,6 @@ export const getOrdersByUserIdService = async (userId: number) => {
 };
 
 /**
- * Service to update the total amount of an order.
- *
- * @param id - The ID of the order to update.
- * @param total - The new total amount for the order.
- *
- * @returns The updated order, or null if not found.
- */
-export const updateOrderService = async (id: number, total: number) => {
-  return await updateOrder(id, total);
-};
-
-/**
  * Service to delete an order by its ID.
  *
  * @param id - The ID of the order to delete.
@@ -65,5 +62,3 @@ export const updateOrderService = async (id: number, total: number) => {
 export const deleteOrderService = async (id: number): Promise<number> => {
   return await deleteOrder(id);
 };
-
-

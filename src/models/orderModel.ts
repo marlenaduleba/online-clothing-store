@@ -1,4 +1,4 @@
-import { query } from '../utils/db.js';
+import { query } from "../utils/db.js";
 
 interface Order {
   id: number;
@@ -25,18 +25,30 @@ interface OrderItem {
  *
  * @returns The newly created order.
  */
-export const createOrder = async (userId: number, items: { product_id: number, quantity: number, price: number }[]): Promise<Order> => {
-  const total = items.reduce((sum, item) => sum + item.quantity * item.price, 0);
+export const createOrder = async (
+  userId: number,
+  items: { product_id: number; quantity: number; price: number }[]
+): Promise<Order> => {
+  const total = items.reduce(
+    (sum, item) => sum + item.quantity * item.price,
+    0
+  );
   const orderResult = await query<Order>(
-    'INSERT INTO orders (user_id, total) VALUES ($1, $2) RETURNING *',
+    "INSERT INTO orders (user_id, total) VALUES ($1, $2) RETURNING *",
     [userId, total]
   );
   const order = orderResult.rows[0];
 
-  const orderItemsPromises = items.map(item =>
+  const orderItemsPromises = items.map((item) =>
     query<OrderItem>(
-      'INSERT INTO order_items (order_id, product_id, quantity, price, subtotal) VALUES ($1, $2, $3, $4, $5)',
-      [order.id, item.product_id, item.quantity, item.price, item.quantity * item.price]
+      "INSERT INTO order_items (order_id, product_id, quantity, price, subtotal) VALUES ($1, $2, $3, $4, $5)",
+      [
+        order.id,
+        item.product_id,
+        item.quantity,
+        item.price,
+        item.quantity * item.price,
+      ]
     )
   );
 
@@ -50,7 +62,7 @@ export const createOrder = async (userId: number, items: { product_id: number, q
  * @returns An array of all orders.
  */
 export const getAllOrders = async (): Promise<Order[]> => {
-  const result = await query<Order>('SELECT * FROM orders');
+  const result = await query<Order>("SELECT * FROM orders");
   return result.rows;
 };
 
@@ -62,7 +74,7 @@ export const getAllOrders = async (): Promise<Order[]> => {
  * @returns The order with the specified ID, or null if not found.
  */
 export const getOrderById = async (id: number): Promise<Order | null> => {
-  const result = await query<Order>('SELECT * FROM orders WHERE id = $1', [id]);
+  const result = await query<Order>("SELECT * FROM orders WHERE id = $1", [id]);
   return result.rows[0] || null;
 };
 
@@ -74,21 +86,10 @@ export const getOrderById = async (id: number): Promise<Order | null> => {
  * @returns An array of the user's orders.
  */
 export const getOrdersByUserId = async (userId: number): Promise<Order[]> => {
-  const result = await query<Order>('SELECT * FROM orders WHERE user_id = $1', [userId]);
+  const result = await query<Order>("SELECT * FROM orders WHERE user_id = $1", [
+    userId,
+  ]);
   return result.rows;
-};
-
-/**
- * Updates the total amount of an order.
- *
- * @param id - The ID of the order to update.
- * @param total - The new total amount for the order.
- *
- * @returns The updated order, or null if not found.
- */
-export const updateOrder = async (id: number, total: number): Promise<Order | null> => {
-  const result = await query<Order>('UPDATE orders SET total = $1, updated_at = NOW() WHERE id = $2 RETURNING *', [total, id]);
-  return result.rows[0] || null;
 };
 
 /**
@@ -99,6 +100,6 @@ export const updateOrder = async (id: number, total: number): Promise<Order | nu
  * @returns The number of rows deleted.
  */
 export const deleteOrder = async (id: number): Promise<number> => {
-  const result = await query('DELETE FROM orders WHERE id = $1', [id]);
+  const result = await query("DELETE FROM orders WHERE id = $1", [id]);
   return result.rowCount || 0; // Zwróć rowCount lub 0, jeśli rowCount jest null
 };
