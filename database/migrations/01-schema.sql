@@ -96,5 +96,3 @@ CREATE INDEX idx_cart_items_product_id ON cart_items(product_id);
 CREATE INDEX idx_order_items_order_id ON order_items(order_id);
 CREATE INDEX idx_order_items_product_id ON order_items(product_id);
 
--- Resetting the sequence to start from 1
-ALTER SEQUENCE public.products_id_seq RESTART WITH 1;

@@ -1,3 +1,8 @@
+-- Inserting an admin user into the users table
+INSERT INTO users (email, password, first_name, last_name, role) VALUES
+('admin@example.com', '$2b$10$qrztX0isJzGbYi67HCZN8.0SoXaR2icPH7zAZ8kLHOqzc/4mhJw4e', 'Admin', 'User', 'admin'),
+('user@example.com', '$2b$10$qrztX0isJzGbYi67HCZN8.0SoXaR2icPH7zAZ8kLHOqzc/4mhJw4e', 'Regular', 'User', 'user');
+
 -- Inserting data into the products table
 INSERT INTO products (name, description, price, brand, category, size) VALUES
 ('Basic T-Shirt', 'Comfortable cotton t-shirt in various colors.', 15.99, 'BrandA', 'Apparel', 'M'),
@@ -50,3 +55,4 @@ INSERT INTO products (name, description, price, brand, category, size) VALUES
 ('Face Mask', 'Reusable face mask for protection.', 9.99, 'BrandVV', 'Accessories', 'One Size'),
 ('Graphic T-Shirt', 'T-shirt with a unique graphic design.', 19.99, 'BrandWW', 'Apparel', 'M'),
 ('Leather Wallet', 'Compact leather wallet for daily use.', 29.99, 'BrandXX', 'Accessories', 'One Size');
+
