@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { query, closeConnection } from './db.js';
+import { query } from './db.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -49,8 +49,6 @@ const main = async () => {
     console.log('Database reset successfully');
   } catch (err) {
     console.error('Error resetting the database', err);
-  } finally {
-    await closeConnection();
   }
 };
 
