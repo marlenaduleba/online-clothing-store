@@ -1,44 +1,61 @@
-import { Router } from 'express';
-import { createUser, getAllUsers, getUserById, updateUser, deleteUser } from '../controllers/userController.js';
-import { authenticateToken } from '../middlewares/authenticateToken.js';
-import { isAdmin } from '../middlewares/isAdmin.js';
-import { validateUserCreation, validateUserUpdate } from '../middlewares/validationMiddleware.js';
+import { NextFunction, Request, Response, Router } from "express";
+import {
+  createUser,
+  getAllUsers,
+  getUserById,
+  updateUser,
+  deleteUser,
+} from "../controllers/userController.js";
+import { isAdmin } from "../middlewares/isAdmin.js";
+import {
+  validateUserCreation,
+  validateUserUpdate,
+} from "../middlewares/validationMiddleware.js";
 
 const router = Router();
 
 /**
- * @route POST /admin/users
+ * @route POST /api/v1/admin/users
  * @description Create a new user (Admin only).
  * @access Private (requires authentication and admin role)
  */
-router.post('/admin/users', authenticateToken, isAdmin, validateUserCreation, createUser);
+router.post(
+  "/",
+  (req: Request, res: Response, next: NextFunction) => {
+    console.log("Received request to create user:", req.body);
+    next();
+  },
+  isAdmin,
+  validateUserCreation,
+  createUser
+);
 
 /**
- * @route GET /admin/users
+ * @route GET /api/v1/admin/users
  * @description Get all users (Admin only).
  * @access Private (requires authentication and admin role)
  */
-router.get('/admin/users', authenticateToken, isAdmin, getAllUsers);
+router.get("/", isAdmin, getAllUsers);
 
 /**
- * @route GET /admin/users/:id
+ * @route GET /api/v1/admin/users/:id
  * @description Get a user by their ID (Admin only).
  * @access Private (requires authentication and admin role)
  */
-router.get('/admin/users/:id', authenticateToken, isAdmin, getUserById);
+router.get("/:id", isAdmin, getUserById);
 
 /**
- * @route PUT /admin/users/:id
+ * @route PUT /api/v1/admin/users/:id
  * @description Update a user by their ID (Admin only).
  * @access Private (requires authentication and admin role)
  */
-router.put('/admin/users/:id', authenticateToken, isAdmin, validateUserUpdate, updateUser);
+router.put("/:id", isAdmin, validateUserUpdate, updateUser);
 
 /**
- * @route DELETE /admin/users/:id
+ * @route DELETE /api/v1/admin/users/:id
  * @description Delete a user by their ID (Admin only).
  * @access Private (requires authentication and admin role)
  */
-router.delete('/admin/users/:id', authenticateToken, isAdmin, deleteUser);
+router.delete("/:id", isAdmin, deleteUser);
 
 export default router;

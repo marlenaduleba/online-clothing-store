@@ -1,50 +1,56 @@
-import { Router } from 'express';
-import { createProduct, getAllProducts, getProductById, updateProduct, deleteProduct, searchProducts } from '../controllers/productController.js';
-import { authenticateToken } from '../middlewares/authenticateToken.js';
-import { isAdmin } from '../middlewares/isAdmin.js';
+import { Router } from "express";
+import {
+  createProduct,
+  getAllProducts,
+  getProductById,
+  updateProduct,
+  deleteProduct,
+  searchProducts,
+} from "../controllers/productController.js";
+import { isAdmin } from "../middlewares/isAdmin.js";
 
 const router = Router();
 
 /**
- * @route POST /admin/products
+ * @route POST /api/v1/admin/products
  * @description Create a new product (Admin only).
  * @access Private (requires authentication and admin role)
  */
-router.post('/admin/products', authenticateToken, isAdmin, createProduct);
+router.post("/", isAdmin, createProduct);
 
 /**
- * @route GET /products
+ * @route GET /api/v1/products
  * @description Get all products.
  * @access Public
  */
-router.get('/products', getAllProducts);
+router.get("/", getAllProducts);
 
 /**
- * @route GET /products/:id
+ * @route GET /api/v1/products/{id}
  * @description Get a product by its ID.
  * @access Public
  */
-router.get('/products/:id', getProductById);
+router.get("/:id", getProductById);
 
 /**
- * @route GET /products/search
+ * @route GET /api/v1/products/search
  * @description Search for products by name, brand, or category.
  * @access Public
  */
-router.get('/products/search', searchProducts);
+router.get("/search", searchProducts);
 
 /**
- * @route PUT /admin/products/:id
+ * @route PUT /api/v1/admin/products/{id}
  * @description Update a product by its ID (Admin only).
  * @access Private (requires authentication and admin role)
  */
-router.put('/admin/products/:id', authenticateToken, isAdmin, updateProduct);
+router.put("/:id", isAdmin, updateProduct);
 
 /**
- * @route DELETE /admin/products/:id
+ * @route DELETE /api/v1/admin/products/{id}
  * @description Delete a product by its ID (Admin only).
  * @access Private (requires authentication and admin role)
  */
-router.delete('/admin/products/:id', authenticateToken, isAdmin, deleteProduct);
+router.delete("/:id", isAdmin, deleteProduct);
 
 export default router;

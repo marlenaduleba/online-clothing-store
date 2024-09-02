@@ -5,7 +5,6 @@ import {
   updateCartItem,
   clearCart,
 } from "../controllers/cartController.js";
-import { authenticateToken } from "../middlewares/authenticateToken.js";
 import {
   validateAddItemToCart,
   validateUpdateCartItem,
@@ -14,41 +13,31 @@ import {
 const router = Router();
 
 /**
- * @route POST /me/cart
+ * @route POST /api/v1/me/cart
  * @description Add an item to the current user's cart.
  * @access Private (requires authentication)
  */
-router.post(
-  "/me/cart",
-  authenticateToken,
-  validateAddItemToCart,
-  addItemToCart
-);
+router.post("/", validateAddItemToCart, addItemToCart);
 
 /**
- * @route GET /me/cart
+ * @route GET /api/v1/me/cart
  * @description Get the current user's cart.
  * @access Private (requires authentication)
  */
-router.get("/me/cart", authenticateToken, getCurrentUserCart);
+router.get("/", getCurrentUserCart);
 
 /**
- * @route PUT /me/cart
+ * @route PUT /api/v1/me/cart
  * @description Update an item in the current user's cart.
  * @access Private (requires authentication)
  */
-router.put(
-  "/me/cart",
-  authenticateToken,
-  validateUpdateCartItem,
-  updateCartItem
-);
+router.put("/", validateUpdateCartItem, updateCartItem);
 
 /**
- * @route DELETE /me/cart
+ * @route DELETE /api/v1/me/cart
  * @description Clear the current user's cart.
  * @access Private (requires authentication)
  */
-router.delete("/me/cart", authenticateToken, clearCart);
+router.delete("/", clearCart);
 
 export default router;

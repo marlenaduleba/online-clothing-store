@@ -1,7 +1,7 @@
 import request from 'supertest';
 import app from '../../../src/app.js';
-import { createUser, getUserByEmail, getUserById } from '../../../src/models/userModel.js';
-import { saveRefreshToken, revokeRefreshToken, blacklistToken, getRefreshTokenData } from '../../../src/models/tokenModel.js';
+import { getUserByEmail, getUserById } from '../../../src/models/userModel.js';
+import { saveRefreshToken, getRefreshTokenData } from '../../../src/models/tokenModel.js';
 import bcrypt from 'bcrypt';
 import { createJWT } from '../../../src/utils/jwt.js';
 

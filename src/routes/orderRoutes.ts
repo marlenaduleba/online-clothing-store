@@ -5,70 +5,53 @@ import {
   getOrderById,
   getCurrentUserOrders,
   getCurrentUserOrderById,
-  updateOrder,
   deleteOrder,
 } from "../controllers/orderController.js";
-import { authenticateToken } from "../middlewares/authenticateToken.js";
 import { isAdmin } from "../middlewares/isAdmin.js";
-import {
-  validateCreateOrder,
-  validateUpdateOrder,
-} from "../middlewares/validationMiddleware.js";
+import { validateCreateOrder } from "../middlewares/validationMiddleware.js";
 
 const router = Router();
 
 /**
- * @route POST /me/orders
+ * @route POST /api/v1/me/orders
  * @description Create a new order for the current user.
  * @access Private (requires authentication)
  */
-router.post("/me/orders", authenticateToken, validateCreateOrder, createOrder);
+router.post("/", validateCreateOrder, createOrder);
 
 /**
- * @route GET /admin/orders
+ * @route GET /api/v1/admin/orders
  * @description Get all orders (Admin only).
  * @access Private (requires authentication and admin role)
  */
-router.get("/admin/orders", authenticateToken, isAdmin, getAllOrders);
+router.get("/", isAdmin, getAllOrders);
 
 /**
- * @route GET /admin/orders/:id
+ * @route GET api/v1/admin/orders/:id
  * @description Get an order by its ID (Admin only).
  * @access Private (requires authentication and admin role)
  */
-router.get("/admin/orders/:id", authenticateToken, isAdmin, getOrderById);
+router.get("/:id", isAdmin, getOrderById);
 
 /**
- * @route GET /me/orders
+ * @route GET api/v1/me/orders
  * @description Get all orders of the current user.
  * @access Private (requires authentication)
  */
-router.get("/me/orders", authenticateToken, getCurrentUserOrders);
+router.get("/", getCurrentUserOrders);
 
 /**
- * @route GET /me/orders/:id
+ * @route GET api/v1/me/orders/:id
  * @description Get a specific order of the current user by its ID.
  * @access Private (requires authentication)
  */
-router.get("/me/orders/:id", authenticateToken, getCurrentUserOrderById);
+router.get("/:id", getCurrentUserOrderById);
 
 /**
- * @route PUT /me/orders/:id
- * @description Update an order of the current user by its ID.
- * @access Private (requires authentication)
- */
-router.put(
-  "/me/orders/:id",
-  authenticateToken,
-  validateUpdateOrder,
-  updateOrder
-);
-
-/**
- * @route DELETE /admin/orders/:id
+ * @route DELETE api/v1/admin/orders/:id
  * @description Delete an order by its ID (Admin only).
  * @access Private (requires authentication and admin role)
  */
-router.delete("/admin/orders/:id", authenticateToken, isAdmin, deleteOrder);
+router.delete("/:id", isAdmin, deleteOrder);
 
 export default router;
