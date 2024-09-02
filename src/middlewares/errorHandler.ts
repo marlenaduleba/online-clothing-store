@@ -1,18 +1,18 @@
-// src/middlewares/errorHandler.ts
-
-import { Request, Response, NextFunction } from "express";
+import chalk from "chalk";
+import { NextFunction, Request, Response } from "express";
 import CustomError from "../errors/CustomError.js";
-const chalk = require("chalk");
 
 /**
  * Middleware function to handle errors in the application.
  *
- * @param err - The error object containing the error details.
- * @param req - The request object.
- * @param res - The response object used to send the error message to the client.
- * @param next - The next middleware function in the stack.
+ * This function captures errors that occur during the request-response cycle and sends an appropriate
+ * response to the client. It distinguishes between custom errors and generic errors, logging the necessary
+ * details and ensuring that the correct status code and message are returned.
  *
- * @returns Sends a JSON response with the error message and status code, or a generic message if no specific error details are provided.
+ * @param err - The error object that was thrown.
+ * @param req - The request object from the client.
+ * @param res - The response object to send the error message.
+ * @param next - The next middleware function in the stack.
  */
 export const errorHandler = (
   err: any,
@@ -20,6 +20,17 @@ export const errorHandler = (
   res: Response,
   next: NextFunction
 ) => {
+  // Skip logging for 404 errors
+  if (res.statusCode !== 404) {
+    console.error("Error stack:", err.stack);
+  }
+
+  // If headers have already been sent, delegate to the default Express error handler
+  if (res.headersSent) {
+    return next(err);
+  }
+
+  // Handle CustomError instances
   if (err instanceof CustomError) {
     res
       .status(err.status)
