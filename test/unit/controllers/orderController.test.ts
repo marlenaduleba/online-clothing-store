@@ -5,7 +5,6 @@ import {
   getOrderById,
   getCurrentUserOrders,
   getCurrentUserOrderById,
-  updateOrder,
   deleteOrder,
 } from '../../../src/controllers/orderController';
 import {
@@ -13,7 +12,6 @@ import {
   getAllOrdersService,
   getOrderByIdService,
   getOrdersByUserIdService,
-  updateOrderService,
   deleteOrderService,
 } from '../../../src/services/orderService';
 
@@ -23,7 +21,6 @@ jest.mock('../../../src/services/orderService', () => ({
   getAllOrdersService: jest.fn(),
   getOrderByIdService: jest.fn(),
   getOrdersByUserIdService: jest.fn(),
-  updateOrderService: jest.fn(),
   deleteOrderService: jest.fn(),
 }));
 

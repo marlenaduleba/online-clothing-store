@@ -124,56 +124,63 @@ describe('User Controller', () => {
   describe('updateUser', () => {
     // Test case: Successfully update a user
     it('should update a user and return the updated user', async () => {
-      const mockUser = { id: 1, first_name: 'John', last_name: 'Doe', email: 'john.doe@example.com', role: 'user' };
-      (updateUserService as jest.Mock).mockResolvedValue(mockUser);
+        const mockUser = { id: 1, first_name: 'Johnny', last_name: 'Doe', email: 'johnny.doe@example.com', role: 'user' };
+        (getUserByIdService as jest.Mock).mockResolvedValue(mockUser); // Mock getUserByIdService to return a user
+        (updateUserService as jest.Mock).mockResolvedValue(mockUser);
 
-      mockRequest.params = { id: '1' };
-      mockRequest.body = { first_name: 'Johnny' };
+        mockRequest.params = { id: '1' };
+        mockRequest.body = { first_name: 'Johnny' };
 
-      await updateUser(mockRequest as Request, mockResponse as Response, mockNext);
+        await updateUser(mockRequest as Request, mockResponse as Response, mockNext);
 
-      expect(updateUserService).toHaveBeenCalledWith(1, mockRequest.body);
-      expect(mockResponse.status).toHaveBeenCalledWith(200);
-      expect(mockResponse.json).toHaveBeenCalledWith({ message: 'User updated successfully', user: mockUser });
+        expect(getUserByIdService).toHaveBeenCalledWith(1);
+        expect(updateUserService).toHaveBeenCalledWith(1, mockRequest.body);
+        expect(mockResponse.status).toHaveBeenCalledWith(200);
+        expect(mockResponse.json).toHaveBeenCalledWith({ message: 'User updated successfully', user: mockUser });
     });
 
     // Test case: Handle errors and call next with the error
     it('should handle errors and call next with the error', async () => {
-      const mockError = new Error('Failed to update user');
-      (updateUserService as jest.Mock).mockRejectedValue(mockError);
+        const mockError = new Error('Failed to update user');
+        (getUserByIdService as jest.Mock).mockResolvedValue({ id: 1 }); // Mock getUserByIdService to return a user
+        (updateUserService as jest.Mock).mockRejectedValue(mockError);
 
-      mockRequest.params = { id: '1' }; // Ensure the ID is present in the params
+        mockRequest.params = { id: '1' };
 
-      await updateUser(mockRequest as Request, mockResponse as Response, mockNext);
+        await updateUser(mockRequest as Request, mockResponse as Response, mockNext);
 
-      expect(mockNext).toHaveBeenCalledWith(mockError);
+        expect(mockNext).toHaveBeenCalledWith(mockError);
     });
-  });
+});
 
-  describe('deleteUser', () => {
-    // Test case: Successfully delete a user
-    it('should delete a user and return a success message', async () => {
+describe('deleteUser', () => {
+  // Test case: Successfully delete a user
+  it('should delete a user and return a success message', async () => {
+      const mockUser = { id: 1, first_name: 'John', last_name: 'Doe' };
+      (getUserByIdService as jest.Mock).mockResolvedValue(mockUser); // Mock getUserByIdService to return a user
       (deleteUserService as jest.Mock).mockResolvedValue(undefined);
 
       mockRequest.params = { id: '1' };
 
       await deleteUser(mockRequest as Request, mockResponse as Response, mockNext);
 
+      expect(getUserByIdService).toHaveBeenCalledWith(1);
       expect(deleteUserService).toHaveBeenCalledWith(1);
       expect(mockResponse.status).toHaveBeenCalledWith(200);
       expect(mockResponse.json).toHaveBeenCalledWith({ message: 'User deleted successfully' });
-    });
+  });
 
-    // Test case: Handle errors and call next with the error
-    it('should handle errors and call next with the error', async () => {
+  // Test case: Handle errors and call next with the error
+  it('should handle errors and call next with the error', async () => {
       const mockError = new Error('Failed to delete user');
+      (getUserByIdService as jest.Mock).mockResolvedValue({ id: 1 }); // Mock getUserByIdService to return a user
       (deleteUserService as jest.Mock).mockRejectedValue(mockError);
 
-      mockRequest.params = { id: '1' }; // Ensure the ID is present in the params
+      mockRequest.params = { id: '1' };
 
       await deleteUser(mockRequest as Request, mockResponse as Response, mockNext);
 
       expect(mockNext).toHaveBeenCalledWith(mockError);
-    });
   });
+});
 });
