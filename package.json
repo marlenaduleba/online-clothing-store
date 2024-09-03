@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "cross-env NODE_ENV=development nodemon",
-    "lint": "eslint . --ext .ts",
+    "lint": "eslint .",
     "test": "npx jest --coverage",
     "start": "cross-env NODE_ENV=production node dist/server.js",
     "db:reset": "tsx src/utils/resetDatabase.ts"
