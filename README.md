@@ -1363,7 +1363,13 @@ To run the Online Clothing Store API using Docker, follow these steps:
    docker-compose exec app npm test
    ```
 
-6. **Stopping the Containers**:
+6. **Admin Credentials**:
+   To access the admin panel, use the following credentials:
+
+- Email: admin@example.com
+- Password: password123
+
+7. **Stopping the Containers**:
    When you're done, you can stop the containers with:
 
    ```bash
