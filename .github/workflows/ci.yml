@@ -2,7 +2,7 @@ name: CI Pipeline
 
 on:
   push:
-    branches: 
+    branches:
       - main
   pull_request:
     branches:
@@ -29,7 +29,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '20.11.1'
+          node-version: "20.11.1"
 
       - name: Install dependencies
         run: npm install
@@ -38,7 +38,7 @@ jobs:
         env:
           PGPASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
         run: |
-          psql -h localhost -U ${{ secrets.POSTGRES_USER }} -c "CREATE DATABASE ${{ secrets.POSTGRES_DB }};"
+          psql -h localhost -U ${{ secrets.POSTGRES_USER }} -tc "SELECT 1 FROM pg_database WHERE datname = '${{ secrets.POSTGRES_DB }}'" | grep -q 1 || psql -h localhost -U ${{ secrets.POSTGRES_USER }} -c "CREATE DATABASE ${{ secrets.POSTGRES_DB }};"
 
       - name: Apply Migrations
         env:
