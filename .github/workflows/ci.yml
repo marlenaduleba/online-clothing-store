@@ -25,7 +25,7 @@ jobs:
           --health-cmd="pg_isready -U ${{ secrets.POSTGRES_USER }}" 
           --health-interval=10s 
           --health-timeout=5s 
-          --health-retries=10
+          --health-retries=5
 
     steps:
       - name: Checkout code
@@ -40,14 +40,18 @@ jobs:
         run: npm install
 
       - name: Create Test Database
+        env:
+          PGPASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
         run: |
-          PGPASSWORD=${{ secrets.POSTGRES_PASSWORD }} psql -h localhost -U ${{ secrets.POSTGRES_USER }} -c "CREATE DATABASE ${{ secrets.POSTGRES_DB }};"
+          psql -h localhost -U ${{ secrets.POSTGRES_USER }} -c "CREATE DATABASE ${{ secrets.POSTGRES_DB }};"
 
       - name: Apply Migrations
+        env:
+          PGPASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
         run: |
-          PGPASSWORD=${{ secrets.POSTGRES_PASSWORD }} psql -h localhost -U ${{ secrets.POSTGRES_USER }} -d ${{ secrets.POSTGRES_DB }} -f database/migrations/00-createDatabase.sql &&
-          PGPASSWORD=${{ secrets.POSTGRES_PASSWORD }} psql -h localhost -U ${{ secrets.POSTGRES_USER }} -d ${{ secrets.POSTGRES_DB }} -f database/migrations/01-schema.sql &&
-          PGPASSWORD=${{ secrets.POSTGRES_PASSWORD }} psql -h localhost -U ${{ secrets.POSTGRES_USER }} -d ${{ secrets.POSTGRES_DB }} -f database/migrations/02-initialData.sql
+          psql -h localhost -U ${{ secrets.POSTGRES_USER }} -d ${{ secrets.POSTGRES_DB }} -f database/migrations/00-createDatabase.sql &&
+          psql -h localhost -U ${{ secrets.POSTGRES_USER }} -d ${{ secrets.POSTGRES_DB }} -f database/migrations/01-schema.sql &&
+          psql -h localhost -U ${{ secrets.POSTGRES_USER }} -d ${{ secrets.POSTGRES_DB }} -f database/migrations/02-initialData.sql
 
       - name: Build TypeScript
         run: npm run build
@@ -61,3 +65,6 @@ jobs:
 
       - name: Lint the code
         run: npm run lint
+
+      - name: Stop services
+        run: docker-compose down
